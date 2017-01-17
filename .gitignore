@@ -1,0 +1,9 @@
+.DS_Store
+target
+
+# IDE
+.idea
+hummingbird.iml
+
+# Graal development kit
+graalvm-0.19-dk
