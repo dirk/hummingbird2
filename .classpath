@@ -1,0 +1,3 @@
+./target/classes:
+./graalvm-0.19-dk/jre/lib/truffle/truffle-api.jar:
+./graalvm-0.19-dk/lib/truffle-dsl-processor.jar
