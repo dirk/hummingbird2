@@ -104,3 +104,85 @@ let foo = |bar: Utf8String| -> Utf8String {
   }
 }
 ```
+
+## Control Flow
+
+### While
+
+The traditional `while` loop is probably as you'd expect:
+
+```swift
+var i = 0
+
+while i < 10 {
+  i += 1
+
+  if i % 2 == 0 {
+    continue // Skip even items
+  } else if i == 7 {
+    break // Stop short
+  } else {
+    print(i)
+  }
+}
+```
+
+### For
+
+There are two formulations of the `for` loop structure. The convenient `for-in` statement:
+
+```swift
+let numbers = [1, 2, 3]
+
+// numbers conforms to the IntoIterator trait so it can be used in a
+// for-in statement.
+for i in numbers {
+  print(i)
+}
+```
+
+And the more traditional three-part `for` statement:
+
+```swift
+for (var i = 1; i <= 3; i++) {
+  print(i)
+}
+```
+
+## Classes
+
+Classes are strongly inspired by Swift classes, but with a deliberately more simplistic initializer and inheritance model. They also draw from ECMAScript 6 classes and Rust structs.
+
+```swift
+// Generics are fully supported.
+class Stack<Element> {
+  var items: Array<Element>
+  var depth = 0
+
+  // Using a unary enum Capacity to target a specific constructor via
+  // ad hoc polymorphism (overloading).
+  init(initialCapacity: Capacity) {
+    // Three things to note here:
+    //   - The type-checker will infer the Element generic parameter for the
+    //     array constructor.
+    //   - The implicit self variable; this is the only implicit variable in
+    //     constructors, instance methods, and class methods.
+    self.items = new Array(initialCapacity)
+  }
+
+  // The companion to init is finalize. Classes may define multiple
+  // initializers, but only zero or one finalizers.
+
+  // Type-checker infers the type of item to be Element.
+  func push(item) {
+    this.items.push(item)
+    this.depth += 1
+  }
+}
+```
+
+### Property Initialization
+
+Hummingbird requires that all properties be defined by the end of the initializer, but does not enforce that requirement within the initializer. This means that you can call instance methods before all properties are set (in contrast to Swift, where this is a compilation error).
+
+The rationale for this decision is that there is a balance between freedom and safety. Swift opts for more safety in this regard, whereas Hummingbird chooses to give programmers freedom (at the risk of underfined behavior).
