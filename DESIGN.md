@@ -7,8 +7,13 @@ Mutable and immutable slots are explicitly separated in Hummingbird:
 - `let` defines immutable bindings.
 - `var` defines mutable ones.
 
-```
+```swift
+let foo = "foo" // Type is inferred to be Utf8String.
+foo = "bar" // This is an error!
 
+var baz: Utf8String = "baz"
+baz = "bam" // This is okay.
+baz = 123 // This is an error!
 ```
 
 ## Callables
