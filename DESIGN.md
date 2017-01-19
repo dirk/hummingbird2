@@ -66,7 +66,9 @@ Closures are allocated on the heap and capture ("close") relevant values from th
 - Pointer to the location of the executable code.
 - Map of captured values to be used by the executable code.
 
-Closures use a different syntax than functions. It has been adopted from Rust with the intent that it communicates the fact that closures are really a kind of literal.
+Closures use a different syntax than functions. It has been [adopted from Rust][] with the intent that it communicates the fact that closures are really a kind of literal.
+
+[adopted from Rust]: https://doc.rust-lang.org/stable/book/closures.html#syntax
 
 ```rust
 // Type-checker will infer, constrain, and deduce the following:
