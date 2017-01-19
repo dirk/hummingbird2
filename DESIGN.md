@@ -80,7 +80,7 @@ Closures use a different syntax than functions. It has been [adopted from Rust][
 //
 //   constraints: exists function +(A, B) -> C
 //
-//   deductions: type of foo = Closure((A, B), C)
+//   deductions: type of foo = Closure<(A, B), C>
 //
 let foo = |bar, baz| bar + baz
 ```
@@ -94,7 +94,7 @@ The compiler will implicitly return the result of a single expression in a closu
 //
 //   constraints: exists function ==(Utf8String, Utf8String) -> Bool
 //
-//   deductions: type of foo = Closure((Utf8String), Utf8String)
+//   deductions: type of foo = Closure<(Utf8String), Utf8String>
 //
 let foo = |bar: Utf8String| -> Utf8String {
   if bar == "bar" {
