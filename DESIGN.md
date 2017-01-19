@@ -186,3 +186,34 @@ class Stack<Element> {
 Hummingbird requires that all properties be defined by the end of the initializer, but does not enforce that requirement within the initializer. This means that you can call instance methods before all properties are set (in contrast to Swift, where this is a compilation error).
 
 The rationale for this decision is that there is a balance between freedom and safety. Swift opts for more safety in this regard, whereas Hummingbird chooses to give programmers freedom (at the risk of underfined behavior).
+
+## Enums
+
+Inspired largely by ML and Rust. Enums are a value type that can store associated values within their variants.
+
+```swift
+// Using ad-hoc polymorphism.
+enum List<Element> {
+  case Nil,
+  case Cons(Element, List<Element>),
+}
+```
+
+There is also a unary enum syntax:
+
+```swift
+// Standard collection capacity type.
+enum Capacity(Int64)
+```
+
+## Tuples
+
+Are immutable, constant-sized, and can contain arbitrary types.
+
+```swift
+// Type-checker will infer the type of pair to be (Int64, Utf8String)
+let pair = (1, "one")
+
+// Destructuring assignment is supported in conjunction with type inference.
+let (anInt, aString) = pair
+```
