@@ -1,4 +1,6 @@
-# Variables
+# Design
+
+## Variables
 
 Mutable and immutable slots are explicitly separated in Hummingbird:
 
