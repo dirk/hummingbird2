@@ -112,9 +112,25 @@ let foo = |bar: Utf8String| -> Utf8String {
 
 ## Control Flow
 
+### If
+
+If, else-if, and else all follow the traditional design:
+
+```swift
+let truthy = true
+
+if truthy {
+  print("Truthy")
+} else if !truthy {
+  print("Not truthy")
+} else {
+  print("Actually unreachable")
+}
+```
+
 ### While
 
-The traditional `while` loop is probably as you'd expect:
+The traditional `while` loop is also probably as you'd expect:
 
 ```swift
 var i = 0
@@ -149,7 +165,7 @@ for i in numbers {
 And the more traditional three-part `for` statement:
 
 ```swift
-for (var i = 1; i <= 3; i++) {
+for var i = 1; i <= 3; i++ {
   print(i)
 }
 ```
