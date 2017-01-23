@@ -7,19 +7,31 @@ lf = '\n'.
 cr = '\r'.
 stringChar = ANY - "\"" - '\\' - cr - lf.
 
+TOKENS
+
+let = "let".
+
 PRODUCTIONS
 
-Syntax = Program EOF.
+Syntax =
+  Program<out Object statements>
+                                 (. this.program = statements; .)
+  .
 
-Program =
-  ProgramStatements.
+Program<out Object result> =
+  ProgramStatements<out result>.
 
-ProgramStatements =
+ProgramStatements<out Object result> =
                                     (. List<Object> body = new ArrayList<>(); .)
   {
-    Statement<out statement> (. body.add(statement); .)
-  }.
+    Statement<out Object statement> (. body.add(statement); .)
+  }
+                                    (. result = body; .)
+  .
 
-Statement<out Object statement> = .
+Statement<out Object result> = LetDeclaration<out result>.
+
+LetDeclaration<out Object result> = let (. result = null; .).
+
 
 END Syntax.

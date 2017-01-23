@@ -1,4 +1,6 @@
 
+package org.hummingbirdlang;
+
 import java.io.InputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -151,7 +153,7 @@ class Buffer {
 			bufPos = fileLen - bufStart;
 		}
 	}
-	
+
 	// Read the next chunk of bytes from the stream, increases the buffer
 	// if needed and updates the fields fileLen and bufLen.
 	// Returns the number of bytes read.
@@ -167,11 +169,11 @@ class Buffer {
 			buf = newBuf;
 			free = bufLen;
 		}
-		
+
 		int read;
 		try { read = stream.read(buf, bufLen, free); }
 		catch (IOException ioex) { throw new FatalError(ioex.getMessage()); }
-		
+
 		if (read > 0) {
 			fileLen = bufLen = (bufLen + read);
 			return read;
@@ -250,8 +252,8 @@ class StartStates {
 public class Scanner {
 	static final char EOL = '\n';
 	static final int  eofSym = 0;
-	static final int maxT = 1;
-	static final int noSym = 1;
+	static final int maxT = 2;
+	static final int noSym = 2;
 
 
 	public Buffer buffer; // scanner buffer
@@ -268,7 +270,7 @@ public class Scanner {
 
 	Token tokens;      // list of tokens already peeked (first token is a dummy)
 	Token pt;          // current peek token
-	
+
 	char[] tval = new char[16]; // token text used in NextToken(), dynamically enlarged
 	int tlen;          // length of current token
 
@@ -276,20 +278,21 @@ public class Scanner {
 	static {
 		start = new StartStates();
 		literals = new HashMap();
+		start.set(108, 1); 
 		start.set(Buffer.EOF, -1);
 
 	}
-	
+
 	public Scanner (String fileName) {
 		buffer = new Buffer(fileName);
 		Init();
 	}
-	
+
 	public Scanner(InputStream s) {
 		buffer = new Buffer(s);
 		Init();
 	}
-	
+
 	void Init () {
 		pos = -1; line = 1; col = 0; charPos = -1;
 		oldEols = 0;
@@ -305,7 +308,7 @@ public class Scanner {
 		}
 		pt = tokens = new Token();  // first token is a dummy
 	}
-	
+
 	void NextCh() {
 		if (oldEols > 0) { ch = EOL; oldEols--; }
 		else {
@@ -319,7 +322,7 @@ public class Scanner {
 		}
 
 	}
-	
+
 	void AddCh() {
 		if (tlen >= tval.length) {
 			char[] newBuf = new char[2 * tval.length];
@@ -333,7 +336,7 @@ public class Scanner {
 		}
 
 	}
-	
+
 
 
 	void CheckLiteral() {
@@ -359,7 +362,7 @@ public class Scanner {
 
 		loop: for (;;) {
 			switch (state) {
-				case -1: { t.kind = eofSym; break loop; } // NextCh already done 
+				case -1: { t.kind = eofSym; break loop; } // NextCh already done
 				case 0: {
 					if (recKind != noSym) {
 						tlen = recEnd - t.pos;
@@ -367,20 +370,28 @@ public class Scanner {
 					}
 					t.kind = recKind; break loop;
 				} // NextCh already done
+				case 1:
+					if (ch == 'e') {AddCh(); state = 2; break;}
+					else {state = 0; break;}
+				case 2:
+					if (ch == 't') {AddCh(); state = 3; break;}
+					else {state = 0; break;}
+				case 3:
+					{t.kind = 1; break loop;}
 
 			}
 		}
 		t.val = new String(tval, 0, tlen);
 		return t;
 	}
-	
+
 	private void SetScannerBehindT() {
 		buffer.setPos(t.pos);
 		NextCh();
 		line = t.line; col = t.col; charPos = t.charPos;
 		for (int i = 0; i < tlen; i++) NextCh();
 	}
-	
+
 	// get the next token (possibly a token already seen during peeking)
 	public Token Scan () {
 		if (tokens.next == null) {
