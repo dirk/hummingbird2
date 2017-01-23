@@ -1,0 +1,25 @@
+COMPILER Syntax
+
+CHARACTERS
+
+tab = '\t'.
+lf = '\n'.
+cr = '\r'.
+stringChar = ANY - "\"" - '\\' - cr - lf.
+
+PRODUCTIONS
+
+Syntax = Program EOF.
+
+Program =
+  ProgramStatements.
+
+ProgramStatements =
+                                    (. List<Object> body = new ArrayList<>(); .)
+  {
+    Statement<out statement> (. body.add(statement); .)
+  }.
+
+Statement<out Object statement> = .
+
+END Syntax.

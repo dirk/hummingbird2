@@ -1,0 +1,7 @@
+#!/bin/bash
+
+if [ ! -f Coco.jar ]; then
+  wget http://www.ssw.uni-linz.ac.at/Coco/Java/Coco.jar -O Coco.jar
+fi
+
+java -jar Coco.jar src/main/java/org/hummingbirdlang/parser/Syntax.atg
