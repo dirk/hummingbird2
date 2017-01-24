@@ -85,7 +85,7 @@ public class Parser {
 
 	void Syntax() {
 		Object statements = Program();
-		this.program = statements; 
+		this.program = statements;
 	}
 
 	Object  Program() {
@@ -96,18 +96,18 @@ public class Parser {
 
 	Object  ProgramStatements() {
 		Object  result;
-		List<Object> body = new ArrayList<>(); 
+		List<Object> body = new ArrayList<>();
 		while (la.kind == 2 || la.kind == 3) {
 			Object statement = Statement();
-			body.add(statement); 
+			body.add(statement);
 		}
-		result = body; 
+		result = body;
 		return result;
 	}
 
 	Object  Statement() {
 		Object  result;
-		result = null; 
+		result = null;
 		if (la.kind == 2) {
 			result = LetDeclaration();
 		} else if (la.kind == 3) {
@@ -121,7 +121,7 @@ public class Parser {
 		Expect(2);
 		Expect(4);
 		Object expression = Expression();
-		result = expression; 
+		result = expression;
 		return result;
 	}
 
@@ -130,7 +130,7 @@ public class Parser {
 		Expect(3);
 		Expect(4);
 		Object expression = Expression();
-		result = expression; 
+		result = expression;
 		return result;
 	}
 
@@ -143,13 +143,13 @@ public class Parser {
 	Token  Identifier() {
 		Token  result;
 		Expect(1);
-		result = t; 
+		result = t;
 		return result;
 	}
 
 	Object  TernaryExpression() {
 		Object  result;
-		result = null; 
+		result = null;
 		PostfixExpression();
 		if (la.kind == 5) {
 			Object thenElse = TernaryThenElse();
@@ -163,7 +163,7 @@ public class Parser {
 
 	Object  TernaryThenElse() {
 		Object  result;
-		result = null; 
+		result = null;
 		Expect(5);
 		PostfixExpression();
 		Expect(6);
@@ -209,7 +209,7 @@ public class Parser {
 class Errors {
 	public int count = 0;                                    // number of errors detected
 	public java.io.PrintStream errorStream = System.out;     // error messages go to this stream
-	public String errMsgFormat = "-- line {0} col {1}: {2}"; // 0=line, 1=column, 2=text
+	public String errMsgFormat = "-- line {0} col {1}: {2}"; // 0=line, 1=column, 2=tex
 
 	protected void printMsg(int line, int column, String msg) {
 		StringBuffer b = new StringBuffer(errMsgFormat);

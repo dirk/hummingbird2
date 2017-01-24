@@ -14,7 +14,7 @@ class Token {
 	public int col;     // token column (starting at 1)
 	public int line;    // token line (starting at 1)
 	public String val;  // token value
-	public Token next;  // ML 2005-03-11 Peek tokens are kept in linked list
+	public Token next;  // ML 2005-03-11 Peek tokens are kept in linked lis
 }
 
 //-----------------------------------------------------------------------------------
@@ -162,7 +162,7 @@ class Buffer {
 		if (free == 0) {
 			// in the case of a growing input stream
 			// we can neither seek in the stream, nor can we
-			// foresee the maximum length, thus we must adapt
+			// foresee the maximum length, thus we must adap
 			// the buffer size on demand.
 			byte[] newBuf = new byte[bufLen * 2];
 			System.arraycopy(buf, 0, newBuf, 0, bufLen);
@@ -280,11 +280,11 @@ public class Scanner {
 		literals = new HashMap();
 		for (int i = 65; i <= 90; ++i) start.set(i, 1);
 		for (int i = 97; i <= 122; ++i) start.set(i, 1);
-		start.set(61, 2); 
-		start.set(63, 3); 
-		start.set(58, 4); 
-		start.set(40, 5); 
-		start.set(41, 6); 
+		start.set(61, 2);
+		start.set(63, 3);
+		start.set(58, 4);
+		start.set(40, 5);
+		start.set(41, 6);
 		start.set(Buffer.EOF, -1);
 		literals.put("let", new Integer(2));
 		literals.put("var", new Integer(3));
@@ -338,7 +338,7 @@ public class Scanner {
 			tval = newBuf;
 		}
 		if (ch != Buffer.EOF) {
-			tval[tlen++] = (char)ch; 
+			tval[tlen++] = (char)ch;
 
 			NextCh();
 		}
