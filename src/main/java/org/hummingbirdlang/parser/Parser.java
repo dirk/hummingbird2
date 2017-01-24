@@ -6,8 +6,10 @@ import java.util.List;
 
 public class Parser {
 	public static final int _EOF = 0;
-	public static final int _let = 1;
-	public static final int maxT = 2;
+	public static final int _identifier = 1;
+	public static final int _let = 2;
+	public static final int _var = 3;
+	public static final int maxT = 9;
 
 	static final boolean _T = true;
 	static final boolean _x = false;
@@ -95,7 +97,7 @@ public class Parser {
 	Object  ProgramStatements() {
 		Object  result;
 		List<Object> body = new ArrayList<>(); 
-		while (la.kind == 1) {
+		while (la.kind == 2 || la.kind == 3) {
 			Object statement = Statement();
 			body.add(statement); 
 		}
@@ -105,14 +107,83 @@ public class Parser {
 
 	Object  Statement() {
 		Object  result;
-		result = LetDeclaration();
+		result = null; 
+		if (la.kind == 2) {
+			result = LetDeclaration();
+		} else if (la.kind == 3) {
+			result = VarDeclaration();
+		} else SynErr(10);
 		return result;
 	}
 
 	Object  LetDeclaration() {
 		Object  result;
+		Expect(2);
+		Expect(4);
+		Object expression = Expression();
+		result = expression; 
+		return result;
+	}
+
+	Object  VarDeclaration() {
+		Object  result;
+		Expect(3);
+		Expect(4);
+		Object expression = Expression();
+		result = expression; 
+		return result;
+	}
+
+	Object  Expression() {
+		Object  result;
+		result = TernaryExpression();
+		return result;
+	}
+
+	Token  Identifier() {
+		Token  result;
 		Expect(1);
+		result = t; 
+		return result;
+	}
+
+	Object  TernaryExpression() {
+		Object  result;
 		result = null; 
+		PostfixExpression();
+		if (la.kind == 5) {
+			Object thenElse = TernaryThenElse();
+		}
+		return result;
+	}
+
+	void PostfixExpression() {
+		GroupExpression();
+	}
+
+	Object  TernaryThenElse() {
+		Object  result;
+		result = null; 
+		Expect(5);
+		PostfixExpression();
+		Expect(6);
+		PostfixExpression();
+		return result;
+	}
+
+	void GroupExpression() {
+		if (la.kind == 7) {
+			Get();
+			Object expression = Expression();
+			Expect(8);
+		} else if (la.kind == 1) {
+			Token atom = Atom();
+		} else SynErr(11);
+	}
+
+	Token  Atom() {
+		Token  result;
+		result = Identifier();
 		return result;
 	}
 
@@ -129,7 +200,7 @@ public class Parser {
 	}
 
 	private static final boolean[][] set = {
-		{_T,_x,_x,_x}
+		{_T,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x}
 
 	};
 } // end Parser
@@ -155,8 +226,17 @@ class Errors {
 		String s;
 		switch (n) {
 			case 0: s = "EOF expected"; break;
-			case 1: s = "let expected"; break;
-			case 2: s = "??? expected"; break;
+			case 1: s = "identifier expected"; break;
+			case 2: s = "let expected"; break;
+			case 3: s = "var expected"; break;
+			case 4: s = "\"=\" expected"; break;
+			case 5: s = "\"?\" expected"; break;
+			case 6: s = "\":\" expected"; break;
+			case 7: s = "\"(\" expected"; break;
+			case 8: s = "\")\" expected"; break;
+			case 9: s = "??? expected"; break;
+			case 10: s = "invalid Statement"; break;
+			case 11: s = "invalid GroupExpression"; break;
 			default: s = "error " + n; break;
 		}
 		printMsg(line, col, s);

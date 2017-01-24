@@ -2,6 +2,9 @@ COMPILER Syntax
 
 CHARACTERS
 
+letter = 'A'..'Z' + 'a'..'z'.
+nonZeroDigit = "123456789".
+digit = nonZeroDigit + "0".
 tab = '\t'.
 lf = '\n'.
 cr = '\r'.
@@ -9,7 +12,12 @@ stringChar = ANY - "\"" - '\\' - cr - lf.
 
 TOKENS
 
+identifier = letter {letter | digit}.
 let = "let".
+var = "var".
+
+COMMENTS FROM "//" TO lf
+COMMENTS FROM "/*" TO "*/"
 
 PRODUCTIONS
 
@@ -29,9 +37,59 @@ ProgramStatements<out Object result> =
                                     (. result = body; .)
   .
 
-Statement<out Object result> = LetDeclaration<out result>.
+Statement<out Object result> =
+                               (. result = null; .)
+  (
+      LetDeclaration<out result>
+    | VarDeclaration<out result>
+  )
+  .
 
-LetDeclaration<out Object result> = let (. result = null; .).
+LetDeclaration<out Object result> =
+  let
+  "="
+  Expression<out Object expression> (. result = expression; .)
+  .
 
+VarDeclaration<out Object result> =
+  var
+  "="
+  Expression<out Object expression> (. result = expression; .)
+  .
+
+Identifier<out Token result> =
+  identifier (. result = t; .)
+  .
+
+Expression<out Object result> =
+  TernaryExpression<out result>.
+
+TernaryExpression<out Object result> =
+                                         (. result = null; .)
+  PostfixExpression
+  [
+    TernaryThenElse<out Object thenElse>
+  ]
+  .
+
+TernaryThenElse<out Object result> =
+                        (. result = null; .)
+  "?" PostfixExpression
+  ":" PostfixExpression
+  .
+
+PostfixExpression =
+  GroupExpression.
+
+GroupExpression =
+    (
+      "(" Expression<out Object expression> ")"
+    )
+  |
+    Atom<out Token atom>
+  .
+
+Atom<out Token result> =
+  Identifier<out result>.
 
 END Syntax.

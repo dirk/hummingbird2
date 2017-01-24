@@ -252,8 +252,8 @@ class StartStates {
 public class Scanner {
 	static final char EOL = '\n';
 	static final int  eofSym = 0;
-	static final int maxT = 2;
-	static final int noSym = 2;
+	static final int maxT = 9;
+	static final int noSym = 9;
 
 
 	public Buffer buffer; // scanner buffer
@@ -278,8 +278,16 @@ public class Scanner {
 	static {
 		start = new StartStates();
 		literals = new HashMap();
-		start.set(108, 1); 
+		for (int i = 65; i <= 90; ++i) start.set(i, 1);
+		for (int i = 97; i <= 122; ++i) start.set(i, 1);
+		start.set(61, 2); 
+		start.set(63, 3); 
+		start.set(58, 4); 
+		start.set(40, 5); 
+		start.set(41, 6); 
 		start.set(Buffer.EOF, -1);
+		literals.put("let", new Integer(2));
+		literals.put("var", new Integer(3));
 
 	}
 
@@ -338,6 +346,47 @@ public class Scanner {
 	}
 
 
+	boolean Comment0() {
+		int level = 1, pos0 = pos, line0 = line, col0 = col, charPos0 = charPos;
+		NextCh();
+		if (ch == '*') {
+			NextCh();
+			for(;;) {
+				if (ch == '*') {
+					NextCh();
+					if (ch == '/') {
+						level--;
+						if (level == 0) { oldEols = line - line0; NextCh(); return true; }
+						NextCh();
+					}
+				} else if (ch == Buffer.EOF) return false;
+				else NextCh();
+			}
+		} else {
+			buffer.setPos(pos0); NextCh(); line = line0; col = col0; charPos = charPos0;
+		}
+		return false;
+	}
+
+	boolean Comment1() {
+		int level = 1, pos0 = pos, line0 = line, col0 = col, charPos0 = charPos;
+		NextCh();
+		if (ch == '/') {
+			NextCh();
+			for(;;) {
+				if (ch == 10) {
+					level--;
+					if (level == 0) { oldEols = line - line0; NextCh(); return true; }
+					NextCh();
+				} else if (ch == Buffer.EOF) return false;
+				else NextCh();
+			}
+		} else {
+			buffer.setPos(pos0); NextCh(); line = line0; col = col0; charPos = charPos0;
+		}
+		return false;
+	}
+
 
 	void CheckLiteral() {
 		String val = t.val;
@@ -352,7 +401,7 @@ public class Scanner {
 		while (ch == ' ' ||
 			false
 		) NextCh();
-
+		if (ch == '/' && Comment0() ||ch == '/' && Comment1()) return NextToken();
 		int recKind = noSym;
 		int recEnd = pos;
 		t = new Token();
@@ -371,13 +420,19 @@ public class Scanner {
 					t.kind = recKind; break loop;
 				} // NextCh already done
 				case 1:
-					if (ch == 'e') {AddCh(); state = 2; break;}
-					else {state = 0; break;}
+					recEnd = pos; recKind = 1;
+					if (ch >= '0' && ch <= '9' || ch >= 'A' && ch <= 'Z' || ch >= 'a' && ch <= 'z') {AddCh(); state = 1; break;}
+					else {t.kind = 1; t.val = new String(tval, 0, tlen); CheckLiteral(); return t;}
 				case 2:
-					if (ch == 't') {AddCh(); state = 3; break;}
-					else {state = 0; break;}
+					{t.kind = 4; break loop;}
 				case 3:
-					{t.kind = 1; break loop;}
+					{t.kind = 5; break loop;}
+				case 4:
+					{t.kind = 6; break loop;}
+				case 5:
+					{t.kind = 7; break loop;}
+				case 6:
+					{t.kind = 8; break loop;}
 
 			}
 		}
