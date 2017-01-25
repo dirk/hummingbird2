@@ -65,17 +65,28 @@ Expression<out Object result> =
   TernaryExpression<out result>.
 
 TernaryExpression<out Object result> =
-                                         (. result = null; .)
-  PostfixExpression
+                                                        (. result = null; .)
+  LogicalOrExpression<out Object condOrValueExpression>
   [
-    TernaryThenElse<out Object thenElse>
+    "?" LogicalOrExpression<out Object thenExpression>
+    ":" LogicalOrExpression<out Object elseExpression>
   ]
   .
 
-TernaryThenElse<out Object result> =
-                        (. result = null; .)
-  "?" PostfixExpression
-  ":" PostfixExpression
+LogicalOrExpression<out Object result> =  (. result = null; .)
+  LogicalAndExpression<out Object left>
+  [
+    "||"
+    LogicalOrExpression<out Object right>
+  ]
+  .
+
+LogicalAndExpression<out Object result> =  (. result = null; .)
+  PostfixExpression
+  [
+    "&&"
+    LogicalAndExpression<out Object right>
+  ]
   .
 
 PostfixExpression =

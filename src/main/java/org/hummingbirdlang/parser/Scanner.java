@@ -252,8 +252,8 @@ class StartStates {
 public class Scanner {
 	static final char EOL = '\n';
 	static final int  eofSym = 0;
-	static final int maxT = 9;
-	static final int noSym = 9;
+	static final int maxT = 11;
+	static final int noSym = 11;
 
 
 	public Buffer buffer; // scanner buffer
@@ -283,8 +283,10 @@ public class Scanner {
 		start.set(61, 2);
 		start.set(63, 3);
 		start.set(58, 4);
-		start.set(40, 5);
-		start.set(41, 6);
+		start.set(124, 5);
+		start.set(38, 7);
+		start.set(40, 9);
+		start.set(41, 10);
 		start.set(Buffer.EOF, -1);
 		literals.put("let", new Integer(2));
 		literals.put("var", new Integer(3));
@@ -430,9 +432,19 @@ public class Scanner {
 				case 4:
 					{t.kind = 6; break loop;}
 				case 5:
-					{t.kind = 7; break loop;}
+					if (ch == '|') {AddCh(); state = 6; break;}
+					else {state = 0; break;}
 				case 6:
+					{t.kind = 7; break loop;}
+				case 7:
+					if (ch == '&') {AddCh(); state = 8; break;}
+					else {state = 0; break;}
+				case 8:
 					{t.kind = 8; break loop;}
+				case 9:
+					{t.kind = 9; break loop;}
+				case 10:
+					{t.kind = 10; break loop;}
 
 			}
 		}

@@ -9,7 +9,7 @@ public class Parser {
 	public static final int _identifier = 1;
 	public static final int _let = 2;
 	public static final int _var = 3;
-	public static final int maxT = 9;
+	public static final int maxT = 11;
 
 	static final boolean _T = true;
 	static final boolean _x = false;
@@ -112,7 +112,7 @@ public class Parser {
 			result = LetDeclaration();
 		} else if (la.kind == 3) {
 			result = VarDeclaration();
-		} else SynErr(10);
+		} else SynErr(12);
 		return result;
 	}
 
@@ -150,9 +150,34 @@ public class Parser {
 	Object  TernaryExpression() {
 		Object  result;
 		result = null;
-		PostfixExpression();
+		Object condOrValueExpression = LogicalOrExpression();
 		if (la.kind == 5) {
-			Object thenElse = TernaryThenElse();
+			Get();
+			Object thenExpression = LogicalOrExpression();
+			Expect(6);
+			Object elseExpression = LogicalOrExpression();
+		}
+		return result;
+	}
+
+	Object  LogicalOrExpression() {
+		Object  result;
+		result = null;
+		Object left = LogicalAndExpression();
+		if (la.kind == 7) {
+			Get();
+			Object right = LogicalOrExpression();
+		}
+		return result;
+	}
+
+	Object  LogicalAndExpression() {
+		Object  result;
+		result = null;
+		PostfixExpression();
+		if (la.kind == 8) {
+			Get();
+			Object right = LogicalAndExpression();
 		}
 		return result;
 	}
@@ -161,24 +186,14 @@ public class Parser {
 		GroupExpression();
 	}
 
-	Object  TernaryThenElse() {
-		Object  result;
-		result = null;
-		Expect(5);
-		PostfixExpression();
-		Expect(6);
-		PostfixExpression();
-		return result;
-	}
-
 	void GroupExpression() {
-		if (la.kind == 7) {
+		if (la.kind == 9) {
 			Get();
 			Object expression = Expression();
-			Expect(8);
+			Expect(10);
 		} else if (la.kind == 1) {
 			Token atom = Atom();
-		} else SynErr(11);
+		} else SynErr(13);
 	}
 
 	Token  Atom() {
@@ -200,7 +215,7 @@ public class Parser {
 	}
 
 	private static final boolean[][] set = {
-		{_T,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x}
+		{_T,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x}
 
 	};
 } // end Parser
@@ -232,11 +247,13 @@ class Errors {
 			case 4: s = "\"=\" expected"; break;
 			case 5: s = "\"?\" expected"; break;
 			case 6: s = "\":\" expected"; break;
-			case 7: s = "\"(\" expected"; break;
-			case 8: s = "\")\" expected"; break;
-			case 9: s = "??? expected"; break;
-			case 10: s = "invalid Statement"; break;
-			case 11: s = "invalid GroupExpression"; break;
+			case 7: s = "\"||\" expected"; break;
+			case 8: s = "\"&&\" expected"; break;
+			case 9: s = "\"(\" expected"; break;
+			case 10: s = "\")\" expected"; break;
+			case 11: s = "??? expected"; break;
+			case 12: s = "invalid Statement"; break;
+			case 13: s = "invalid GroupExpression"; break;
 			default: s = "error " + n; break;
 		}
 		printMsg(line, col, s);
