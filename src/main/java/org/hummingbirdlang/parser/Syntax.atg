@@ -62,7 +62,15 @@ Identifier<out Token result> =
   .
 
 Expression<out Object result> =
-  TernaryExpression<out result>.
+  AssignmentExpression<out result>.
+
+AssignmentExpression<out Object result> =  (. result = null; .)
+  TernaryExpression<out Object expression>
+  [
+    "="
+    Expression<out Object newValueExpression>
+  ]
+  .
 
 TernaryExpression<out Object result> =
                                                         (. result = null; .)
@@ -82,23 +90,23 @@ LogicalOrExpression<out Object result> =  (. result = null; .)
   .
 
 LogicalAndExpression<out Object result> =  (. result = null; .)
-  PostfixExpression
+  GroupExpression
   [
     "&&"
     LogicalAndExpression<out Object right>
   ]
   .
 
-PostfixExpression =
-  GroupExpression.
-
 GroupExpression =
     (
       "(" Expression<out Object expression> ")"
     )
   |
-    Atom<out Token atom>
+    PostfixExpression
   .
+
+PostfixExpression =
+  Atom<out Token atom>.
 
 Atom<out Token result> =
   Identifier<out result>.

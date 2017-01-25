@@ -136,7 +136,7 @@ public class Parser {
 
 	Object  Expression() {
 		Object  result;
-		result = TernaryExpression();
+		result = AssignmentExpression();
 		return result;
 	}
 
@@ -144,6 +144,17 @@ public class Parser {
 		Token  result;
 		Expect(1);
 		result = t;
+		return result;
+	}
+
+	Object  AssignmentExpression() {
+		Object  result;
+		result = null;
+		Object expression = TernaryExpression();
+		if (la.kind == 4) {
+			Get();
+			Object newValueExpression = Expression();
+		}
 		return result;
 	}
 
@@ -174,16 +185,12 @@ public class Parser {
 	Object  LogicalAndExpression() {
 		Object  result;
 		result = null;
-		PostfixExpression();
+		GroupExpression();
 		if (la.kind == 8) {
 			Get();
 			Object right = LogicalAndExpression();
 		}
 		return result;
-	}
-
-	void PostfixExpression() {
-		GroupExpression();
 	}
 
 	void GroupExpression() {
@@ -192,8 +199,12 @@ public class Parser {
 			Object expression = Expression();
 			Expect(10);
 		} else if (la.kind == 1) {
-			Token atom = Atom();
+			PostfixExpression();
 		} else SynErr(13);
+	}
+
+	void PostfixExpression() {
+		Token atom = Atom();
 	}
 
 	Token  Atom() {
