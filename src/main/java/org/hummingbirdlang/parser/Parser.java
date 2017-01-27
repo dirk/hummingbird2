@@ -9,7 +9,7 @@ public class Parser {
 	public static final int _identifier = 1;
 	public static final int _let = 2;
 	public static final int _var = 3;
-	public static final int maxT = 11;
+	public static final int maxT = 12;
 
 	static final boolean _T = true;
 	static final boolean _x = false;
@@ -112,7 +112,7 @@ public class Parser {
 			result = LetDeclaration();
 		} else if (la.kind == 3) {
 			result = VarDeclaration();
-		} else SynErr(12);
+		} else SynErr(13);
 		return result;
 	}
 
@@ -153,7 +153,7 @@ public class Parser {
 		Object expression = TernaryExpression();
 		if (la.kind == 4) {
 			Get();
-			Object newValueExpression = Expression();
+			Object newValue = Expression();
 		}
 		return result;
 	}
@@ -199,17 +199,39 @@ public class Parser {
 			Object expression = Expression();
 			Expect(10);
 		} else if (la.kind == 1) {
-			PostfixExpression();
-		} else SynErr(13);
+			SuffixExpression();
+		} else SynErr(14);
 	}
 
-	void PostfixExpression() {
+	void SuffixExpression() {
 		Token atom = Atom();
+		if (la.kind == 9) {
+			Object result = Suffix(atom);
+		}
 	}
 
 	Token  Atom() {
 		Token  result;
 		result = Identifier();
+		return result;
+	}
+
+	Object  Suffix(Object parent) {
+		Object  result;
+		result = null;
+		Expect(9);
+		Object parameter;
+		if (la.kind == 1 || la.kind == 9) {
+			parameter = Expression();
+			while (la.kind == 11) {
+				Get();
+				parameter = Expression();
+			}
+		}
+		Expect(10);
+		if (la.kind == 9) {
+			result = Suffix(result);
+		}
 		return result;
 	}
 
@@ -226,7 +248,7 @@ public class Parser {
 	}
 
 	private static final boolean[][] set = {
-		{_T,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x}
+		{_T,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x}
 
 	};
 } // end Parser
@@ -262,9 +284,10 @@ class Errors {
 			case 8: s = "\"&&\" expected"; break;
 			case 9: s = "\"(\" expected"; break;
 			case 10: s = "\")\" expected"; break;
-			case 11: s = "??? expected"; break;
-			case 12: s = "invalid Statement"; break;
-			case 13: s = "invalid GroupExpression"; break;
+			case 11: s = "\",\" expected"; break;
+			case 12: s = "??? expected"; break;
+			case 13: s = "invalid Statement"; break;
+			case 14: s = "invalid GroupExpression"; break;
 			default: s = "error " + n; break;
 		}
 		printMsg(line, col, s);
