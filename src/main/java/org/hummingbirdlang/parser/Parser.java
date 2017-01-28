@@ -9,7 +9,7 @@ public class Parser {
 	public static final int _identifier = 1;
 	public static final int _let = 2;
 	public static final int _var = 3;
-	public static final int maxT = 12;
+	public static final int maxT = 15;
 
 	static final boolean _T = true;
 	static final boolean _x = false;
@@ -112,7 +112,7 @@ public class Parser {
 			result = LetDeclaration();
 		} else if (la.kind == 3) {
 			result = VarDeclaration();
-		} else SynErr(13);
+		} else SynErr(16);
 		return result;
 	}
 
@@ -200,12 +200,12 @@ public class Parser {
 			Expect(10);
 		} else if (la.kind == 1) {
 			SuffixExpression();
-		} else SynErr(14);
+		} else SynErr(17);
 	}
 
 	void SuffixExpression() {
 		Token atom = Atom();
-		if (la.kind == 9) {
+		if (la.kind == 9 || la.kind == 12 || la.kind == 14) {
 			Object result = Suffix(atom);
 		}
 	}
@@ -219,17 +219,29 @@ public class Parser {
 	Object  Suffix(Object parent) {
 		Object  result;
 		result = null;
-		Expect(9);
-		Object parameter;
-		if (la.kind == 1 || la.kind == 9) {
-			parameter = Expression();
-			while (la.kind == 11) {
-				Get();
-				parameter = Expression();
-			}
-		}
-		Expect(10);
 		if (la.kind == 9) {
+			Get();
+			Object parameter;
+			List<Object> parameters = new ArrayList<>();
+			if (la.kind == 1 || la.kind == 9) {
+				parameter = Expression();
+				parameters.add(parameter);
+				while (la.kind == 11) {
+					Get();
+					parameter = Expression();
+					parameters.add(parameter);
+				}
+			}
+			Expect(10);
+		} else if (la.kind == 12) {
+			Get();
+			Object indexer = Expression();
+			Expect(13);
+		} else if (la.kind == 14) {
+			Get();
+			Object property = Identifier();
+		} else SynErr(18);
+		if (la.kind == 9 || la.kind == 12 || la.kind == 14) {
 			result = Suffix(result);
 		}
 		return result;
@@ -248,7 +260,7 @@ public class Parser {
 	}
 
 	private static final boolean[][] set = {
-		{_T,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x}
+		{_T,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x}
 
 	};
 } // end Parser
@@ -285,9 +297,13 @@ class Errors {
 			case 9: s = "\"(\" expected"; break;
 			case 10: s = "\")\" expected"; break;
 			case 11: s = "\",\" expected"; break;
-			case 12: s = "??? expected"; break;
-			case 13: s = "invalid Statement"; break;
-			case 14: s = "invalid GroupExpression"; break;
+			case 12: s = "\"[\" expected"; break;
+			case 13: s = "\"]\" expected"; break;
+			case 14: s = "\".\" expected"; break;
+			case 15: s = "??? expected"; break;
+			case 16: s = "invalid Statement"; break;
+			case 17: s = "invalid GroupExpression"; break;
+			case 18: s = "invalid Suffix"; break;
 			default: s = "error " + n; break;
 		}
 		printMsg(line, col, s);

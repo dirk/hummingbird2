@@ -38,7 +38,7 @@ ProgramStatements<out Object result> =
   .
 
 Statement<out Object result> =
-                               (. result = null; .)
+                                 (. result = null; .)
   (
       LetDeclaration<out result>
     | VarDeclaration<out result>
@@ -64,7 +64,7 @@ Identifier<out Token result> =
 Expression<out Object result> =
   AssignmentExpression<out result>.
 
-AssignmentExpression<out Object result> =     (. result = null; .)
+AssignmentExpression<out Object result> =  (. result = null; .)
   TernaryExpression<out Object expression>
   [
     "="
@@ -116,17 +116,25 @@ Atom<out Token result> =
   Identifier<out result>.
 
 Suffix<out Object result, Object parent> =
-                                  (. result = null; .)
+                                    (. result = null; .)
   (
-    "("                           (. Object parameter; .)
-    [
-      Expression<out parameter>
-      {
-        ","
-        Expression<out parameter>
-      }
-    ]
-    ")"
+      "("                           (. Object parameter;
+                                       List<Object> parameters = new ArrayList<>(); .)
+      [
+        Expression<out parameter>   (. parameters.add(parameter); .)
+        {
+          ","
+          Expression<out parameter> (. parameters.add(parameter); .)
+        }
+      ]
+      ")"
+    |
+      "["
+      Expression<out Object indexer>
+      "]"
+    |
+      "."
+      Identifier<out Object property>
   )
   [
     Suffix<out result, result>
