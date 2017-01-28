@@ -57,10 +57,6 @@ VarDeclaration<out Object result> =
   Expression<out Object expression> (. result = expression; .)
   .
 
-Identifier<out Token result> =
-  identifier (. result = t; .)
-  .
-
 Expression<out Object result> =
   TernaryExpression<out result>.
 
@@ -114,15 +110,16 @@ GroupOrTupleExpression =
   .
 
 SuffixExpression<out Object result> =
-                             (. result = null; .)
-  Atom<out Token atom>
+                                  (. result = null; .)
+  Atom<out HBExpressionNode atom>
   [
     Suffix<out result, atom>
   ]
   .
 
-Atom<out Token result> =
-  Identifier<out result>.
+Atom<out HBExpressionNode result> =
+  identifier (. result = new HBIdentifierNode(t); .)
+  .
 
 Suffix<out Object result, Object parent> =
                                           (. result = null; .)
@@ -144,7 +141,7 @@ Suffix<out Object result, Object parent> =
           "]"
         |
           "."
-          Identifier<out Object property>
+          identifier
       )
       [
         Suffix<out result, result>

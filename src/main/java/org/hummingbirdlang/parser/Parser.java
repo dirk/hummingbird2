@@ -140,13 +140,6 @@ public class Parser {
 		return result;
 	}
 
-	Token  Identifier() {
-		Token  result;
-		Expect(1);
-		result = t;
-		return result;
-	}
-
 	Object  TernaryExpression() {
 		Object  result;
 		result = null;
@@ -211,16 +204,17 @@ public class Parser {
 	Object  SuffixExpression() {
 		Object  result;
 		result = null;
-		Token atom = Atom();
+		HBExpressionNode atom = Atom();
 		if (StartOf(1)) {
 			result = Suffix(atom);
 		}
 		return result;
 	}
 
-	Token  Atom() {
-		Token  result;
-		result = Identifier();
+	HBExpressionNode  Atom() {
+		HBExpressionNode  result;
+		Expect(1);
+		result = new HBIdentifierNode(t);
 		return result;
 	}
 
@@ -248,7 +242,7 @@ public class Parser {
 				Expect(13);
 			} else {
 				Get();
-				Object property = Identifier();
+				Expect(1);
 			}
 			if (StartOf(1)) {
 				result = Suffix(result);
