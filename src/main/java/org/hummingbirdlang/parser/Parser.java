@@ -174,7 +174,7 @@ public class Parser {
 	Object  LogicalAndExpression() {
 		Object  result;
 		result = null;
-		GroupExpression();
+		GroupOrTupleExpression();
 		if (la.kind == 8) {
 			Get();
 			Object right = LogicalAndExpression();
@@ -182,11 +182,27 @@ public class Parser {
 		return result;
 	}
 
-	void GroupExpression() {
+	void GroupOrTupleExpression() {
 		if (la.kind == 9) {
+			boolean isTuple = false;
 			Get();
 			Object expression = Expression();
-			Expect(10);
+			if (la.kind == 10) {
+				isTuple = true;
+				List<Object> elements = new ArrayList<>();
+				elements.add(expression);
+				Get();
+				if (la.kind == 1 || la.kind == 9) {
+					Object secondElement = Expression();
+					elements.add(secondElement);
+					while (la.kind == 10) {
+						Get();
+						Object nextElement = Expression();
+						elements.add(nextElement);
+					}
+				}
+			}
+			Expect(11);
 		} else if (la.kind == 1) {
 			Object result = SuffixExpression();
 		} else SynErr(17);
@@ -194,9 +210,10 @@ public class Parser {
 
 	Object  SuffixExpression() {
 		Object  result;
+		result = null;
 		Token atom = Atom();
 		if (StartOf(1)) {
-			Object result = Suffix(atom);
+			result = Suffix(atom);
 		}
 		return result;
 	}
@@ -218,13 +235,13 @@ public class Parser {
 				if (la.kind == 1 || la.kind == 9) {
 					parameter = Expression();
 					parameters.add(parameter);
-					while (la.kind == 11) {
+					while (la.kind == 10) {
 						Get();
 						parameter = Expression();
 						parameters.add(parameter);
 					}
 				}
-				Expect(10);
+				Expect(11);
 			} else if (la.kind == 12) {
 				Get();
 				Object indexer = Expression();
@@ -296,14 +313,14 @@ class Errors {
 			case 7: s = "\"||\" expected"; break;
 			case 8: s = "\"&&\" expected"; break;
 			case 9: s = "\"(\" expected"; break;
-			case 10: s = "\")\" expected"; break;
-			case 11: s = "\",\" expected"; break;
+			case 10: s = "\",\" expected"; break;
+			case 11: s = "\")\" expected"; break;
 			case 12: s = "\"[\" expected"; break;
 			case 13: s = "\"]\" expected"; break;
 			case 14: s = "\".\" expected"; break;
 			case 15: s = "??? expected"; break;
 			case 16: s = "invalid Statement"; break;
-			case 17: s = "invalid GroupExpression"; break;
+			case 17: s = "invalid GroupOrTupleExpression"; break;
 			case 18: s = "invalid Suffix"; break;
 			default: s = "error " + n; break;
 		}

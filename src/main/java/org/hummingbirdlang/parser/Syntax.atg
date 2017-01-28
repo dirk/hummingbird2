@@ -82,25 +82,42 @@ LogicalOrExpression<out Object result> =  (. result = null; .)
   .
 
 LogicalAndExpression<out Object result> =  (. result = null; .)
-  GroupExpression
+  GroupOrTupleExpression
   [
     "&&"
     LogicalAndExpression<out Object right>
   ]
   .
 
-GroupExpression =
+GroupOrTupleExpression =
     (
-      "(" Expression<out Object expression> ")"
+                                                       (. boolean isTuple = false; .)
+      "("
+      Expression<out Object expression>
+      [
+                                               (. isTuple = true;
+                                                  List<Object> elements = new ArrayList<>();
+                                                  elements.add(expression); .)
+        ","
+        [
+          Expression<out Object secondElement> (. elements.add(secondElement); .)
+          {
+            ","
+            Expression<out Object nextElement> (. elements.add(nextElement); .)
+          }
+        ]
+      ]
+      ")"
     )
   |
     SuffixExpression<out Object result>
   .
 
 SuffixExpression<out Object result> =
+                             (. result = null; .)
   Atom<out Token atom>
   [
-    Suffix<out Object result, atom>
+    Suffix<out result, atom>
   ]
   .
 
