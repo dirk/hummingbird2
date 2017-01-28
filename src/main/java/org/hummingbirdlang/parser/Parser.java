@@ -134,43 +134,43 @@ public class Parser {
 		return result;
 	}
 
-	Object  Expression() {
-		Object  result;
+	HBExpressionNode  Expression() {
+		HBExpressionNode  result;
 		result = TernaryExpression();
 		return result;
 	}
 
-	Object  TernaryExpression() {
-		Object  result;
+	HBExpressionNode  TernaryExpression() {
+		HBExpressionNode  result;
 		result = null;
-		Object condOrValueExpression = LogicalOrExpression();
+		HBExpressionNode condOrValueExpression = LogicalOrExpression();
 		if (la.kind == 5) {
 			Get();
-			Object thenExpression = LogicalOrExpression();
+			HBExpressionNode thenExpression = LogicalOrExpression();
 			Expect(6);
-			Object elseExpression = LogicalOrExpression();
+			HBExpressionNode elseExpression = LogicalOrExpression();
 		}
 		return result;
 	}
 
-	Object  LogicalOrExpression() {
-		Object  result;
+	HBExpressionNode  LogicalOrExpression() {
+		HBExpressionNode  result;
 		result = null;
-		Object left = LogicalAndExpression();
+		HBExpressionNode left = LogicalAndExpression();
 		if (la.kind == 7) {
 			Get();
-			Object right = LogicalOrExpression();
+			HBExpressionNode right = LogicalOrExpression();
 		}
 		return result;
 	}
 
-	Object  LogicalAndExpression() {
-		Object  result;
+	HBExpressionNode  LogicalAndExpression() {
+		HBExpressionNode  result;
 		result = null;
 		GroupOrTupleExpression();
 		if (la.kind == 8) {
 			Get();
-			Object right = LogicalAndExpression();
+			HBExpressionNode right = LogicalAndExpression();
 		}
 		return result;
 	}
@@ -224,8 +224,8 @@ public class Parser {
 		if (la.kind == 9 || la.kind == 12 || la.kind == 14) {
 			if (la.kind == 9) {
 				Get();
-				Object parameter;
-				List<Object> parameters = new ArrayList<>();
+				HBExpressionNode parameter;
+				List<HBExpressionNode> parameters = new ArrayList<>();
 				if (la.kind == 1 || la.kind == 9) {
 					parameter = Expression();
 					parameters.add(parameter);
@@ -255,7 +255,7 @@ public class Parser {
 
 	void Assignment() {
 		Expect(4);
-		Object newValue = Expression();
+		HBExpressionNode newValue = Expression();
 	}
 
 

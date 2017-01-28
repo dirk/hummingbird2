@@ -57,37 +57,37 @@ VarDeclaration<out Object result> =
   Expression<out Object expression> (. result = expression; .)
   .
 
-Expression<out Object result> =
+Expression<out HBExpressionNode result> =
   TernaryExpression<out result>.
 
-TernaryExpression<out Object result> =
-                                                        (. result = null; .)
-  LogicalOrExpression<out Object condOrValueExpression>
+TernaryExpression<out HBExpressionNode result> =
+                                                                  (. result = null; .)
+  LogicalOrExpression<out HBExpressionNode condOrValueExpression>
   [
-    "?" LogicalOrExpression<out Object thenExpression>
-    ":" LogicalOrExpression<out Object elseExpression>
+    "?" LogicalOrExpression<out HBExpressionNode thenExpression>
+    ":" LogicalOrExpression<out HBExpressionNode elseExpression>
   ]
   .
 
-LogicalOrExpression<out Object result> =  (. result = null; .)
-  LogicalAndExpression<out Object left>
+LogicalOrExpression<out HBExpressionNode result> =  (. result = null; .)
+  LogicalAndExpression<out HBExpressionNode left>
   [
     "||"
-    LogicalOrExpression<out Object right>
+    LogicalOrExpression<out HBExpressionNode right>
   ]
   .
 
-LogicalAndExpression<out Object result> =  (. result = null; .)
+LogicalAndExpression<out HBExpressionNode result> =  (. result = null; .)
   GroupOrTupleExpression
   [
     "&&"
-    LogicalAndExpression<out Object right>
+    LogicalAndExpression<out HBExpressionNode right>
   ]
   .
 
 GroupOrTupleExpression =
     (
-                                                       (. boolean isTuple = false; .)
+                                               (. boolean isTuple = false; .)
       "("
       Expression<out Object expression>
       [
@@ -122,16 +122,16 @@ Atom<out HBExpressionNode result> =
   .
 
 Suffix<out Object result, Object parent> =
-                                          (. result = null; .)
+                                         (. result = null; .)
   (
       (
-          "("                             (. Object parameter;
-                                             List<Object> parameters = new ArrayList<>(); .)
+          "("                            (. HBExpressionNode parameter;
+                                            List<HBExpressionNode> parameters = new ArrayList<>(); .)
           [
-            Expression<out parameter>     (. parameters.add(parameter); .)
+            Expression<out parameter>    (. parameters.add(parameter); .)
             {
               ","
-              Expression<out parameter>   (. parameters.add(parameter); .)
+              Expression<out parameter>  (. parameters.add(parameter); .)
             }
           ]
           ")"
@@ -154,7 +154,7 @@ Suffix<out Object result, Object parent> =
 
 Assignment =
   "="
-  Expression<out Object newValue>
+  Expression<out HBExpressionNode newValue>
   .
 
 END Syntax.
