@@ -136,7 +136,7 @@ public class Parser {
 
 	Object  Expression() {
 		Object  result;
-		result = AssignmentExpression();
+		result = TernaryExpression();
 		return result;
 	}
 
@@ -144,17 +144,6 @@ public class Parser {
 		Token  result;
 		Expect(1);
 		result = t;
-		return result;
-	}
-
-	Object  AssignmentExpression() {
-		Object  result;
-		result = null;
-		Object expression = TernaryExpression();
-		if (la.kind == 4) {
-			Get();
-			Object newValue = Expression();
-		}
 		return result;
 	}
 
@@ -199,15 +188,17 @@ public class Parser {
 			Object expression = Expression();
 			Expect(10);
 		} else if (la.kind == 1) {
-			SuffixExpression();
+			Object result = SuffixExpression();
 		} else SynErr(17);
 	}
 
-	void SuffixExpression() {
+	Object  SuffixExpression() {
+		Object  result;
 		Token atom = Atom();
-		if (la.kind == 9 || la.kind == 12 || la.kind == 14) {
+		if (StartOf(1)) {
 			Object result = Suffix(atom);
 		}
+		return result;
 	}
 
 	Token  Atom() {
@@ -219,32 +210,41 @@ public class Parser {
 	Object  Suffix(Object parent) {
 		Object  result;
 		result = null;
-		if (la.kind == 9) {
-			Get();
-			Object parameter;
-			List<Object> parameters = new ArrayList<>();
-			if (la.kind == 1 || la.kind == 9) {
-				parameter = Expression();
-				parameters.add(parameter);
-				while (la.kind == 11) {
-					Get();
+		if (la.kind == 9 || la.kind == 12 || la.kind == 14) {
+			if (la.kind == 9) {
+				Get();
+				Object parameter;
+				List<Object> parameters = new ArrayList<>();
+				if (la.kind == 1 || la.kind == 9) {
 					parameter = Expression();
 					parameters.add(parameter);
+					while (la.kind == 11) {
+						Get();
+						parameter = Expression();
+						parameters.add(parameter);
+					}
 				}
+				Expect(10);
+			} else if (la.kind == 12) {
+				Get();
+				Object indexer = Expression();
+				Expect(13);
+			} else {
+				Get();
+				Object property = Identifier();
 			}
-			Expect(10);
-		} else if (la.kind == 12) {
-			Get();
-			Object indexer = Expression();
-			Expect(13);
-		} else if (la.kind == 14) {
-			Get();
-			Object property = Identifier();
+			if (StartOf(1)) {
+				result = Suffix(result);
+			}
+		} else if (la.kind == 4) {
+			Assignment();
 		} else SynErr(18);
-		if (la.kind == 9 || la.kind == 12 || la.kind == 14) {
-			result = Suffix(result);
-		}
 		return result;
+	}
+
+	void Assignment() {
+		Expect(4);
+		Object newValue = Expression();
 	}
 
 
@@ -260,7 +260,8 @@ public class Parser {
 	}
 
 	private static final boolean[][] set = {
-		{_T,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x}
+		{_T,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x},
+		{_x,_x,_x,_x, _T,_x,_x,_x, _x,_T,_x,_x, _T,_x,_T,_x, _x}
 
 	};
 } // end Parser

@@ -62,15 +62,7 @@ Identifier<out Token result> =
   .
 
 Expression<out Object result> =
-  AssignmentExpression<out result>.
-
-AssignmentExpression<out Object result> =  (. result = null; .)
-  TernaryExpression<out Object expression>
-  [
-    "="
-    Expression<out Object newValue>
-  ]
-  .
+  TernaryExpression<out result>.
 
 TernaryExpression<out Object result> =
                                                         (. result = null; .)
@@ -102,10 +94,10 @@ GroupExpression =
       "(" Expression<out Object expression> ")"
     )
   |
-    SuffixExpression
+    SuffixExpression<out Object result>
   .
 
-SuffixExpression =
+SuffixExpression<out Object result> =
   Atom<out Token atom>
   [
     Suffix<out Object result, atom>
@@ -116,29 +108,39 @@ Atom<out Token result> =
   Identifier<out result>.
 
 Suffix<out Object result, Object parent> =
-                                    (. result = null; .)
+                                          (. result = null; .)
   (
-      "("                           (. Object parameter;
-                                       List<Object> parameters = new ArrayList<>(); .)
+      (
+          "("                             (. Object parameter;
+                                             List<Object> parameters = new ArrayList<>(); .)
+          [
+            Expression<out parameter>     (. parameters.add(parameter); .)
+            {
+              ","
+              Expression<out parameter>   (. parameters.add(parameter); .)
+            }
+          ]
+          ")"
+        |
+          "["
+          Expression<out Object indexer>
+          "]"
+        |
+          "."
+          Identifier<out Object property>
+      )
       [
-        Expression<out parameter>   (. parameters.add(parameter); .)
-        {
-          ","
-          Expression<out parameter> (. parameters.add(parameter); .)
-        }
+        Suffix<out result, result>
       ]
-      ")"
     |
-      "["
-      Expression<out Object indexer>
-      "]"
-    |
-      "."
-      Identifier<out Object property>
+      // Assignment must be last so we avoid the recursive branch.
+      Assignment
   )
-  [
-    Suffix<out result, result>
-  ]
+  .
+
+Assignment =
+  "="
+  Expression<out Object newValue>
   .
 
 END Syntax.
