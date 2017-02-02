@@ -135,14 +135,14 @@ Suffix<out HBExpressionNode result, HBExpressionNode parent> =
               Expression<out parameter>                        (. parameters.add(parameter); .)
             }
           ]
-          ")"                                                  (. result = new HBCallNode(parent, parameters.toArray(new HBExpressionNode[parameters.size()])); .)
+          ")"                                                  (. result = HBCallNodeFactory.create(parent, parameters); .)
         |
           "["
-          Expression<out Object indexer>
-          "]"
+          Expression<out HBExpressionNode index>
+          "]"                                                  (. result = new HBIndexerNode(parent, index); .)
         |
           "."
-          identifier
+          identifier                                           (. result = new HBPropertyNode(parent, t); .)
       )
       [
         Suffix<out result, result>

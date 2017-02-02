@@ -7,7 +7,7 @@ public class HBIdentifierNode extends HBExpressionNode {
   private final String name;
 
   public HBIdentifierNode(Token token) {
-    name = token.val;
+    this.name = token.val;
   }
 
   @Override

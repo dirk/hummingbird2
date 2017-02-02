@@ -243,14 +243,16 @@ public class Parser {
 					}
 				}
 				Expect(11);
-				result = new HBCallNode(parent, parameters.toArray(new HBExpressionNode[parameters.size()]));
+				result = HBCallNodeFactory.create(parent, parameters);
 			} else if (la.kind == 12) {
 				Get();
-				Object indexer = Expression();
+				HBExpressionNode index = Expression();
 				Expect(13);
+				result = new HBIndexerNode(parent, index);
 			} else {
 				Get();
 				Expect(1);
+				result = new HBPropertyNode(parent, t);
 			}
 			if (StartOf(1)) {
 				result = Suffix(result);
