@@ -26,6 +26,20 @@ public final class HBLanguage extends TruffleLanguage<HBContext> {
     return new HBContext(env, in, out);
   }
 
+  @Override
+  protected CallTarget parse(ParsingRequest request) throws Exception {
+    Source source = request.getSource();
+    Object program = ParserWrapper.parse(source);
+    return null;
+  }
+
+  @Override
+  protected CallTarget parse(Source source, Node node, String... argumentNames) throws Exception {
+    Object program = ParserWrapper.parse(source);
+    System.out.println(program.toString());
+    return null;
+  }
+
   // Called when some other language is seeking for a global symbol.
   @Override
   protected Object findExportedSymbol(HBContext context, String globalName, boolean onlyExplicit) {

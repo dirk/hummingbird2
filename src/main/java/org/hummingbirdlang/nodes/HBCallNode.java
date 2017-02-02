@@ -4,7 +4,7 @@ import com.oracle.truffle.api.frame.VirtualFrame;
 
 public class HBCallNode extends HBExpressionNode {
   @Child private HBExpressionNode targetNode;
-  @Children private HBExpressionNode[] parameterNodes;
+  @Children private final HBExpressionNode[] parameterNodes;
 
   public HBCallNode(HBExpressionNode targetNode, HBExpressionNode[] parameterNodes) {
     this.targetNode = targetNode;

@@ -4,12 +4,16 @@ package org.hummingbirdlang;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.oracle.truffle.api.source.Source;
+
 public class Parser {
 	public static final int _EOF = 0;
 	public static final int _identifier = 1;
 	public static final int _let = 2;
 	public static final int _var = 3;
-	public static final int maxT = 15;
+	public static final int _lf = 4;
+	public static final int _semicolon = 5;
+	public static final int maxT = 17;
 
 	static final boolean _T = true;
 	static final boolean _x = false;
@@ -21,13 +25,20 @@ public class Parser {
 
 	public Scanner scanner;
 	public Errors errors;
+	private Source source;
 	private Object program;
 
 	
 
-	public Parser(Scanner scanner) {
-		this.scanner = scanner;
-		errors = new Errors();
+	// public Parser(Scanner scanner) {
+	// 	this.scanner = scanner;
+	// 	errors = new Errors();
+	// }
+
+	public Parser(Source source) {
+		this.scanner = new Scanner(source.getInputStream());
+		this.source = source;
+		this.errors = new Errors();
 	}
 
 	void SynErr (int n) {
@@ -84,52 +95,59 @@ public class Parser {
 	}
 
 	void Syntax() {
-		Object statements = Program();
+		Object statements = Source();
 		this.program = statements;
 	}
 
-	Object  Program() {
+	Object  Source() {
 		Object  result;
-		result = ProgramStatements();
+		HBStatementNode[] statements = SourceStatements();
+		result = HBSourceRootNodeFactory.create(source.createUnavailableSection(), statements);
 		return result;
 	}
 
-	Object  ProgramStatements() {
-		Object  result;
-		List<Object> body = new ArrayList<>();
-		while (la.kind == 2 || la.kind == 3) {
-			Object statement = Statement();
+	HBStatementNode[]  SourceStatements() {
+		HBStatementNode[]  result;
+		List<HBStatementNode> body = new ArrayList<>();
+		while (StartOf(1)) {
+			HBStatementNode statement = Statement();
 			body.add(statement);
 		}
-		result = body;
+		result = body.toArray(new HBStatementNode[body.size()]);
 		return result;
 	}
 
-	Object  Statement() {
-		Object  result;
+	HBStatementNode  Statement() {
+		HBStatementNode  result;
 		result = null;
 		if (la.kind == 2) {
 			result = LetDeclaration();
 		} else if (la.kind == 3) {
 			result = VarDeclaration();
-		} else SynErr(16);
+		} else if (la.kind == 1 || la.kind == 11) {
+			result = Expression();
+		} else SynErr(18);
+		Terminator();
+		while (la.kind == 4 || la.kind == 5) {
+			Terminator();
+		}
 		return result;
 	}
 
-	Object  LetDeclaration() {
-		Object  result;
+	HBStatementNode  LetDeclaration() {
+		HBStatementNode  result;
 		Expect(2);
-		Expect(4);
-		Object expression = Expression();
+		Expect(6);
+		HBExpressionNode expression = Expression();
 		result = expression;
 		return result;
 	}
 
-	Object  VarDeclaration() {
-		Object  result;
+	HBStatementNode  VarDeclaration() {
+		HBStatementNode  result;
 		Expect(3);
-		Expect(4);
-		Object expression = Expression();
+		Expect(6);
+		HBExpressionNode expression = Expression();
 		result = expression;
 		return result;
 	}
@@ -140,15 +158,24 @@ public class Parser {
 		return result;
 	}
 
+	void Terminator() {
+		if (la.kind == 4) {
+			Get();
+		} else if (la.kind == 5) {
+			Get();
+		} else SynErr(19);
+	}
+
 	HBExpressionNode  TernaryExpression() {
 		HBExpressionNode  result;
 		result = null;
-		HBExpressionNode condOrValueExpression = LogicalOrExpression();
-		if (la.kind == 5) {
+		HBExpressionNode condOrValue = LogicalOrExpression();
+		result = condOrValue;
+		if (la.kind == 7) {
 			Get();
-			HBExpressionNode thenExpression = LogicalOrExpression();
-			Expect(6);
-			HBExpressionNode elseExpression = LogicalOrExpression();
+			HBExpressionNode then = LogicalOrExpression();
+			Expect(8);
+			HBExpressionNode els = LogicalOrExpression();
 		}
 		return result;
 	}
@@ -157,9 +184,11 @@ public class Parser {
 		HBExpressionNode  result;
 		result = null;
 		HBExpressionNode left = LogicalAndExpression();
-		if (la.kind == 7) {
+		result = left;
+		if (la.kind == 9) {
 			Get();
 			HBExpressionNode right = LogicalOrExpression();
+			result = new HBLogicalOrNode(left, right);
 		}
 		return result;
 	}
@@ -169,7 +198,7 @@ public class Parser {
 		result = null;
 		HBExpressionNode left = GroupOrTupleExpression();
 		result = left;
-		if (la.kind == 8) {
+		if (la.kind == 10) {
 			Get();
 			HBExpressionNode right = LogicalAndExpression();
 			result = new HBLogicalAndNode(left, right);
@@ -180,31 +209,31 @@ public class Parser {
 	HBExpressionNode  GroupOrTupleExpression() {
 		HBExpressionNode  result;
 		result = null;
-		if (la.kind == 9) {
+		if (la.kind == 11) {
 			boolean isTuple = false;
 			Get();
 			Object expression = Expression();
-			if (la.kind == 10) {
+			if (la.kind == 12) {
 				isTuple = true;
 				List<Object> elements = new ArrayList<>();
 				elements.add(expression);
 				Get();
-				if (la.kind == 1 || la.kind == 9) {
+				if (la.kind == 1 || la.kind == 11) {
 					Object secondElement = Expression();
 					elements.add(secondElement);
-					while (la.kind == 10) {
+					while (la.kind == 12) {
 						Get();
 						Object nextElement = Expression();
 						elements.add(nextElement);
 					}
 				}
 			}
-			Expect(11);
+			Expect(13);
 			result = null; /* TODO: Tuple expression! */
 		} else if (la.kind == 1) {
 			HBExpressionNode suffix = SuffixExpression();
 			result = suffix;
-		} else SynErr(17);
+		} else SynErr(20);
 		return result;
 	}
 
@@ -212,7 +241,7 @@ public class Parser {
 		HBExpressionNode  result;
 		HBExpressionNode atom = Atom();
 		result = atom;
-		if (StartOf(1)) {
+		if (StartOf(2)) {
 			result = Suffix(atom);
 		}
 		return result;
@@ -228,45 +257,45 @@ public class Parser {
 	HBExpressionNode  Suffix(HBExpressionNode parent) {
 		HBExpressionNode  result;
 		result = null;
-		if (la.kind == 9 || la.kind == 12 || la.kind == 14) {
-			if (la.kind == 9) {
+		if (la.kind == 11 || la.kind == 14 || la.kind == 16) {
+			if (la.kind == 11) {
 				Get();
 				HBExpressionNode parameter;
 				List<HBExpressionNode> parameters = new ArrayList<>();
-				if (la.kind == 1 || la.kind == 9) {
+				if (la.kind == 1 || la.kind == 11) {
 					parameter = Expression();
 					parameters.add(parameter);
-					while (la.kind == 10) {
+					while (la.kind == 12) {
 						Get();
 						parameter = Expression();
 						parameters.add(parameter);
 					}
 				}
-				Expect(11);
+				Expect(13);
 				result = HBCallNodeFactory.create(parent, parameters);
-			} else if (la.kind == 12) {
+			} else if (la.kind == 14) {
 				Get();
 				HBExpressionNode index = Expression();
-				Expect(13);
+				Expect(15);
 				result = new HBIndexerNode(parent, index);
 			} else {
 				Get();
 				Expect(1);
 				result = new HBPropertyNode(parent, t);
 			}
-			if (StartOf(1)) {
+			if (StartOf(2)) {
 				result = Suffix(result);
 			}
-		} else if (la.kind == 4) {
+		} else if (la.kind == 6) {
 			HBExpressionNode newValue = Assignment();
 			result = new HBAssignmentNode(parent, newValue);
-		} else SynErr(18);
+		} else SynErr(21);
 		return result;
 	}
 
 	HBExpressionNode  Assignment() {
 		HBExpressionNode  newValue;
-		Expect(4);
+		Expect(6);
 		newValue = Expression();
 		return newValue;
 	}
@@ -284,8 +313,9 @@ public class Parser {
 	}
 
 	private static final boolean[][] set = {
-		{_T,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x},
-		{_x,_x,_x,_x, _T,_x,_x,_x, _x,_T,_x,_x, _T,_x,_T,_x, _x}
+		{_T,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x},
+		{_x,_T,_T,_T, _x,_x,_x,_x, _x,_x,_x,_T, _x,_x,_x,_x, _x,_x,_x},
+		{_x,_x,_x,_x, _x,_x,_T,_x, _x,_x,_x,_T, _x,_x,_T,_x, _T,_x,_x}
 
 	};
 } // end Parser
@@ -314,21 +344,24 @@ class Errors {
 			case 1: s = "identifier expected"; break;
 			case 2: s = "let expected"; break;
 			case 3: s = "var expected"; break;
-			case 4: s = "\"=\" expected"; break;
-			case 5: s = "\"?\" expected"; break;
-			case 6: s = "\":\" expected"; break;
-			case 7: s = "\"||\" expected"; break;
-			case 8: s = "\"&&\" expected"; break;
-			case 9: s = "\"(\" expected"; break;
-			case 10: s = "\",\" expected"; break;
-			case 11: s = "\")\" expected"; break;
-			case 12: s = "\"[\" expected"; break;
-			case 13: s = "\"]\" expected"; break;
-			case 14: s = "\".\" expected"; break;
-			case 15: s = "??? expected"; break;
-			case 16: s = "invalid Statement"; break;
-			case 17: s = "invalid GroupOrTupleExpression"; break;
-			case 18: s = "invalid Suffix"; break;
+			case 4: s = "lf expected"; break;
+			case 5: s = "semicolon expected"; break;
+			case 6: s = "\"=\" expected"; break;
+			case 7: s = "\"?\" expected"; break;
+			case 8: s = "\":\" expected"; break;
+			case 9: s = "\"||\" expected"; break;
+			case 10: s = "\"&&\" expected"; break;
+			case 11: s = "\"(\" expected"; break;
+			case 12: s = "\",\" expected"; break;
+			case 13: s = "\")\" expected"; break;
+			case 14: s = "\"[\" expected"; break;
+			case 15: s = "\"]\" expected"; break;
+			case 16: s = "\".\" expected"; break;
+			case 17: s = "??? expected"; break;
+			case 18: s = "invalid Statement"; break;
+			case 19: s = "invalid Terminator"; break;
+			case 20: s = "invalid GroupOrTupleExpression"; break;
+			case 21: s = "invalid Suffix"; break;
 			default: s = "error " + n; break;
 		}
 		printMsg(line, col, s);

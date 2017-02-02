@@ -1,5 +1,8 @@
 package org.hummingbirdlang;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 import com.oracle.truffle.api.frame.VirtualFrame;
 
 public class HBBlockNode extends HBStatementNode {
@@ -14,5 +17,11 @@ public class HBBlockNode extends HBStatementNode {
     for (HBStatementNode bodyNode : bodyNodes) {
       bodyNode.executeVoid(frame);
     }
+  }
+
+  @Override
+  public String toString() {
+    List<String> nodes = Arrays.stream(this.bodyNodes).map(n -> String.valueOf(n)).collect(Collectors.toList());
+    return "{" + String.join(", ", nodes) + "}";
   }
 }

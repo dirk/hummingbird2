@@ -12,68 +12,79 @@ stringChar = ANY - "\"" - '\\' - cr - lf.
 
 TOKENS
 
-identifier = letter {letter | digit}.
+identifier = letter {letter | digit | "_"}.
 let = "let".
 var = "var".
+lf = lf.
+semicolon = ";".
 
 COMMENTS FROM "//" TO lf
 COMMENTS FROM "/*" TO "*/"
 
+IGNORE cr
+
 PRODUCTIONS
 
 Syntax =
-  Program<out Object statements>
+  Source<out Object statements>
                                  (. this.program = statements; .)
   .
 
-Program<out Object result> =
-  ProgramStatements<out result>.
+Source<out Object result> =
+  SourceStatements<out HBStatementNode[] statements> (. result = HBSourceRootNodeFactory.create(source.createUnavailableSection(), statements); .).
 
-ProgramStatements<out Object result> =
-                                    (. List<Object> body = new ArrayList<>(); .)
+SourceStatements<out HBStatementNode[] result> =
+                                             (. List<HBStatementNode> body = new ArrayList<>(); .)
   {
-    Statement<out Object statement> (. body.add(statement); .)
+    Statement<out HBStatementNode statement> (. body.add(statement); .)
   }
-                                    (. result = body; .)
+                                             (. result = body.toArray(new HBStatementNode[body.size()]); .)
   .
 
-Statement<out Object result> =
+Statement<out HBStatementNode result> =
                                  (. result = null; .)
   (
       LetDeclaration<out result>
     | VarDeclaration<out result>
+    | Expression<out result>
   )
+  Terminator
+  { Terminator } // More than one terminator is fine.
   .
 
-LetDeclaration<out Object result> =
+Terminator =
+  lf | semicolon
+  .
+
+LetDeclaration<out HBStatementNode result> =
   let
   "="
-  Expression<out Object expression> (. result = expression; .)
+  Expression<out HBExpressionNode expression> (. result = expression; .)
   .
 
-VarDeclaration<out Object result> =
+VarDeclaration<out HBStatementNode result> =
   var
   "="
-  Expression<out Object expression> (. result = expression; .)
+  Expression<out HBExpressionNode expression> (. result = expression; .)
   .
 
 Expression<out HBExpressionNode result> =
   TernaryExpression<out result>.
 
 TernaryExpression<out HBExpressionNode result> =
-                                                                  (. result = null; .)
-  LogicalOrExpression<out HBExpressionNode condOrValueExpression>
+                                                        (. result = null; .)
+  LogicalOrExpression<out HBExpressionNode condOrValue> (. result = condOrValue; .)
   [
-    "?" LogicalOrExpression<out HBExpressionNode thenExpression>
-    ":" LogicalOrExpression<out HBExpressionNode elseExpression>
+    "?" LogicalOrExpression<out HBExpressionNode then>
+    ":" LogicalOrExpression<out HBExpressionNode els>
   ]
   .
 
 LogicalOrExpression<out HBExpressionNode result> =  (. result = null; .)
-  LogicalAndExpression<out HBExpressionNode left>
+  LogicalAndExpression<out HBExpressionNode left>   (. result = left; .)
   [
     "||"
-    LogicalOrExpression<out HBExpressionNode right>
+    LogicalOrExpression<out HBExpressionNode right> (. result = new HBLogicalOrNode(left, right); .)
   ]
   .
 
