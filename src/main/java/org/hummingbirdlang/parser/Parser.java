@@ -167,15 +167,19 @@ public class Parser {
 	HBExpressionNode  LogicalAndExpression() {
 		HBExpressionNode  result;
 		result = null;
-		GroupOrTupleExpression();
+		HBExpressionNode left = GroupOrTupleExpression();
+		result = left;
 		if (la.kind == 8) {
 			Get();
 			HBExpressionNode right = LogicalAndExpression();
+			result = new HBLogicalAndNode(left, right);
 		}
 		return result;
 	}
 
-	void GroupOrTupleExpression() {
+	HBExpressionNode  GroupOrTupleExpression() {
+		HBExpressionNode  result;
+		result = null;
 		if (la.kind == 9) {
 			boolean isTuple = false;
 			Get();
@@ -196,13 +200,16 @@ public class Parser {
 				}
 			}
 			Expect(11);
+			result = null; /* TODO: Tuple expression! */
 		} else if (la.kind == 1) {
-			Object result = SuffixExpression();
+			HBExpressionNode suffix = SuffixExpression();
+			result = suffix;
 		} else SynErr(17);
+		return result;
 	}
 
-	Object  SuffixExpression() {
-		Object  result;
+	HBExpressionNode  SuffixExpression() {
+		HBExpressionNode  result;
 		result = null;
 		HBExpressionNode atom = Atom();
 		if (StartOf(1)) {
@@ -218,8 +225,8 @@ public class Parser {
 		return result;
 	}
 
-	Object  Suffix(Object parent) {
-		Object  result;
+	HBExpressionNode  Suffix(HBExpressionNode parent) {
+		HBExpressionNode  result;
 		result = null;
 		if (la.kind == 9 || la.kind == 12 || la.kind == 14) {
 			if (la.kind == 9) {
@@ -236,6 +243,7 @@ public class Parser {
 					}
 				}
 				Expect(11);
+				result = new HBCallNode(parent, parameters.toArray(new HBExpressionNode[parameters.size()]));
 			} else if (la.kind == 12) {
 				Get();
 				Object indexer = Expression();

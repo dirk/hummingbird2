@@ -78,39 +78,40 @@ LogicalOrExpression<out HBExpressionNode result> =  (. result = null; .)
   .
 
 LogicalAndExpression<out HBExpressionNode result> =  (. result = null; .)
-  GroupOrTupleExpression
+  GroupOrTupleExpression<out HBExpressionNode left>  (. result = left; .)
   [
     "&&"
-    LogicalAndExpression<out HBExpressionNode right>
+    LogicalAndExpression<out HBExpressionNode right> (. result = new HBLogicalAndNode(left, right); .)
   ]
   .
 
-GroupOrTupleExpression =
+GroupOrTupleExpression<out HBExpressionNode result> = (. result = null; .)
+  (
     (
-                                               (. boolean isTuple = false; .)
+                                                      (. boolean isTuple = false; .)
       "("
       Expression<out Object expression>
       [
-                                               (. isTuple = true;
-                                                  List<Object> elements = new ArrayList<>();
-                                                  elements.add(expression); .)
+                                                      (. isTuple = true;
+                                                         List<Object> elements = new ArrayList<>();
+                                                         elements.add(expression); .)
         ","
         [
-          Expression<out Object secondElement> (. elements.add(secondElement); .)
+          Expression<out Object secondElement>        (. elements.add(secondElement); .)
           {
             ","
-            Expression<out Object nextElement> (. elements.add(nextElement); .)
+            Expression<out Object nextElement>        (. elements.add(nextElement); .)
           }
         ]
       ]
       ")"
-    )
+    )                                                 (. result = null; /* TODO: Tuple expression! */ .)
   |
-    SuffixExpression<out Object result>
+    SuffixExpression<out HBExpressionNode suffix>     (. result = suffix; .)
+  )
   .
 
-SuffixExpression<out Object result> =
-                                  (. result = null; .)
+SuffixExpression<out HBExpressionNode result> = (. result = null; .)
   Atom<out HBExpressionNode atom>
   [
     Suffix<out result, atom>
@@ -121,20 +122,20 @@ Atom<out HBExpressionNode result> =
   identifier (. result = new HBIdentifierNode(t); .)
   .
 
-Suffix<out Object result, Object parent> =
-                                         (. result = null; .)
+Suffix<out HBExpressionNode result, HBExpressionNode parent> =
+                                                               (. result = null; .)
   (
       (
-          "("                            (. HBExpressionNode parameter;
-                                            List<HBExpressionNode> parameters = new ArrayList<>(); .)
+          "("                                                  (. HBExpressionNode parameter;
+                                                                  List<HBExpressionNode> parameters = new ArrayList<>(); .)
           [
-            Expression<out parameter>    (. parameters.add(parameter); .)
+            Expression<out parameter>                          (. parameters.add(parameter); .)
             {
               ","
-              Expression<out parameter>  (. parameters.add(parameter); .)
+              Expression<out parameter>                        (. parameters.add(parameter); .)
             }
           ]
-          ")"
+          ")"                                                  (. result = new HBCallNode(parent, parameters.toArray(new HBExpressionNode[parameters.size()])); .)
         |
           "["
           Expression<out Object indexer>
