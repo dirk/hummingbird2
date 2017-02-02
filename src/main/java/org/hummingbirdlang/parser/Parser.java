@@ -210,8 +210,8 @@ public class Parser {
 
 	HBExpressionNode  SuffixExpression() {
 		HBExpressionNode  result;
-		result = null;
 		HBExpressionNode atom = Atom();
+		result = atom;
 		if (StartOf(1)) {
 			result = Suffix(atom);
 		}
@@ -258,14 +258,17 @@ public class Parser {
 				result = Suffix(result);
 			}
 		} else if (la.kind == 4) {
-			Assignment();
+			HBExpressionNode newValue = Assignment();
+			result = new HBAssignmentNode(parent, newValue);
 		} else SynErr(18);
 		return result;
 	}
 
-	void Assignment() {
+	HBExpressionNode  Assignment() {
+		HBExpressionNode  newValue;
 		Expect(4);
-		HBExpressionNode newValue = Expression();
+		newValue = Expression();
+		return newValue;
 	}
 
 

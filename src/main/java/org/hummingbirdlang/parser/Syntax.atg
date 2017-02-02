@@ -111,8 +111,8 @@ GroupOrTupleExpression<out HBExpressionNode result> = (. result = null; .)
   )
   .
 
-SuffixExpression<out HBExpressionNode result> = (. result = null; .)
-  Atom<out HBExpressionNode atom>
+SuffixExpression<out HBExpressionNode result> =
+  Atom<out HBExpressionNode atom>               (. result = atom; .)
   [
     Suffix<out result, atom>
   ]
@@ -149,13 +149,13 @@ Suffix<out HBExpressionNode result, HBExpressionNode parent> =
       ]
     |
       // Assignment must be last so we avoid the recursive branch.
-      Assignment
+      Assignment<out HBExpressionNode newValue>                (. result = new HBAssignmentNode(parent, newValue); .)
   )
   .
 
-Assignment =
+Assignment<out HBExpressionNode newValue> =
   "="
-  Expression<out HBExpressionNode newValue>
+  Expression<out newValue>
   .
 
 END Syntax.
