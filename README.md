@@ -12,3 +12,7 @@ This is an iteration of the [Hummingbird 1 project][]. It seeks to build on core
 - **Accessible tooling**: the Language Server protocol is an excellent starting point. The complexities of specializing JIT compilers enforces a sizable start-up penalty on tools. Therefore the ecosystem should be built with this in mind and seek to avoid time penalties (through strategies like compilers-as-language-servers and ahead-of-time compilation).
 
 [design document]: DESIGN.md
+
+## License
+
+Released under the Modified BSD License. See [LICENSE](LICENSE) for details.
