@@ -252,8 +252,8 @@ class StartStates {
 public class Scanner {
 	static final char EOL = '\n';
 	static final int  eofSym = 0;
-	static final int maxT = 17;
-	static final int noSym = 17;
+	static final int maxT = 19;
+	static final int noSym = 19;
 
 
 	public Buffer buffer; // scanner buffer
@@ -281,21 +281,23 @@ public class Scanner {
 		for (int i = 65; i <= 90; ++i) start.set(i, 1);
 		for (int i = 97; i <= 122; ++i) start.set(i, 1);
 		for (int i = 10; i <= 10; ++i) start.set(i, 2);
+		for (int i = 48; i <= 57; ++i) start.set(i, 4);
 		start.set(59, 3);
-		start.set(61, 4);
-		start.set(63, 5);
-		start.set(58, 6);
-		start.set(124, 7);
-		start.set(38, 9);
-		start.set(40, 11);
-		start.set(44, 12);
-		start.set(41, 13);
-		start.set(91, 14);
-		start.set(93, 15);
-		start.set(46, 16);
+		start.set(46, 5);
+		start.set(61, 6);
+		start.set(63, 7);
+		start.set(58, 8);
+		start.set(124, 9);
+		start.set(38, 11);
+		start.set(40, 13);
+		start.set(44, 14);
+		start.set(41, 15);
+		start.set(91, 16);
+		start.set(93, 17);
 		start.set(Buffer.EOF, -1);
 		literals.put("let", new Integer(2));
 		literals.put("var", new Integer(3));
+		literals.put(".", new Integer(16));
 
 	}
 
@@ -438,21 +440,23 @@ public class Scanner {
 				case 4:
 					{t.kind = 6; break loop;}
 				case 5:
-					{t.kind = 7; break loop;}
+					recEnd = pos; recKind = 7;
+					if (ch >= '0' && ch <= '9') {AddCh(); state = 5; break;}
+					else {t.kind = 7; t.val = new String(tval, 0, tlen); CheckLiteral(); return t;}
 				case 6:
 					{t.kind = 8; break loop;}
 				case 7:
-					if (ch == '|') {AddCh(); state = 8; break;}
-					else {state = 0; break;}
-				case 8:
 					{t.kind = 9; break loop;}
+				case 8:
+					{t.kind = 10; break loop;}
 				case 9:
-					if (ch == '&') {AddCh(); state = 10; break;}
+					if (ch == '|') {AddCh(); state = 10; break;}
 					else {state = 0; break;}
 				case 10:
-					{t.kind = 10; break loop;}
-				case 11:
 					{t.kind = 11; break loop;}
+				case 11:
+					if (ch == '&') {AddCh(); state = 12; break;}
+					else {state = 0; break;}
 				case 12:
 					{t.kind = 12; break loop;}
 				case 13:
@@ -462,7 +466,9 @@ public class Scanner {
 				case 15:
 					{t.kind = 15; break loop;}
 				case 16:
-					{t.kind = 16; break loop;}
+					{t.kind = 17; break loop;}
+				case 17:
+					{t.kind = 18; break loop;}
 
 			}
 		}

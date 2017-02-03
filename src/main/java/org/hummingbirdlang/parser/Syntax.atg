@@ -17,6 +17,8 @@ let = "let".
 var = "var".
 lf = lf.
 semicolon = ";".
+integerLiteral = "0" | nonZeroDigit.
+floatFractional = "." {digit}.
 
 COMMENTS FROM "//" TO lf
 COMMENTS FROM "/*" TO "*/"
@@ -130,7 +132,32 @@ SuffixExpression<out HBExpressionNode result> =
   .
 
 Atom<out HBExpressionNode result> =
+                                 (. result = null; .)
+  (
+      IdentifierAtom<out result>
+    | NumericAtom<out result>
+  )
+  .
+
+IdentifierAtom<out HBExpressionNode result> =
   identifier (. result = new HBIdentifierNode(t); .)
+  .
+
+NumericAtom<out HBExpressionNode result> =
+                          (. result = null; .)
+  (
+    integerLiteral        (. StringBuilder number = new StringBuilder(t.val); .)
+    (
+      // No decimal, so it's an int.
+                          (. result = new HBIntegerLiteralNode(number.toString()); .)
+      |
+        "."               (. number.append(t.val); .)
+        {
+          floatFractional (. number.append(t.val); .)
+        }
+                          (. result = new HBFloatLiteralNode(number.toString()); .)
+    )
+  )
   .
 
 Suffix<out HBExpressionNode result, HBExpressionNode parent> =

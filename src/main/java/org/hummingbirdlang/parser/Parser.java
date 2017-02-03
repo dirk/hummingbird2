@@ -13,7 +13,9 @@ public class Parser {
 	public static final int _var = 3;
 	public static final int _lf = 4;
 	public static final int _semicolon = 5;
-	public static final int maxT = 17;
+	public static final int _integerLiteral = 6;
+	public static final int _floatFractional = 7;
+	public static final int maxT = 19;
 
 	static final boolean _T = true;
 	static final boolean _x = false;
@@ -124,9 +126,9 @@ public class Parser {
 			result = LetDeclaration();
 		} else if (la.kind == 3) {
 			result = VarDeclaration();
-		} else if (la.kind == 1 || la.kind == 11) {
+		} else if (la.kind == 1 || la.kind == 6 || la.kind == 13) {
 			result = Expression();
-		} else SynErr(18);
+		} else SynErr(20);
 		Terminator();
 		while (la.kind == 4 || la.kind == 5) {
 			Terminator();
@@ -137,7 +139,7 @@ public class Parser {
 	HBStatementNode  LetDeclaration() {
 		HBStatementNode  result;
 		Expect(2);
-		Expect(6);
+		Expect(8);
 		HBExpressionNode expression = Expression();
 		result = expression;
 		return result;
@@ -146,7 +148,7 @@ public class Parser {
 	HBStatementNode  VarDeclaration() {
 		HBStatementNode  result;
 		Expect(3);
-		Expect(6);
+		Expect(8);
 		HBExpressionNode expression = Expression();
 		result = expression;
 		return result;
@@ -163,7 +165,7 @@ public class Parser {
 			Get();
 		} else if (la.kind == 5) {
 			Get();
-		} else SynErr(19);
+		} else SynErr(21);
 	}
 
 	HBExpressionNode  TernaryExpression() {
@@ -171,10 +173,10 @@ public class Parser {
 		result = null;
 		HBExpressionNode condOrValue = LogicalOrExpression();
 		result = condOrValue;
-		if (la.kind == 7) {
+		if (la.kind == 9) {
 			Get();
 			HBExpressionNode then = LogicalOrExpression();
-			Expect(8);
+			Expect(10);
 			HBExpressionNode els = LogicalOrExpression();
 		}
 		return result;
@@ -185,7 +187,7 @@ public class Parser {
 		result = null;
 		HBExpressionNode left = LogicalAndExpression();
 		result = left;
-		if (la.kind == 9) {
+		if (la.kind == 11) {
 			Get();
 			HBExpressionNode right = LogicalOrExpression();
 			result = new HBLogicalOrNode(left, right);
@@ -198,7 +200,7 @@ public class Parser {
 		result = null;
 		HBExpressionNode left = GroupOrTupleExpression();
 		result = left;
-		if (la.kind == 10) {
+		if (la.kind == 12) {
 			Get();
 			HBExpressionNode right = LogicalAndExpression();
 			result = new HBLogicalAndNode(left, right);
@@ -209,31 +211,31 @@ public class Parser {
 	HBExpressionNode  GroupOrTupleExpression() {
 		HBExpressionNode  result;
 		result = null;
-		if (la.kind == 11) {
+		if (la.kind == 13) {
 			boolean isTuple = false;
 			Get();
 			Object expression = Expression();
-			if (la.kind == 12) {
+			if (la.kind == 14) {
 				isTuple = true;
 				List<Object> elements = new ArrayList<>();
 				elements.add(expression);
 				Get();
-				if (la.kind == 1 || la.kind == 11) {
+				if (la.kind == 1 || la.kind == 6 || la.kind == 13) {
 					Object secondElement = Expression();
 					elements.add(secondElement);
-					while (la.kind == 12) {
+					while (la.kind == 14) {
 						Get();
 						Object nextElement = Expression();
 						elements.add(nextElement);
 					}
 				}
 			}
-			Expect(13);
+			Expect(15);
 			result = null; /* TODO: Tuple expression! */
-		} else if (la.kind == 1) {
+		} else if (la.kind == 1 || la.kind == 6) {
 			HBExpressionNode suffix = SuffixExpression();
 			result = suffix;
-		} else SynErr(20);
+		} else SynErr(22);
 		return result;
 	}
 
@@ -249,34 +251,38 @@ public class Parser {
 
 	HBExpressionNode  Atom() {
 		HBExpressionNode  result;
-		Expect(1);
-		result = new HBIdentifierNode(t);
+		result = null;
+		if (la.kind == 1) {
+			result = IdentifierAtom();
+		} else if (la.kind == 6) {
+			result = NumericAtom();
+		} else SynErr(23);
 		return result;
 	}
 
 	HBExpressionNode  Suffix(HBExpressionNode parent) {
 		HBExpressionNode  result;
 		result = null;
-		if (la.kind == 11 || la.kind == 14 || la.kind == 16) {
-			if (la.kind == 11) {
+		if (la.kind == 13 || la.kind == 16 || la.kind == 17) {
+			if (la.kind == 13) {
 				Get();
 				HBExpressionNode parameter;
 				List<HBExpressionNode> parameters = new ArrayList<>();
-				if (la.kind == 1 || la.kind == 11) {
+				if (la.kind == 1 || la.kind == 6 || la.kind == 13) {
 					parameter = Expression();
 					parameters.add(parameter);
-					while (la.kind == 12) {
+					while (la.kind == 14) {
 						Get();
 						parameter = Expression();
 						parameters.add(parameter);
 					}
 				}
-				Expect(13);
+				Expect(15);
 				result = HBCallNodeFactory.create(parent, parameters);
-			} else if (la.kind == 14) {
+			} else if (la.kind == 17) {
 				Get();
 				HBExpressionNode index = Expression();
-				Expect(15);
+				Expect(18);
 				result = new HBIndexerNode(parent, index);
 			} else {
 				Get();
@@ -286,16 +292,42 @@ public class Parser {
 			if (StartOf(2)) {
 				result = Suffix(result);
 			}
-		} else if (la.kind == 6) {
+		} else if (la.kind == 8) {
 			HBExpressionNode newValue = Assignment();
 			result = new HBAssignmentNode(parent, newValue);
-		} else SynErr(21);
+		} else SynErr(24);
+		return result;
+	}
+
+	HBExpressionNode  IdentifierAtom() {
+		HBExpressionNode  result;
+		Expect(1);
+		result = new HBIdentifierNode(t);
+		return result;
+	}
+
+	HBExpressionNode  NumericAtom() {
+		HBExpressionNode  result;
+		result = null;
+		Expect(6);
+		StringBuilder number = new StringBuilder(t.val);
+		if (StartOf(3)) {
+			result = new HBIntegerLiteralNode(number.toString());
+		} else if (la.kind == 16) {
+			Get();
+			number.append(t.val);
+			while (la.kind == 7) {
+				Get();
+				number.append(t.val);
+			}
+			result = new HBFloatLiteralNode(number.toString());
+		} else SynErr(25);
 		return result;
 	}
 
 	HBExpressionNode  Assignment() {
 		HBExpressionNode  newValue;
-		Expect(6);
+		Expect(8);
 		newValue = Expression();
 		return newValue;
 	}
@@ -313,9 +345,10 @@ public class Parser {
 	}
 
 	private static final boolean[][] set = {
-		{_T,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x},
-		{_x,_T,_T,_T, _x,_x,_x,_x, _x,_x,_x,_T, _x,_x,_x,_x, _x,_x,_x},
-		{_x,_x,_x,_x, _x,_x,_T,_x, _x,_x,_x,_T, _x,_x,_T,_x, _T,_x,_x}
+		{_T,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x},
+		{_x,_T,_T,_T, _x,_x,_T,_x, _x,_x,_x,_x, _x,_T,_x,_x, _x,_x,_x,_x, _x},
+		{_x,_x,_x,_x, _x,_x,_x,_x, _T,_x,_x,_x, _x,_T,_x,_x, _T,_T,_x,_x, _x},
+		{_x,_x,_x,_x, _T,_T,_x,_x, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_x, _x}
 
 	};
 } // end Parser
@@ -346,22 +379,26 @@ class Errors {
 			case 3: s = "var expected"; break;
 			case 4: s = "lf expected"; break;
 			case 5: s = "semicolon expected"; break;
-			case 6: s = "\"=\" expected"; break;
-			case 7: s = "\"?\" expected"; break;
-			case 8: s = "\":\" expected"; break;
-			case 9: s = "\"||\" expected"; break;
-			case 10: s = "\"&&\" expected"; break;
-			case 11: s = "\"(\" expected"; break;
-			case 12: s = "\",\" expected"; break;
-			case 13: s = "\")\" expected"; break;
-			case 14: s = "\"[\" expected"; break;
-			case 15: s = "\"]\" expected"; break;
+			case 6: s = "integerLiteral expected"; break;
+			case 7: s = "floatFractional expected"; break;
+			case 8: s = "\"=\" expected"; break;
+			case 9: s = "\"?\" expected"; break;
+			case 10: s = "\":\" expected"; break;
+			case 11: s = "\"||\" expected"; break;
+			case 12: s = "\"&&\" expected"; break;
+			case 13: s = "\"(\" expected"; break;
+			case 14: s = "\",\" expected"; break;
+			case 15: s = "\")\" expected"; break;
 			case 16: s = "\".\" expected"; break;
-			case 17: s = "??? expected"; break;
-			case 18: s = "invalid Statement"; break;
-			case 19: s = "invalid Terminator"; break;
-			case 20: s = "invalid GroupOrTupleExpression"; break;
-			case 21: s = "invalid Suffix"; break;
+			case 17: s = "\"[\" expected"; break;
+			case 18: s = "\"]\" expected"; break;
+			case 19: s = "??? expected"; break;
+			case 20: s = "invalid Statement"; break;
+			case 21: s = "invalid Terminator"; break;
+			case 22: s = "invalid GroupOrTupleExpression"; break;
+			case 23: s = "invalid Atom"; break;
+			case 24: s = "invalid Suffix"; break;
+			case 25: s = "invalid NumericAtom"; break;
 			default: s = "error " + n; break;
 		}
 		printMsg(line, col, s);
