@@ -6,6 +6,4 @@ package org.hummingbirdlang.types;
  * and matched.
  */
 public class CompositeType extends Type {
-  // TODO: Figure out if this is semantically a `superType` or `superClass`.
-  private Type superClass;
 }

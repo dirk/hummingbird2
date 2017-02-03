@@ -10,7 +10,9 @@ package org.hummingbirdlang.types;
  *
  * 2. Composite types: Built-in and user-defined types which can both:
  *    derive (subclass) concrete types and/or compose (tuples & generics)
- *    other types.
+ *    other types. There are a couple structures of composite types:
+ *       - Classes (see ClassType)
+ *       - Tuples (see TupleType)
  *
  * 3. Unknown types: This is how the language supports ad-hoc and parametric
  *    polymorphism. The type-checker and/or run-time will eventually realize
