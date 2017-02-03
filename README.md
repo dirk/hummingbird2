@@ -13,6 +13,18 @@ This is an iteration of the [Hummingbird 1 project][]. It seeks to build on core
 
 [design document]: DESIGN.md
 
+## Navigating the repository
+
+The language system is separated into a few logical parts:
+
+- org/hummingbirdlang: Common Java package namespace.
+  - **nodes**: [AST][] nodes and evaluation logic.
+  - **parser**: Implementation of the parser. The only files users should edit in this directory are `Syntax.atg`, the `.frame` files, and `ParserWrapper.java`.
+  - **types**: The components that make up the type-system.
+    - **realize**: The actual type-inferencing and type-checking algorithms.
+
+[AST]: https://en.wikipedia.org/wiki/Abstract_syntax_tree
+
 ## License
 
 Released under the Modified BSD License. See [LICENSE](LICENSE) for details.
