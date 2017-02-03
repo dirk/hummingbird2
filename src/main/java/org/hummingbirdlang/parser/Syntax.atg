@@ -50,8 +50,12 @@ Statement<out HBStatementNode result> =
     | VarDeclaration<out result>
     | Expression<out result>
   )
+  Terminators // More than one terminator is fine.
+  .
+
+Terminators =
   Terminator
-  { Terminator } // More than one terminator is fine.
+  { Terminator }
   .
 
 Terminator =

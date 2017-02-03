@@ -129,10 +129,7 @@ public class Parser {
 		} else if (la.kind == 1 || la.kind == 6 || la.kind == 13) {
 			result = Expression();
 		} else SynErr(20);
-		Terminator();
-		while (la.kind == 4 || la.kind == 5) {
-			Terminator();
-		}
+		Terminators();
 		return result;
 	}
 
@@ -158,6 +155,13 @@ public class Parser {
 		HBExpressionNode  result;
 		result = TernaryExpression();
 		return result;
+	}
+
+	void Terminators() {
+		Terminator();
+		while (la.kind == 4 || la.kind == 5) {
+			Terminator();
+		}
 	}
 
 	void Terminator() {
