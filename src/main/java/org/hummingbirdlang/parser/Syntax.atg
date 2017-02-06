@@ -15,6 +15,7 @@ TOKENS
 identifier = letter {letter | digit | "_"}.
 let = "let".
 var = "var".
+func = "func".
 lf = lf.
 semicolon = ";".
 integerLiteral = "0" | nonZeroDigit.
@@ -48,6 +49,7 @@ Statement<out HBStatementNode result> =
   (
       LetDeclaration<out result>
     | VarDeclaration<out result>
+    | FunctionDeclaration<out result>
     | Expression<out result>
   )
   Terminators // More than one terminator is fine.
@@ -72,6 +74,29 @@ VarDeclaration<out HBStatementNode result> =
   var
   "="
   Expression<out HBExpressionNode expression> (. result = expression; .)
+  .
+
+FunctionDeclaration<out HBFunctionNode result> =
+  func                         (. int start = t.charPos; .)
+  identifier                   (. String name = t.val; .)
+  "("
+  ")"
+  Block<out HBBlockNode block> (. int length = (t.charPos + t.val.length()) - start;
+                                  result = new HBFunctionNode(
+                                    name,
+                                    block,
+                                    source.createSection(start, length)
+                                  ); .)
+  .
+
+Block<out HBBlockNode result> =
+  "{"
+                                             (. List<HBStatementNode> body = new ArrayList<>(); .)
+  {
+    Statement<out HBStatementNode statement> (. body.add(statement); .)
+  }
+                                             (. result = new HBBlockNode(body.toArray(new HBStatementNode[body.size()])); .)
+  "}"
   .
 
 Expression<out HBExpressionNode result> =
