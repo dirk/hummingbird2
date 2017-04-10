@@ -1,10 +1,12 @@
-package org.hummingbirdlang;
+package org.hummingbirdlang.nodes;
 
 import com.oracle.truffle.api.frame.FrameDescriptor;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.Node;
 import com.oracle.truffle.api.nodes.RootNode;
 import com.oracle.truffle.api.source.SourceSection;
+
+import org.hummingbirdlang.HBLanguage;
 
 public class HBFunctionRootNode extends RootNode {
   @Child private HBBlockNode bodyNode;

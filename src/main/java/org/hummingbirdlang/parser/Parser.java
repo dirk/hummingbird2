@@ -1,11 +1,13 @@
 
-package org.hummingbirdlang;
+package org.hummingbirdlang.parser;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.oracle.truffle.api.source.Source;
 import com.oracle.truffle.api.source.SourceSection;
+
+import org.hummingbirdlang.nodes.*;
 
 public class Parser {
 	public static final int _EOF = 0;

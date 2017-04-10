@@ -1,6 +1,8 @@
-package org.hummingbirdlang;
+package org.hummingbirdlang.nodes;
 
 import com.oracle.truffle.api.frame.VirtualFrame;
+
+import org.hummingbirdlang.parser.Token;
 
 public class HBPropertyNode extends HBExpressionNode {
   @Child private HBExpressionNode targetNode;

@@ -1,4 +1,4 @@
-package org.hummingbirdlang;
+package org.hummingbirdlang.nodes;
 
 import java.util.List;
 

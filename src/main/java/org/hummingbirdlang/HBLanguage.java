@@ -10,6 +10,8 @@ import com.oracle.truffle.api.TruffleLanguage;
 import com.oracle.truffle.api.source.Source;
 import com.oracle.truffle.api.nodes.Node;
 
+import org.hummingbirdlang.parser.ParserWrapper;
+
 @TruffleLanguage.Registration(name = "Hummingbird", version = "0.1", mimeType = HBLanguage.MIME_TYPE)
 public final class HBLanguage extends TruffleLanguage<HBContext> {
   public static final String MIME_TYPE = "application/x-hummingbird";

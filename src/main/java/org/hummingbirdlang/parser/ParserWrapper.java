@@ -1,4 +1,4 @@
-package org.hummingbirdlang;
+package org.hummingbirdlang.parser;
 
 import com.oracle.truffle.api.source.Source;
 

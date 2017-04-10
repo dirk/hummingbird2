@@ -1,4 +1,4 @@
-package org.hummingbirdlang;
+package org.hummingbirdlang.nodes;
 
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.NodeInfo;

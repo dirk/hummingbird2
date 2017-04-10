@@ -1,6 +1,8 @@
-package org.hummingbirdlang;
+package org.hummingbirdlang.nodes;
 
 import com.oracle.truffle.api.frame.VirtualFrame;
+
+import org.hummingbirdlang.parser.Token;
 
 // Basic identifier of a local or global name.
 public class HBIdentifierNode extends HBExpressionNode {

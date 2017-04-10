@@ -1,4 +1,4 @@
-package org.hummingbirdlang;
+package org.hummingbirdlang.nodes;
 
 // Basic identifier of a local or global name.
 public abstract class HBBinaryOperatorNode extends HBExpressionNode {

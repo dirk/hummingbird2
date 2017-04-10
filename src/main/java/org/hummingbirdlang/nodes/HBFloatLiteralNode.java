@@ -1,11 +1,11 @@
-package org.hummingbirdlang;
+package org.hummingbirdlang.nodes;
 
 import com.oracle.truffle.api.frame.VirtualFrame;
 
 public class HBFloatLiteralNode extends HBExpressionNode {
   private final double value;
 
-  HBFloatLiteralNode(String value) {
+  public HBFloatLiteralNode(String value) {
     this.value = Double.parseDouble(value);
   }
 
