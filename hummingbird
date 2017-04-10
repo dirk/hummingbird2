@@ -1,0 +1,2 @@
+#!/bin/bash
+./graalvm-0.21/bin/java -classpath target/classes org.hummingbirdlang.Main $@
