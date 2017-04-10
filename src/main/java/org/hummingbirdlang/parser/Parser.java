@@ -32,7 +32,7 @@ public class Parser {
 	public Scanner scanner;
 	public Errors errors;
 	private Source source;
-	private Object program;
+	private HBSourceRootNode program;
 
 	
 
@@ -101,12 +101,12 @@ public class Parser {
 	}
 
 	void Syntax() {
-		Object statements = Source();
+		HBSourceRootNode statements = Source();
 		this.program = statements;
 	}
 
-	Object  Source() {
-		Object  result;
+	HBSourceRootNode  Source() {
+		HBSourceRootNode  result;
 		HBStatementNode[] statements = SourceStatements();
 		result = HBSourceRootNodeFactory.create(source.createUnavailableSection(), statements);
 		return result;
@@ -375,7 +375,7 @@ public class Parser {
 
 
 
-	public Object Parse() {
+	public HBSourceRootNode Parse() {
 		la = new Token();
 		la.val = "";
 		Get();

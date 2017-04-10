@@ -49,7 +49,7 @@ public class Parser {
 	public Scanner scanner;
 	public Errors errors;
 	private Source source;
-	private Object program;
+	private HBSourceRootNode program;
 
 	-->declarations
 
@@ -119,7 +119,7 @@ public class Parser {
 
 -->productions
 
-	public Object Parse() {
+	public HBSourceRootNode Parse() {
 		la = new Token();
 		la.val = "";
 		Get();

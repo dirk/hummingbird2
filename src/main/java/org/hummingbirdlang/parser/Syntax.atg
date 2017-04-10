@@ -29,11 +29,11 @@ IGNORE cr
 PRODUCTIONS
 
 Syntax =
-  Source<out Object statements>
+  Source<out HBSourceRootNode statements>
                                  (. this.program = statements; .)
   .
 
-Source<out Object result> =
+Source<out HBSourceRootNode result> =
   SourceStatements<out HBStatementNode[] statements> (. result = HBSourceRootNodeFactory.create(source.createUnavailableSection(), statements); .).
 
 SourceStatements<out HBStatementNode[] result> =
