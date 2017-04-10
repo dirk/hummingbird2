@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.oracle.truffle.api.source.Source;
-import com.oracle.truffle.api.source.SourceSection;
 
 import org.hummingbirdlang.nodes.*;
 
