@@ -34,12 +34,14 @@ public final class HBLanguage extends TruffleLanguage<HBContext> {
     return null;
   }
 
-  @Override
-  protected CallTarget parse(Source source, Node node, String... argumentNames) throws Exception {
-    Object program = ParserWrapper.parse(source);
-    System.out.println(program.toString());
-    return null;
-  }
+  // TODO: Fully remove this deprecated implementation.:
+  //
+  //   @Override
+  //   protected CallTarget parse(Source source, Node node, String... argumentNames) throws Exception {
+  //     Object program = ParserWrapper.parse(source);
+  //     System.out.println(program.toString());
+  //     return null;
+  //   }
 
   // Called when some other language is seeking for a global symbol.
   @Override
