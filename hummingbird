@@ -1,2 +1,10 @@
 #!/bin/bash
-./graalvm-0.21/bin/java -classpath target/classes org.hummingbirdlang.Main $@
+
+# Maven classes:
+#   ./graalvm-0.21/bin/java -classpath target/classes org.hummingbirdlang.Main $@
+
+# Gradle classes:
+#   ./graalvm-0.21/bin/java -classpath build/classes/main -classpath build/resources/main org.hummingbirdlang.Main $@
+
+# Gradle JAR:
+./graalvm-0.21/bin/java -jar build/libs/hummingbird-1.0-SNAPSHOT.jar $@
