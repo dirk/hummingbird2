@@ -8,8 +8,9 @@ import com.oracle.truffle.api.CallTarget;
 import com.oracle.truffle.api.TruffleLanguage;
 import com.oracle.truffle.api.source.Source;
 
-import org.hummingbirdlang.parser.ParserWrapper;
 import org.hummingbirdlang.nodes.HBSourceRootNode;
+import org.hummingbirdlang.parser.ParserWrapper;
+import org.hummingbirdlang.types.realize.InferenceVisitor;
 
 @TruffleLanguage.Registration(name = "Hummingbird", version = "0.1", mimeType = HBLanguage.MIME_TYPE)
 public final class HBLanguage extends TruffleLanguage<HBContext> {
@@ -32,6 +33,10 @@ public final class HBLanguage extends TruffleLanguage<HBContext> {
     Source source = request.getSource();
     HBSourceRootNode program = ParserWrapper.parse(source);
     System.out.println(program.toString());
+
+    InferenceVisitor visitor = new InferenceVisitor();
+    program.accept(visitor);
+
     return null;
   }
 

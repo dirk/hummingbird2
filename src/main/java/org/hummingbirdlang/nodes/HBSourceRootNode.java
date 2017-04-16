@@ -6,13 +6,19 @@ import com.oracle.truffle.api.nodes.RootNode;
 import com.oracle.truffle.api.source.SourceSection;
 
 import org.hummingbirdlang.HBLanguage;
+import org.hummingbirdlang.types.realize.InferenceVisitor;
+import org.hummingbirdlang.types.realize.Visitable;
 
-public class HBSourceRootNode extends RootNode {
+public class HBSourceRootNode extends RootNode implements Visitable {
   @Child private HBBlockNode bodyNode;
 
   public HBSourceRootNode(SourceSection sourceSection, FrameDescriptor frameDescriptor, HBBlockNode bodyNode) {
     super(HBLanguage.class, sourceSection, frameDescriptor);
     this.bodyNode = bodyNode;
+  }
+
+  public void accept(InferenceVisitor visitor) {
+    visitor.visit(this);
   }
 
   @Override
