@@ -2,10 +2,12 @@ package org.hummingbirdlang.parser;
 
 import com.oracle.truffle.api.source.Source;
 
+import org.hummingbirdlang.nodes.HBSourceRootNode;
+
 public class ParserWrapper {
-  public static Object parse(Source source) throws Exception {
+  public static HBSourceRootNode parse(Source source) throws Exception {
     Parser parser = new Parser(source);
-    Object program = parser.Parse();
+    HBSourceRootNode program = parser.Parse();
 
     // if (parser.errors.size() > 0) {
     //   StringBuilder message = new StringBuilder("Error(s) parsing script:\n");

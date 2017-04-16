@@ -9,6 +9,7 @@ import com.oracle.truffle.api.TruffleLanguage;
 import com.oracle.truffle.api.source.Source;
 
 import org.hummingbirdlang.parser.ParserWrapper;
+import org.hummingbirdlang.nodes.HBSourceRootNode;
 
 @TruffleLanguage.Registration(name = "Hummingbird", version = "0.1", mimeType = HBLanguage.MIME_TYPE)
 public final class HBLanguage extends TruffleLanguage<HBContext> {
@@ -29,7 +30,8 @@ public final class HBLanguage extends TruffleLanguage<HBContext> {
   @Override
   protected CallTarget parse(ParsingRequest request) throws Exception {
     Source source = request.getSource();
-    Object program = ParserWrapper.parse(source);
+    HBSourceRootNode program = ParserWrapper.parse(source);
+    System.out.println(program.toString());
     return null;
   }
 
