@@ -22,4 +22,9 @@ public class HBPropertyNode extends HBExpressionNode {
   public Object executeGeneric(VirtualFrame frame) {
     return null;
   }
+
+  @Override
+  public String toString() {
+    return this.targetNode.toString() + "." + this.property.toString();
+  }
 }
