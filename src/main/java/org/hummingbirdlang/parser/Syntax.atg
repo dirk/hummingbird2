@@ -64,16 +64,18 @@ Terminator =
   lf | semicolon
   .
 
-LetDeclaration<out HBStatementNode result> =
+LetDeclaration<out HBLetDeclarationNode result> =
   let
+  identifier                             (. String left = t.val; .)
   "="
-  Expression<out HBExpressionNode expression> (. result = expression; .)
+  Expression<out HBExpressionNode right>
+                                         (. result = new HBLetDeclarationNode(left, right); .)
   .
 
-VarDeclaration<out HBStatementNode result> =
-  var
+VarDeclaration<out HBVarDeclarationNode result> =
+  var                                    (. String left = t.val; .)
   "="
-  Expression<out HBExpressionNode expression> (. result = expression; .)
+  Expression<out HBExpressionNode right> (. result = new HBVarDeclarationNode(left, right); .)
   .
 
 FunctionDeclaration<out HBFunctionNode result> =

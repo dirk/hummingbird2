@@ -138,21 +138,24 @@ public class Parser {
 		return result;
 	}
 
-	HBStatementNode  LetDeclaration() {
-		HBStatementNode  result;
+	HBLetDeclarationNode  LetDeclaration() {
+		HBLetDeclarationNode  result;
 		Expect(2);
+		Expect(1);
+		String left = t.val;
 		Expect(9);
-		HBExpressionNode expression = Expression();
-		result = expression;
+		HBExpressionNode right = Expression();
+		result = new HBLetDeclarationNode(left, right);
 		return result;
 	}
 
-	HBStatementNode  VarDeclaration() {
-		HBStatementNode  result;
+	HBVarDeclarationNode  VarDeclaration() {
+		HBVarDeclarationNode  result;
 		Expect(3);
+		String left = t.val;
 		Expect(9);
-		HBExpressionNode expression = Expression();
-		result = expression;
+		HBExpressionNode right = Expression();
+		result = new HBVarDeclarationNode(left, right);
 		return result;
 	}
 
