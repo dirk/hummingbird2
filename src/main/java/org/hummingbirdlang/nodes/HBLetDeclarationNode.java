@@ -4,11 +4,11 @@ import com.oracle.truffle.api.frame.VirtualFrame;
 
 public class HBLetDeclarationNode extends HBStatementNode {
   private final String left;
-  @Child private HBExpressionNode right;
+  @Child private HBExpressionNode rightNode;
 
-  public HBLetDeclarationNode(String left, HBExpressionNode right) {
+  public HBLetDeclarationNode(String left, HBExpressionNode rightNode) {
     this.left = left;
-    this.right = right;
+    this.rightNode = rightNode;
   }
 
   @Override
@@ -18,6 +18,6 @@ public class HBLetDeclarationNode extends HBStatementNode {
 
   @Override
   public String toString() {
-    return "let " + this.left + " = " + this.right.toString();
+    return "let " + this.left + " = " + this.rightNode.toString();
   }
 }
