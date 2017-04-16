@@ -5,11 +5,21 @@ import java.util.List;
 import java.util.stream.Collectors;
 import com.oracle.truffle.api.frame.VirtualFrame;
 
+import org.hummingbirdlang.types.realize.InferenceVisitor;
+
 public class HBBlockNode extends HBStatementNode {
   @Children private final HBStatementNode[] bodyNodes;
 
   public HBBlockNode(HBStatementNode[] bodyNodes) {
     this.bodyNodes = bodyNodes;
+  }
+
+  public void accept(InferenceVisitor visitor) {
+    visitor.enter(this);
+    for (HBStatementNode node : this.bodyNodes) {
+      node.accept(visitor);
+    }
+    visitor.leave(this);
   }
 
   @Override

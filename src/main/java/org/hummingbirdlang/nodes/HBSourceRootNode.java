@@ -18,7 +18,9 @@ public class HBSourceRootNode extends RootNode implements Visitable {
   }
 
   public void accept(InferenceVisitor visitor) {
-    visitor.visit(this);
+    visitor.enter(this);
+    this.bodyNode.accept(visitor);
+    visitor.leave(this);
   }
 
   @Override

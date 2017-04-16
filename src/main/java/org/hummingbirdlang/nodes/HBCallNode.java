@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import com.oracle.truffle.api.frame.VirtualFrame;
 
+import org.hummingbirdlang.types.realize.InferenceVisitor;
+
 public class HBCallNode extends HBExpressionNode {
   @Child private HBExpressionNode targetNode;
   @Children private final HBExpressionNode[] parameterNodes;
@@ -12,6 +14,10 @@ public class HBCallNode extends HBExpressionNode {
   public HBCallNode(HBExpressionNode targetNode, HBExpressionNode[] parameterNodes) {
     this.targetNode = targetNode;
     this.parameterNodes = parameterNodes;
+  }
+
+  public void accept(InferenceVisitor visitor) {
+    return;
   }
 
   @Override

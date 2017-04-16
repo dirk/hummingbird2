@@ -1,5 +1,7 @@
 package org.hummingbirdlang.types.realize;
 
+import org.hummingbirdlang.nodes.HBBlockNode;
+import org.hummingbirdlang.nodes.HBFunctionNode;
 import org.hummingbirdlang.nodes.HBSourceRootNode;
 
 /**
@@ -7,7 +9,27 @@ import org.hummingbirdlang.nodes.HBSourceRootNode;
  * nodes in the AST.
  */
 public final class InferenceVisitor {
-  public void visit(HBSourceRootNode rootNode) {
+  public void enter(HBSourceRootNode rootNode) {
+    return;
+  }
+
+  public void leave(HBSourceRootNode rootNode) {
+    return;
+  }
+
+  public void enter(HBFunctionNode functionNode) {
+    return;
+  }
+
+  public void leave(HBFunctionNode functionNode) {
+    return;
+  }
+
+  public void enter(HBBlockNode blockNode) {
+    return;
+  }
+
+  public void leave(HBBlockNode blockNode) {
     return;
   }
 }
