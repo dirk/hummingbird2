@@ -201,6 +201,9 @@ public class Parser {
 	HBBlockNode  Block() {
 		HBBlockNode  result;
 		Expect(12);
+		while (la.kind == 5) {
+			Get();
+		}
 		List<HBStatementNode> body = new ArrayList<>();
 		while (StartOf(1)) {
 			HBStatementNode statement = Statement();

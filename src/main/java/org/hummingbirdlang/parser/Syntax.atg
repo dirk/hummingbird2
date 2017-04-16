@@ -92,7 +92,7 @@ FunctionDeclaration<out HBFunctionNode result> =
   .
 
 Block<out HBBlockNode result> =
-  "{"
+  "{" { lf }
                                              (. List<HBStatementNode> body = new ArrayList<>(); .)
   {
     Statement<out HBStatementNode statement> (. body.add(statement); .)
