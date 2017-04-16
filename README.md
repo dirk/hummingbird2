@@ -25,6 +25,18 @@ The language system is separated into a few logical parts:
 
 [AST]: https://en.wikipedia.org/wiki/Abstract_syntax_tree
 
+## Building and running
+
+Gradle is used for building, and a wrapper script handles invoking the Graal JVM.
+
+```bash
+# Build a "fat" JAR via Shadow.
+./gradlew shadowJar
+
+# Invoke the wrapper.
+./hummingbird test.hb
+```
+
 ## License
 
 Released under the Modified BSD License. See [LICENSE](LICENSE) for details.
