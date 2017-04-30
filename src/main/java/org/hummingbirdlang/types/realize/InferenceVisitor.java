@@ -2,7 +2,9 @@ package org.hummingbirdlang.types.realize;
 
 import org.hummingbirdlang.nodes.HBBlockNode;
 import org.hummingbirdlang.nodes.HBFunctionNode;
+import org.hummingbirdlang.nodes.HBIntegerLiteralNode;
 import org.hummingbirdlang.nodes.HBSourceRootNode;
+import org.hummingbirdlang.types.concrete.IntegerType;
 
 /**
  * Visitor-pattern system for recursively inferring type information on
@@ -31,5 +33,9 @@ public final class InferenceVisitor {
 
   public void leave(HBBlockNode blockNode) {
     return;
+  }
+
+  public void visit(HBIntegerLiteralNode literalNode) {
+    literalNode.setType(IntegerType.SINGLETON);
   }
 }

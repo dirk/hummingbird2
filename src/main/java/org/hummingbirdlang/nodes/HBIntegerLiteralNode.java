@@ -12,7 +12,7 @@ public class HBIntegerLiteralNode extends HBExpressionNode {
   }
 
   public void accept(InferenceVisitor visitor) {
-    return;
+    visitor.visit(this);
   }
 
   @Override
