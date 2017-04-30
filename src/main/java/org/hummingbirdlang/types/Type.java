@@ -9,7 +9,7 @@ package org.hummingbirdlang.types;
  *    Contains both value (eg. Int32) and reference (eg. Object) types.
  *
  * 2. Composite types: Built-in and user-defined types which can both:
- *    derive (subclass) concrete types and/or compose (tuples & generics)
+ *    derive (subclass) concrete types and/or compose (tuples and generics)
  *    other types. There are a couple structures of composite types:
  *       - Classes (see ClassType)
  *       - Tuples (see TupleType)
