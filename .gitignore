@@ -1,5 +1,6 @@
-.DS_Store
 *.old
+.DS_Store
+.gradle
 build
 target
 
@@ -8,5 +9,4 @@ target
 hummingbird.iml
 
 # Graal development kit
-graalvm-0.19-dk
-graalvm-0.21
+graalvm-*
