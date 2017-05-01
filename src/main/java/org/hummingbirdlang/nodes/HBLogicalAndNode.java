@@ -12,7 +12,9 @@ public class HBLogicalAndNode extends HBBinaryOperatorNode {
   }
 
   public void accept(InferenceVisitor visitor) {
-    return;
+    this.leftNode.accept(visitor);
+    this.rightNode.accept(visitor);
+    visitor.visit(this);
   }
 
   @Override
