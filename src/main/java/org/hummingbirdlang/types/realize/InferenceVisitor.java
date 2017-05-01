@@ -5,8 +5,11 @@ import org.hummingbirdlang.nodes.HBFunctionNode;
 import org.hummingbirdlang.nodes.HBIntegerLiteralNode;
 import org.hummingbirdlang.nodes.HBLogicalAndNode;
 import org.hummingbirdlang.nodes.HBSourceRootNode;
+import org.hummingbirdlang.types.composite.SumType;
+import org.hummingbirdlang.types.concrete.BooleanType;
 import org.hummingbirdlang.types.concrete.IntegerType;
 import org.hummingbirdlang.types.concrete.NullType;
+import org.hummingbirdlang.types.Type;
 
 /**
  * Visitor-pattern system for recursively inferring type information on
@@ -42,6 +45,15 @@ public final class InferenceVisitor {
   }
 
   public void visit(HBLogicalAndNode andNode) {
-    andNode.setType(NullType.SINGLETON);
+    Type leftType = andNode.getLeftNode().getType();
+    Type rightType = andNode.getRightNode().getType();
+
+    Type resultType;
+    if (!rightType.equals(BooleanType.SINGLETON)) {
+      resultType = new SumType(BooleanType.SINGLETON, rightType);
+    } else {
+      resultType = BooleanType.SINGLETON;
+    }
+    andNode.setType(resultType);
   }
 }

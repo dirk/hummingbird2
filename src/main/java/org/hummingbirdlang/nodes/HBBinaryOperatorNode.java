@@ -9,4 +9,12 @@ public abstract class HBBinaryOperatorNode extends HBExpressionNode {
     this.leftNode = leftNode;
     this.rightNode = rightNode;
   }
+
+  public HBExpressionNode getLeftNode() {
+    return this.leftNode;
+  }
+
+  public HBExpressionNode getRightNode() {
+    return this.rightNode;
+  }
 }
