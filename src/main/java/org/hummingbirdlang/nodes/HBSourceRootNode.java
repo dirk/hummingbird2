@@ -11,9 +11,11 @@ import org.hummingbirdlang.types.realize.Visitable;
 
 public class HBSourceRootNode extends RootNode implements Visitable {
   @Child private HBBlockNode bodyNode;
+  private final SourceSection sourceSection;
 
-  public HBSourceRootNode(SourceSection sourceSection, FrameDescriptor frameDescriptor, HBBlockNode bodyNode) {
-    super(HBLanguage.class, sourceSection, frameDescriptor);
+  public HBSourceRootNode(HBLanguage language, SourceSection sourceSection, FrameDescriptor frameDescriptor, HBBlockNode bodyNode) {
+    super(language, frameDescriptor);
+    this.sourceSection = sourceSection;
     this.bodyNode = bodyNode;
   }
 
@@ -27,6 +29,11 @@ public class HBSourceRootNode extends RootNode implements Visitable {
   public Object execute(VirtualFrame frame) {
     this.bodyNode.executeVoid(frame);
     return null;
+  }
+
+  @Override
+  public SourceSection getSourceSection() {
+    return this.sourceSection;
   }
 
   @Override

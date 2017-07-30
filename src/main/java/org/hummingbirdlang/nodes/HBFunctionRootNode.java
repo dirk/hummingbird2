@@ -11,14 +11,21 @@ import org.hummingbirdlang.types.realize.Visitable;
 
 public class HBFunctionRootNode extends RootNode implements Visitable {
   @Child private HBBlockNode bodyNode;
+  private final SourceSection sourceSection;
 
-  public HBFunctionRootNode(HBBlockNode bodyNode, SourceSection sourceSection, FrameDescriptor frameDescriptor) {
-    super(HBLanguage.class, sourceSection, frameDescriptor);
+  public HBFunctionRootNode(HBLanguage language, SourceSection sourceSection, FrameDescriptor frameDescriptor, HBBlockNode bodyNode) {
+    super(language, frameDescriptor);
+    this.sourceSection = sourceSection;
     this.bodyNode = bodyNode;
   }
 
   public void accept(InferenceVisitor visitor) {
     this.bodyNode.accept(visitor);
+  }
+
+  @Override
+  public SourceSection getSourceSection() {
+    return this.sourceSection;
   }
 
   @Override

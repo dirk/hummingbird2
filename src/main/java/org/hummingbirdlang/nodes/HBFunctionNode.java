@@ -12,7 +12,7 @@ public class HBFunctionNode extends HBStatementNode {
 
   public HBFunctionNode(String name, HBBlockNode block, SourceSection sourceSection) {
     this.name = name;
-    this.rootNode = new HBFunctionRootNode(block, sourceSection, new FrameDescriptor());
+    this.rootNode = new HBFunctionRootNode(null, sourceSection, new FrameDescriptor(), block);
   }
 
   public void accept(InferenceVisitor visitor) {

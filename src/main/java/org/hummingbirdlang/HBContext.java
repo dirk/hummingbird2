@@ -2,10 +2,9 @@ package org.hummingbirdlang;
 
 import java.io.BufferedReader;
 import java.io.PrintWriter;
-import com.oracle.truffle.api.ExecutionContext;
 import com.oracle.truffle.api.TruffleLanguage;
 
-public final class HBContext extends ExecutionContext {
+public final class HBContext {
   private final TruffleLanguage.Env env;
   private final BufferedReader input;
   private final PrintWriter output;

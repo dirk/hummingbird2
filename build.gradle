@@ -18,9 +18,12 @@ repositories {
 }
 
 dependencies {
-  compile group: 'com.oracle.truffle', name: 'truffle-api', version:'0.24'
-  compile group: 'com.oracle.truffle', name: 'truffle-tck', version:'0.24'
-  compile group: 'com.oracle.truffle', name: 'truffle-dsl-processor', version:'0.24'
+  compile group: 'com.oracle.truffle', name: 'truffle-api', version:'0.26'
+  compile group: 'com.oracle.truffle', name: 'truffle-dsl-processor', version:'0.26'
+}
+
+compileJava {
+  options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
 }
 
 mainClassName = 'org.hummingbirdlang.Main'

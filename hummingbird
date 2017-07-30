@@ -6,5 +6,16 @@
 # Gradle classes:
 #   ./graalvm-0.21/bin/java -classpath build/classes/main -classpath build/resources/main org.hummingbirdlang.Main $@
 
-# Gradle JAR:
-./graalvm-0.22/bin/java -jar build/libs/hummingbird-1.0-SNAPSHOT-all.jar $@
+# Gradle with shadow/fat JAR:
+# ./graalvm-0.22/bin/java -jar build/libs/hummingbird-1.0-SNAPSHOT-all.jar $@
+
+# Gradle with GraalVM 0.26 (have to provide truffle-api.jar on the
+# "bootclasspath", whatever that is).
+./graalvm-0.26/jre/bin/java \
+  "-Xbootclasspath/a:graalvm-0.26/jre/lib/truffle/truffle-api.jar" \
+  -jar build/libs/hummingbird-1.0-SNAPSHOT-all.jar \
+  $@
+
+# If doing classpaths:
+#   -cp "build/classes/java/main:build/resources/main" \
+#   org.hummingbirdlang.Main \

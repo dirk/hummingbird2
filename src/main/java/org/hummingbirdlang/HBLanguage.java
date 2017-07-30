@@ -17,9 +17,7 @@ import org.hummingbirdlang.types.realize.InferenceVisitor;
 public final class HBLanguage extends TruffleLanguage<HBContext> {
   public static final String MIME_TYPE = "application/x-hummingbird";
 
-  public static final HBLanguage INSTANCE = new HBLanguage();
-
-  private HBLanguage() {
+  public HBLanguage() {
   }
 
   @Override
