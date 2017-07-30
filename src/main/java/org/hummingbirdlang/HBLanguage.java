@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.lang.Exception;
+import com.oracle.truffle.api.Truffle;
 import com.oracle.truffle.api.CallTarget;
 import com.oracle.truffle.api.TruffleLanguage;
 import com.oracle.truffle.api.source.Source;
@@ -32,12 +33,12 @@ public final class HBLanguage extends TruffleLanguage<HBContext> {
   protected CallTarget parse(ParsingRequest request) throws Exception {
     Source source = request.getSource();
     HBSourceRootNode program = ParserWrapper.parse(source);
-    System.out.println(program.toString());
 
     InferenceVisitor visitor = new InferenceVisitor();
     program.accept(visitor);
+    System.out.println(program.toString());
 
-    return null;
+    return Truffle.getRuntime().createCallTarget(program);
   }
 
   // TODO: Fully remove this deprecated implementation.:
