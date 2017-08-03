@@ -8,6 +8,7 @@ import com.oracle.truffle.api.source.SourceSection;
 import org.hummingbirdlang.HBLanguage;
 import org.hummingbirdlang.types.realize.InferenceVisitor;
 import org.hummingbirdlang.types.realize.Visitable;
+import org.hummingbirdlang.types.scope.NameNotFoundException;
 
 public class HBFunctionRootNode extends RootNode implements Visitable {
   @Child private HBBlockNode bodyNode;
@@ -19,7 +20,7 @@ public class HBFunctionRootNode extends RootNode implements Visitable {
     this.bodyNode = bodyNode;
   }
 
-  public void accept(InferenceVisitor visitor) {
+  public void accept(InferenceVisitor visitor) throws NameNotFoundException {
     this.bodyNode.accept(visitor);
   }
 

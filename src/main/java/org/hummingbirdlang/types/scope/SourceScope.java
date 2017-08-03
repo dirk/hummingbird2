@@ -15,4 +15,14 @@ public class SourceScope implements Scope {
   public SourceScope() {
     this.types = new HashMap<>();
   }
+
+  @Override
+  public Type find(String name) throws NameNotFoundException {
+    throw new NameNotFoundException("Name not found in SourceScope: " + name);
+  }
+
+  @Override
+  public Scope getParent() {
+    throw new RuntimeException("Cannot getParent of SourceScope");
+  }
 }

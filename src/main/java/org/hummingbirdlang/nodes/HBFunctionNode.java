@@ -6,6 +6,7 @@ import com.oracle.truffle.api.source.SourceSection;
 
 import org.hummingbirdlang.HBLanguage;
 import org.hummingbirdlang.types.realize.InferenceVisitor;
+import org.hummingbirdlang.types.scope.NameNotFoundException;
 
 public class HBFunctionNode extends HBStatementNode {
   private final String name;
@@ -16,7 +17,7 @@ public class HBFunctionNode extends HBStatementNode {
     this.rootNode = new HBFunctionRootNode(language, sourceSection, new FrameDescriptor(), block);
   }
 
-  public void accept(InferenceVisitor visitor) {
+  public void accept(InferenceVisitor visitor) throws NameNotFoundException {
     visitor.enter(this);
     this.rootNode.accept(visitor);
     visitor.leave(this);

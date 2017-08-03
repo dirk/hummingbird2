@@ -5,6 +5,7 @@ import com.oracle.truffle.api.frame.VirtualFrame;
 
 import org.hummingbirdlang.parser.Token;
 import org.hummingbirdlang.types.realize.InferenceVisitor;
+import org.hummingbirdlang.types.scope.NameNotFoundException;
 
 public class HBPropertyNode extends HBExpressionNode {
   @Child private HBExpressionNode targetNode;
@@ -20,8 +21,8 @@ public class HBPropertyNode extends HBExpressionNode {
     this.property = property;
   }
 
-  public void accept(InferenceVisitor visitor) {
-    return;
+  public void accept(InferenceVisitor visitor) throws NameNotFoundException {
+    this.targetNode.accept(visitor);
   }
 
   @Override

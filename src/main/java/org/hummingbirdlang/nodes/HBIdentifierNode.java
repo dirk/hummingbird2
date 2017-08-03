@@ -5,6 +5,7 @@ import com.oracle.truffle.api.frame.VirtualFrame;
 
 import org.hummingbirdlang.parser.Token;
 import org.hummingbirdlang.types.realize.InferenceVisitor;
+import org.hummingbirdlang.types.scope.NameNotFoundException;
 
 // Basic identifier of a local or global name.
 public class HBIdentifierNode extends HBExpressionNode {
@@ -14,8 +15,12 @@ public class HBIdentifierNode extends HBExpressionNode {
     this.name = token.val;
   }
 
-  public void accept(InferenceVisitor visitor) {
-    return;
+  public void accept(InferenceVisitor visitor) throws NameNotFoundException {
+    visitor.visit(this);
+  }
+
+  public String getName() {
+    return this.name;
   }
 
   @Override
