@@ -26,4 +26,12 @@ public class HBFunctionNode extends HBStatementNode {
   public void executeVoid(VirtualFrame frame) {
     return;
   }
+
+  @Override
+  public String toString() {
+    StringBuilder result = new StringBuilder("HBFunctionNode(");
+    result.append(this.rootNode.toString());
+    result.append(")");
+    return result.toString();
+  }
 }

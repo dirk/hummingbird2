@@ -8,7 +8,9 @@ public class HBStringLiteralNode extends HBExpressionNode {
   private final String value;
 
   public HBStringLiteralNode(String value) {
-    this.value = value;
+    assert value.charAt(0) == '"';
+    assert value.charAt(value.length() - 1) == '"';
+    this.value = value.substring(1, value.length() - 1);
   }
 
   public void accept(InferenceVisitor visitor) {
@@ -18,5 +20,10 @@ public class HBStringLiteralNode extends HBExpressionNode {
   @Override
   public Object executeGeneric(VirtualFrame frame) {
     return this.value;
+  }
+
+  @Override
+  public String toString() {
+    return "\"" + this.value + "\"";
   }
 }
