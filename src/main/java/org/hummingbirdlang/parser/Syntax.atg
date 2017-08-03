@@ -8,7 +8,7 @@ digit = nonZeroDigit + "0".
 tab = '\t'.
 lf = '\n'.
 cr = '\r'.
-stringChar = ANY - "\"" - '\\' - cr - lf.
+stringChar = ANY - '"' - '\\' - cr - lf.
 
 TOKENS
 
@@ -20,6 +20,7 @@ lf = lf.
 semicolon = ";".
 integerLiteral = "0" | nonZeroDigit.
 floatFractional = "." {digit}.
+stringLiteral = "\"" {stringChar} "\"".
 
 COMMENTS FROM "//" TO lf
 COMMENTS FROM "/*" TO "*/"
@@ -171,6 +172,7 @@ Atom<out HBExpressionNode result> =
   (
       IdentifierAtom<out result>
     | NumericAtom<out result>
+    | StringAtom<out result>
   )
   .
 
@@ -194,6 +196,9 @@ NumericAtom<out HBExpressionNode result> =
     )
   )
   .
+
+StringAtom<out HBExpressionNode result> =
+  stringLiteral (. result = new HBStringLiteralNode(t.val); .).
 
 Suffix<out HBExpressionNode result, HBExpressionNode parent> =
                                                                (. result = null; .)
