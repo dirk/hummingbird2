@@ -33,6 +33,7 @@ import java.util.List;
 
 import com.oracle.truffle.api.source.Source;
 
+import org.hummingbirdlang.HBLanguage;
 import org.hummingbirdlang.nodes.*;
 
 public class Parser {
@@ -47,6 +48,7 @@ public class Parser {
 
 	public Scanner scanner;
 	public Errors errors;
+	private HBLanguage language;
 	private Source source;
 	private HBSourceRootNode program;
 
@@ -57,7 +59,8 @@ public class Parser {
 	// 	errors = new Errors();
 	// }
 
-	public Parser(Source source) {
+	public Parser(HBLanguage language, Source source) {
+		this.language = language;
 		this.scanner = new Scanner(source.getInputStream());
 		this.source = source;
 		this.errors = new Errors();

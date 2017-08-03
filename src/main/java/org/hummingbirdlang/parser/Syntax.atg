@@ -34,7 +34,10 @@ Syntax =
   .
 
 Source<out HBSourceRootNode result> =
-  SourceStatements<out HBStatementNode[] statements> (. result = HBSourceRootNodeFactory.create(source.createUnavailableSection(), statements); .).
+  SourceStatements<out HBStatementNode[] statements> (. result = HBSourceRootNodeFactory.create(
+                                                          this.language,
+                                                          source.createUnavailableSection(),
+                                                          statements); .).
 
 SourceStatements<out HBStatementNode[] result> =
                                              (. List<HBStatementNode> body = new ArrayList<>(); .)
@@ -85,6 +88,7 @@ FunctionDeclaration<out HBFunctionNode result> =
   ")"
   Block<out HBBlockNode block> (. int length = (t.charPos + t.val.length()) - start;
                                   result = new HBFunctionNode(
+                                    this.language,
                                     name,
                                     block,
                                     source.createSection(start, length)

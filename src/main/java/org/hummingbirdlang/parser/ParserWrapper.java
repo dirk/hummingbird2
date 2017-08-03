@@ -3,10 +3,11 @@ package org.hummingbirdlang.parser;
 import com.oracle.truffle.api.source.Source;
 
 import org.hummingbirdlang.nodes.HBSourceRootNode;
+import org.hummingbirdlang.HBLanguage;
 
 public class ParserWrapper {
-  public static HBSourceRootNode parse(Source source) throws Exception {
-    Parser parser = new Parser(source);
+  public static HBSourceRootNode parse(HBLanguage language, Source source) throws Exception {
+    Parser parser = new Parser(language, source);
     HBSourceRootNode program = parser.Parse();
 
     // if (parser.errors.size() > 0) {

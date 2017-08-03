@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.oracle.truffle.api.source.Source;
 
+import org.hummingbirdlang.HBLanguage;
 import org.hummingbirdlang.nodes.*;
 
 public class Parser {
@@ -30,6 +31,7 @@ public class Parser {
 
 	public Scanner scanner;
 	public Errors errors;
+	private HBLanguage language;
 	private Source source;
 	private HBSourceRootNode program;
 
@@ -40,7 +42,8 @@ public class Parser {
 	// 	errors = new Errors();
 	// }
 
-	public Parser(Source source) {
+	public Parser(HBLanguage language, Source source) {
+		this.language = language;
 		this.scanner = new Scanner(source.getInputStream());
 		this.source = source;
 		this.errors = new Errors();
@@ -107,7 +110,10 @@ public class Parser {
 	HBSourceRootNode  Source() {
 		HBSourceRootNode  result;
 		HBStatementNode[] statements = SourceStatements();
-		result = HBSourceRootNodeFactory.create(source.createUnavailableSection(), statements);
+		result = HBSourceRootNodeFactory.create(
+		 this.language,
+		 source.createUnavailableSection(),
+		 statements);
 		return result;
 	}
 
@@ -170,6 +176,7 @@ public class Parser {
 		HBBlockNode block = Block();
 		int length = (t.charPos + t.val.length()) - start;
 		result = new HBFunctionNode(
+		 this.language,
 		 name,
 		 block,
 		 source.createSection(start, length)

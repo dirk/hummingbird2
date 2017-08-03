@@ -30,7 +30,7 @@ public final class HBLanguage extends TruffleLanguage<HBContext> {
   @Override
   protected CallTarget parse(ParsingRequest request) throws Exception {
     Source source = request.getSource();
-    HBSourceRootNode program = ParserWrapper.parse(source);
+    HBSourceRootNode program = ParserWrapper.parse(this, source);
 
     InferenceVisitor visitor = new InferenceVisitor();
     program.accept(visitor);
