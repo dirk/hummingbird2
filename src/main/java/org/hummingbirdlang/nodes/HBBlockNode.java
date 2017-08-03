@@ -23,7 +23,7 @@ public class HBBlockNode extends HBStatementNode {
   }
 
   @Override
-  public void executeVoid(VirtualFrame frame) {
+  public void executeVoid(VirtualFrame frame) throws Exception {
     for (HBStatementNode bodyNode : bodyNodes) {
       bodyNode.executeVoid(frame);
     }

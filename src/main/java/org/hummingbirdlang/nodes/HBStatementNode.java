@@ -9,5 +9,5 @@ import org.hummingbirdlang.types.realize.Visitable;
 @NodeInfo(language = "HB")
 public abstract class HBStatementNode extends Node implements Visitable {
   // Execute without a return value.
-  public abstract void executeVoid(VirtualFrame frame);
+  public abstract void executeVoid(VirtualFrame frame) throws Exception;
 }

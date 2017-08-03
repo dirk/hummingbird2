@@ -1,5 +1,6 @@
 package org.hummingbirdlang.nodes;
 
+import java.lang.reflect.Field;
 import com.oracle.truffle.api.frame.VirtualFrame;
 
 import org.hummingbirdlang.parser.Token;
@@ -24,12 +25,15 @@ public class HBPropertyNode extends HBExpressionNode {
   }
 
   @Override
-  public Object executeGeneric(VirtualFrame frame) {
-    return null;
+  public Object executeGeneric(VirtualFrame frame) throws Exception, NoSuchFieldException {
+    Object receiver = this.targetNode.executeGeneric(frame);
+    Class<?> receiverClass = receiver.getClass();
+    Field field = receiverClass.getField(this.property);
+    return field.get(receiver);
   }
 
   @Override
   public String toString() {
-    return this.targetNode.toString() + "." + this.property.toString();
+    return "HBPropertyNode(" + this.targetNode.toString() + "." + this.property.toString() + ")";
   }
 }

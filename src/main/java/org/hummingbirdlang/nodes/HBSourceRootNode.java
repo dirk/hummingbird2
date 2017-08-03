@@ -27,7 +27,11 @@ public class HBSourceRootNode extends RootNode implements Visitable {
 
   @Override
   public Object execute(VirtualFrame frame) {
-    this.bodyNode.executeVoid(frame);
+    try {
+      this.bodyNode.executeVoid(frame);
+    } catch (Exception exception) {
+      throw new RuntimeException(exception);
+    }
     return null;
   }
 

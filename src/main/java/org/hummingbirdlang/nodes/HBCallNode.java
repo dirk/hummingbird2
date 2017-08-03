@@ -21,17 +21,21 @@ public class HBCallNode extends HBExpressionNode {
   }
 
   @Override
-  public Object executeGeneric(VirtualFrame frame) {
+  public Object executeGeneric(VirtualFrame frame) throws Exception {
+    Object target = this.targetNode.executeGeneric(frame);
     return null;
   }
 
   @Override
   public String toString() {
-    StringBuilder result = new StringBuilder(this.targetNode.toString());
-    result.append("(");
+    StringBuilder result = new StringBuilder();
+    result.append("HBCallNode{");
+    result.append(this.targetNode.toString());
+    result.append(", (");
     List<String> parameters = Arrays.stream(this.parameterNodes).map(p -> p.toString()).collect(Collectors.toList());
     result.append(String.join(", ", parameters));
     result.append(")");
+    result.append("}");
     return result.toString();
   }
 }

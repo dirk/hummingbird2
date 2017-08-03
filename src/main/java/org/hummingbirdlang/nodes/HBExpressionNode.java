@@ -12,10 +12,10 @@ public abstract class HBExpressionNode extends HBStatementNode implements Typeab
   @CompilationFinal Type type;
 
   // Execute with a generic unspecialized return value.
-  public abstract Object executeGeneric(VirtualFrame frame);
+  public abstract Object executeGeneric(VirtualFrame frame) throws Exception;
 
   @Override
-  public void executeVoid(VirtualFrame frame) {
+  public void executeVoid(VirtualFrame frame) throws Exception {
     executeGeneric(frame);
   }
 

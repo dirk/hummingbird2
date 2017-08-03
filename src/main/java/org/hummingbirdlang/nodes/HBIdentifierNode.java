@@ -1,5 +1,6 @@
 package org.hummingbirdlang.nodes;
 
+import com.oracle.truffle.api.frame.FrameSlot;
 import com.oracle.truffle.api.frame.VirtualFrame;
 
 import org.hummingbirdlang.parser.Token;
@@ -19,7 +20,8 @@ public class HBIdentifierNode extends HBExpressionNode {
 
   @Override
   public Object executeGeneric(VirtualFrame frame) {
-    return null;
+    FrameSlot frameSlot = frame.getFrameDescriptor().findOrAddFrameSlot(this.name);
+    return frame.getValue(frameSlot);
   }
 
   @Override
