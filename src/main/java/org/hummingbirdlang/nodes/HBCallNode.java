@@ -42,13 +42,13 @@ public class HBCallNode extends HBExpressionNode {
   @Override
   public String toString() {
     StringBuilder result = new StringBuilder();
-    result.append("HBCallNode{");
+    result.append("HBCallNode(");
     result.append(this.targetNode.toString());
     result.append(", (");
     List<String> parameters = Arrays.stream(this.parameterNodes).map(p -> p.toString()).collect(Collectors.toList());
     result.append(String.join(", ", parameters));
     result.append(")");
-    result.append("}");
+    result.append(")");
     return result.toString();
   }
 }
