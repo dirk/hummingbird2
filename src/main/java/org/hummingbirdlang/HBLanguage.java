@@ -32,9 +32,9 @@ public final class HBLanguage extends TruffleLanguage<HBContext> {
     Source source = request.getSource();
     HBSourceRootNode program = ParserWrapper.parse(this, source);
 
+    System.out.println(program.toString());
     InferenceVisitor visitor = new InferenceVisitor();
     program.accept(visitor);
-    System.out.println(program.toString());
 
     return Truffle.getRuntime().createCallTarget(program);
   }
