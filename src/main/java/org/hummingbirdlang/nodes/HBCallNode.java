@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import com.oracle.truffle.api.frame.VirtualFrame;
 
+import org.hummingbirdlang.types.TypeException;
 import org.hummingbirdlang.types.realize.InferenceVisitor;
-import org.hummingbirdlang.types.scope.NameNotFoundException;
 
 public class HBCallNode extends HBExpressionNode {
   @Child private HBExpressionNode targetNode;
@@ -17,7 +17,7 @@ public class HBCallNode extends HBExpressionNode {
     this.parameterNodes = parameterNodes;
   }
 
-  public void accept(InferenceVisitor visitor) throws NameNotFoundException {
+  public void accept(InferenceVisitor visitor) throws TypeException {
     this.targetNode.accept(visitor);
     for (HBExpressionNode parameterNode : parameterNodes) {
       parameterNode.accept(visitor);

@@ -5,12 +5,17 @@ import org.hummingbirdlang.nodes.HBCallNode;
 import org.hummingbirdlang.nodes.HBFunctionNode;
 import org.hummingbirdlang.nodes.HBIdentifierNode;
 import org.hummingbirdlang.nodes.HBIntegerLiteralNode;
+import org.hummingbirdlang.nodes.HBLetDeclarationNode;
 import org.hummingbirdlang.nodes.HBLogicalAndNode;
+import org.hummingbirdlang.nodes.HBPropertyNode;
 import org.hummingbirdlang.nodes.HBSourceRootNode;
+import org.hummingbirdlang.nodes.HBStringLiteralNode;
 import org.hummingbirdlang.types.composite.SumType;
 import org.hummingbirdlang.types.concrete.BooleanType;
 import org.hummingbirdlang.types.concrete.IntegerType;
-import org.hummingbirdlang.types.concrete.NullType;
+import org.hummingbirdlang.types.concrete.StringType;
+import org.hummingbirdlang.types.Property;
+import org.hummingbirdlang.types.PropertyNotFoundException;
 import org.hummingbirdlang.types.Type;
 import org.hummingbirdlang.types.scope.LocalScope;
 import org.hummingbirdlang.types.scope.NameNotFoundException;
@@ -66,12 +71,18 @@ public final class InferenceVisitor {
   }
 
   public void visit(HBIdentifierNode identifierNode) throws NameNotFoundException {
-    Type type = this.currentScope.find(identifierNode.getName());
+    Type type = this.currentScope.get(identifierNode.getName());
     identifierNode.setType(type);
   }
 
   public void visit(HBIntegerLiteralNode literalNode) {
     literalNode.setType(IntegerType.SINGLETON);
+  }
+
+  public void visit(HBLetDeclarationNode letNode) {
+    Type rightType = letNode.getRightNode().getType();
+    String left = letNode.getLeft();
+    this.currentScope.setLocal(left, rightType);
   }
 
   public void visit(HBLogicalAndNode andNode) {
@@ -85,5 +96,14 @@ public final class InferenceVisitor {
       resultType = BooleanType.SINGLETON;
     }
     andNode.setType(resultType);
+  }
+
+  public void visit(HBPropertyNode propertyNode) throws PropertyNotFoundException {
+    Type targetType = propertyNode.getTargetNode().getType();
+    Property type = targetType.getProperty(propertyNode.getProperty());
+  }
+
+  public void visit(HBStringLiteralNode literalNode) {
+    literalNode.setType(StringType.SINGLETON);
   }
 }

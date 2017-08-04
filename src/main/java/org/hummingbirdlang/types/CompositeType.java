@@ -5,5 +5,5 @@ package org.hummingbirdlang.types;
  * unknown types. Structurally composite types and unknown types can be mixed
  * and matched.
  */
-public class CompositeType extends Type {
+public abstract class CompositeType extends Type {
 }

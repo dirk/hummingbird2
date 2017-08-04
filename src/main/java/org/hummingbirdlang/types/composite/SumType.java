@@ -1,6 +1,8 @@
 package org.hummingbirdlang.types.composite;
 
 import org.hummingbirdlang.types.CompositeType;
+import org.hummingbirdlang.types.Property;
+import org.hummingbirdlang.types.PropertyNotFoundException;
 import org.hummingbirdlang.types.Type;
 
 /**
@@ -14,5 +16,10 @@ public class SumType extends CompositeType {
   public SumType(Type aType, Type bType) {
     this.aType = aType;
     this.bType = bType;
+  }
+
+  @Override
+  public Property getProperty(String name) throws PropertyNotFoundException {
+    throw new PropertyNotFoundException("Not yet implemented");
   }
 }

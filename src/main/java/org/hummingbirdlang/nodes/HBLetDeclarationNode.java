@@ -2,6 +2,7 @@ package org.hummingbirdlang.nodes;
 
 import com.oracle.truffle.api.frame.VirtualFrame;
 
+import org.hummingbirdlang.types.TypeException;
 import org.hummingbirdlang.types.realize.InferenceVisitor;
 
 public class HBLetDeclarationNode extends HBStatementNode {
@@ -13,8 +14,17 @@ public class HBLetDeclarationNode extends HBStatementNode {
     this.rightNode = rightNode;
   }
 
-  public void accept(InferenceVisitor visitor) {
-    return;
+  public void accept(InferenceVisitor visitor) throws TypeException {
+    this.rightNode.accept(visitor);
+    visitor.visit(this);
+  }
+
+  public String getLeft() {
+    return this.left;
+  }
+
+  public HBExpressionNode getRightNode() {
+    return this.rightNode;
   }
 
   @Override

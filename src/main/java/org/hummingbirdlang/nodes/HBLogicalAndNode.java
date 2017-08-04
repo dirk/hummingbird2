@@ -3,8 +3,8 @@ package org.hummingbirdlang.nodes;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.NodeInfo;
 
+import org.hummingbirdlang.types.TypeException;
 import org.hummingbirdlang.types.realize.InferenceVisitor;
-import org.hummingbirdlang.types.scope.NameNotFoundException;
 
 @NodeInfo(shortName = "&&")
 public class HBLogicalAndNode extends HBBinaryOperatorNode {
@@ -12,7 +12,7 @@ public class HBLogicalAndNode extends HBBinaryOperatorNode {
     super(leftNode, rightNode);
   }
 
-  public void accept(InferenceVisitor visitor) throws NameNotFoundException {
+  public void accept(InferenceVisitor visitor) throws TypeException {
     this.leftNode.accept(visitor);
     this.rightNode.accept(visitor);
     visitor.visit(this);

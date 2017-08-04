@@ -8,4 +8,9 @@ public class ClassType extends CompositeType {
     this.name = name;
     this.superClass = superClass;
   }
+
+  @Override
+  public Property getProperty(String name) throws PropertyNotFoundException {
+    throw new PropertyNotFoundException("Not yet implemented");
+  }
 }

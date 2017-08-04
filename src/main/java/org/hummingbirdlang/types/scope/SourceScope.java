@@ -17,8 +17,13 @@ public class SourceScope implements Scope {
   }
 
   @Override
-  public Type find(String name) throws NameNotFoundException {
+  public Type get(String name) throws NameNotFoundException {
     throw new NameNotFoundException("Name not found in SourceScope: " + name);
+  }
+
+  @Override
+  public void setLocal(String name, Type type) {
+    this.types.put(name, type);
   }
 
   @Override

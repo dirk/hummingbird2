@@ -17,4 +17,9 @@ public class FunctionType extends ConcreteType {
     this.argumentTypes = null;
     this.returnType = null;
   }
+
+  @Override
+  public Property getProperty(String name) throws PropertyNotFoundException {
+    throw new PropertyNotFoundException("Not yet implemented");
+  }
 }

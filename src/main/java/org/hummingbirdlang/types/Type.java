@@ -25,4 +25,5 @@ package org.hummingbirdlang.types;
  * run-time type information to perform as-optimized-as-possible evaluation.
  */
 public abstract class Type {
+  public abstract Property getProperty(String name) throws PropertyNotFoundException;
 }

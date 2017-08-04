@@ -18,12 +18,17 @@ public class LocalScope implements Scope {
   }
 
   @Override
-  public Type find(String name) throws NameNotFoundException {
+  public Type get(String name) throws NameNotFoundException {
     if (this.types.containsKey(name)) {
       return this.types.get(name);
     } else {
-      return this.parent.find(name);
+      return this.parent.get(name);
     }
+  }
+
+  @Override
+  public void setLocal(String name, Type type) {
+    this.types.put(name, type);
   }
 
   @Override
