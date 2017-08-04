@@ -7,7 +7,7 @@ import com.oracle.truffle.api.source.Source
 import com.oracle.truffle.api.vm.PolyglotEngine
 
 fun main(args : Array<String>) {
-  println("(running on ${Truffle.getRuntime().getName()}")
+  println("(running on ${Truffle.getRuntime().getName()})")
 
   val engine = PolyglotEngine.newBuilder().setIn(System.`in`).setOut(System.`out`).build()
   assert(engine.getLanguages().containsKey(HBLanguage.MIME_TYPE))
