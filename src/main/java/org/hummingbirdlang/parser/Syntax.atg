@@ -41,7 +41,7 @@ Source<out HBSourceRootNode result> =
                                                           statements); .).
 
 SourceStatements<out HBStatementNode[] result> =
-                                             (. List<HBStatementNode> body = new ArrayList<>(); .)
+  { Terminator }                             (. List<HBStatementNode> body = new ArrayList<>(); .)
   {
     Statement<out HBStatementNode statement> (. body.add(statement); .)
   }

@@ -120,6 +120,9 @@ public class Parser {
 
 	HBStatementNode[]  SourceStatements() {
 		HBStatementNode[]  result;
+		while (la.kind == 5 || la.kind == 6) {
+			Terminator();
+		}
 		List<HBStatementNode> body = new ArrayList<>();
 		while (StartOf(1)) {
 			HBStatementNode statement = Statement();
@@ -127,6 +130,14 @@ public class Parser {
 		}
 		result = body.toArray(new HBStatementNode[body.size()]);
 		return result;
+	}
+
+	void Terminator() {
+		if (la.kind == 5) {
+			Get();
+		} else if (la.kind == 6) {
+			Get();
+		} else SynErr(24);
 	}
 
 	HBStatementNode  Statement() {
@@ -140,7 +151,7 @@ public class Parser {
 			result = FunctionDeclaration();
 		} else if (StartOf(2)) {
 			result = Expression();
-		} else SynErr(24);
+		} else SynErr(25);
 		Terminators();
 		return result;
 	}
@@ -196,14 +207,6 @@ public class Parser {
 		while (la.kind == 5 || la.kind == 6) {
 			Terminator();
 		}
-	}
-
-	void Terminator() {
-		if (la.kind == 5) {
-			Get();
-		} else if (la.kind == 6) {
-			Get();
-		} else SynErr(25);
 	}
 
 	HBBlockNode  Block() {
@@ -461,8 +464,8 @@ class Errors {
 			case 21: s = "\"[\" expected"; break;
 			case 22: s = "\"]\" expected"; break;
 			case 23: s = "??? expected"; break;
-			case 24: s = "invalid Statement"; break;
-			case 25: s = "invalid Terminator"; break;
+			case 24: s = "invalid Terminator"; break;
+			case 25: s = "invalid Statement"; break;
 			case 26: s = "invalid GroupOrTupleExpression"; break;
 			case 27: s = "invalid Atom"; break;
 			case 28: s = "invalid Suffix"; break;
