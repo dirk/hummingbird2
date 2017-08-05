@@ -255,8 +255,8 @@ public class Scanner {
 	int col;           // column number of current character
 	int line;          // line number of current character
 	int oldEols;       // EOLs that appeared in a comment;
-	static final StartStates start; // maps initial token character to start state
-	static final Map literals;      // maps literal strings to literal kinds
+	static final StartStates start;            // maps initial token character to start state
+	static final Map<String, Object> literals; // maps literal strings to literal kinds
 
 	Token tokens;      // list of tokens already peeked (first token is a dummy)
 	Token pt;          // current peek token
@@ -267,7 +267,7 @@ public class Scanner {
 
 	static {
 		start = new StartStates();
-		literals = new HashMap();
+		literals = new HashMap<>();
 		for (int i = 65; i <= 90; ++i) start.set(i, 1);
 		for (int i = 97; i <= 122; ++i) start.set(i, 1);
 		for (int i = 10; i <= 10; ++i) start.set(i, 2);
