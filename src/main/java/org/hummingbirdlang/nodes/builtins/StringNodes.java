@@ -1,9 +1,9 @@
 package org.hummingbirdlang.nodes.builtins;
 
-import org.hummingbirdlang.nodes.HBNode;
-
 import com.oracle.truffle.api.dsl.NodeChild;
 import com.oracle.truffle.api.dsl.Specialization;
+
+import org.hummingbirdlang.nodes.HBNode;
 
 @BuiltinClass("String")
 public abstract class StringNodes {

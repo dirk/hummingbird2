@@ -1,21 +1,31 @@
 package org.hummingbirdlang.types;
 
-public class FunctionType extends ConcreteType {
-  private Object[] argumentTypeDeclarations;
-  private Object returnTypeDeclaration;
+import com.oracle.truffle.api.CallTarget;
 
-  private Type[] argumentTypes;
-  private Type returnType;
+public final class FunctionType extends ConcreteType {
+  private final Type[] argumentTypes;
+  private final Type returnType;
+  private final String name;
+  private final CallTarget callTarget;
 
   public FunctionType(
-    Object[] argumentTypeDeclarations,
-    Object returnTypeDeclaration
+    Type[] argumentTypes,
+    Type returnType,
+    String name,
+    CallTarget callTarget
   ) {
-    this.argumentTypeDeclarations = argumentTypeDeclarations;
-    this.returnTypeDeclaration = returnTypeDeclaration;
+    this.argumentTypes = argumentTypes;
+    this.returnType = returnType;
+    this.name = name;
+    this.callTarget = callTarget;
+  }
 
-    this.argumentTypes = null;
-    this.returnType = null;
+  public String getName() {
+    return this.name;
+  }
+
+  public CallTarget getCallTarget() {
+    return this.callTarget;
   }
 
   @Override

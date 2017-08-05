@@ -13,18 +13,29 @@ import com.oracle.truffle.api.dsl.NodeFactory;
 
 public final class MethodType extends ConcreteType {
   // Type on which this method is defined.
-  private final Type parent;
+  private final Type receiverType;
+  private final Type returnType;
   private final String name;
   private final CallTarget callTarget;
 
-  public MethodType(Type parent, String name, CallTarget callTarget) {
-    this.parent = parent;
+  public MethodType(
+    Type receiverType,
+    Type returnType,
+    String name,
+    CallTarget callTarget
+  ) {
+    this.receiverType = receiverType;
+    this.returnType = returnType;
     this.name = name;
     this.callTarget = callTarget;
   }
 
-  public Type getParent() {
-    return this.parent;
+  public Type getReceiverType() {
+    return this.receiverType;
+  }
+
+  public Type getReturnType() {
+    return this.returnType;
   }
 
   public String getName() {

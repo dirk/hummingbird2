@@ -17,6 +17,7 @@ import org.hummingbirdlang.types.concrete.StringType;
 import org.hummingbirdlang.types.Property;
 import org.hummingbirdlang.types.PropertyNotFoundException;
 import org.hummingbirdlang.types.Type;
+import org.hummingbirdlang.types.scope.BuiltinScope;
 import org.hummingbirdlang.types.scope.LocalScope;
 import org.hummingbirdlang.types.scope.NameNotFoundException;
 import org.hummingbirdlang.types.scope.Scope;
@@ -28,10 +29,12 @@ import org.hummingbirdlang.types.scope.SourceScope;
  */
 public final class InferenceVisitor {
   private final Index index;
+  private BuiltinScope builtinScope;
   private Scope currentScope;
 
   public InferenceVisitor(Index index) {
-    this.currentScope = new SourceScope();
+    this.builtinScope = new BuiltinScope(index);
+    this.currentScope = new SourceScope(this.builtinScope);
     this.index = index;
   }
 
@@ -45,7 +48,7 @@ public final class InferenceVisitor {
   }
 
   public void enter(HBSourceRootNode rootNode) {
-    return;
+    rootNode.setBuiltinScope(this.builtinScope);
   }
 
   public void leave(HBSourceRootNode rootNode) {
@@ -108,6 +111,6 @@ public final class InferenceVisitor {
   }
 
   public void visit(HBStringLiteralNode literalNode) {
-    literalNode.setType(this.index.getBuiltin().get("String"));
+    literalNode.setType(this.index.getBuiltin().get("StringType"));
   }
 }

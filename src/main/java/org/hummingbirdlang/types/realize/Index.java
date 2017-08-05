@@ -2,9 +2,11 @@ package org.hummingbirdlang.types.realize;
 
 import java.util.HashMap;
 
-import org.hummingbirdlang.HBLanguage;
 import org.hummingbirdlang.nodes.builtins.BuiltinNodes;
+import org.hummingbirdlang.types.FunctionType;
 import org.hummingbirdlang.types.Type;
+import org.hummingbirdlang.types.UnknownType;
+import org.hummingbirdlang.types.concrete.NullType;
 import org.hummingbirdlang.types.concrete.StringType;
 
 /**
@@ -18,7 +20,8 @@ public final class Index {
 
   private Index(BuiltinNodes builtins) {
     Module builtin = new Module(Index.BUILTIN);
-    builtin.put("String", StringType.bootstrap(builtins));
+    builtin.put("StringType", StringType.bootstrap(builtins));
+    builtin.put("println", new FunctionType(new Type[]{new UnknownType()}, NullType.SINGLETON, "println", builtins.getCallTarget("Global", "println")));
     this.put(builtin);
   }
 
@@ -35,7 +38,8 @@ public final class Index {
   }
 
   public Module put(Module module) {
-    return this.modules.put(module.getName(), module);
+    this.modules.put(module.getName(), module);
+    return module;
   }
 
   public final class Module {

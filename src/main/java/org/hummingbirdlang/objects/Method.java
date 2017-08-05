@@ -1,4 +1,4 @@
-package org.hummingbirdlang.builtins;
+package org.hummingbirdlang.objects;
 
 import com.oracle.truffle.api.CallTarget;
 

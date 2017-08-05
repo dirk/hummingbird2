@@ -4,21 +4,28 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.hummingbirdlang.types.Type;
+import org.hummingbirdlang.types.realize.Index;
 
 /**
  * Source files are the top-level containers of types. Every source file
  * corresponds to a source scope containing names referencing types.
  */
 public class SourceScope implements Scope {
+  private final BuiltinScope parent;
   private Map<String, Type> types;
 
-  public SourceScope() {
+  public SourceScope(BuiltinScope parent) {
+    this.parent = parent;
     this.types = new HashMap<>();
   }
 
   @Override
   public Type get(String name) throws NameNotFoundException {
-    throw new NameNotFoundException("Name not found in SourceScope: " + name);
+    if (this.types.containsKey(name)) {
+      return this.types.get(name);
+    } else {
+      return this.parent.get(name);
+    }
   }
 
   @Override
@@ -28,6 +35,6 @@ public class SourceScope implements Scope {
 
   @Override
   public Scope getParent() {
-    throw new RuntimeException("Cannot getParent of SourceScope");
+    return this.parent;
   }
 }

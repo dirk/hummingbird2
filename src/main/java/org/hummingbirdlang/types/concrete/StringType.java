@@ -10,7 +10,7 @@ public final class StringType extends ConcreteType {
   private final MethodType toUpperCase;
 
   private StringType(BuiltinNodes builtins) {
-    this.toUpperCase = new MethodType(this, "toUpperCase", builtins.getCallTarget("String", "toUpperCase"));
+    this.toUpperCase = new MethodType(this, this, "toUpperCase", builtins.getCallTarget("String", "toUpperCase"));
   }
 
   public static StringType bootstrap(BuiltinNodes builtins) {

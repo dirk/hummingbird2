@@ -12,4 +12,7 @@ public @interface BuiltinMethod {
 
   // If it has a first argument with its receiver, ie. `this`.
   boolean usesThis() default true;
+
+  // Count of required arguments.
+  int required() default 0;
 }

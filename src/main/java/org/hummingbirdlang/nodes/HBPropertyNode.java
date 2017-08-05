@@ -4,7 +4,7 @@ import java.lang.reflect.Field;
 import com.oracle.truffle.api.CompilerDirectives.CompilationFinal;
 import com.oracle.truffle.api.frame.VirtualFrame;
 
-import org.hummingbirdlang.builtins.Method;
+import org.hummingbirdlang.objects.Method;
 import org.hummingbirdlang.parser.Token;
 import org.hummingbirdlang.types.Property;
 import org.hummingbirdlang.types.TypeException;

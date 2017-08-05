@@ -14,6 +14,7 @@ import com.oracle.truffle.api.source.SourceSection;
 import org.hummingbirdlang.HBLanguage;
 import org.hummingbirdlang.nodes.HBFunctionRootNode;
 import org.hummingbirdlang.nodes.HBNode;
+import org.hummingbirdlang.nodes.arguments.GetArgumentNode;
 import org.hummingbirdlang.nodes.arguments.GetThisNode;
 
 public class BuiltinNodes {
@@ -23,6 +24,7 @@ public class BuiltinNodes {
 
   private BuiltinNodes(HBLanguage language) {
     this.language = language;
+    this.addNodeFactories(GlobalNodesFactory.getFactories());
     this.addNodeFactories(StringNodesFactory.getFactories());
   }
 
@@ -57,8 +59,14 @@ public class BuiltinNodes {
     assert signatures.size() == 1;
 
     List<HBNode> argumentsNodes = new ArrayList<>();
+    int argumentOffset = 0;
     if (methodAnnotation.usesThis()) {
       argumentsNodes.add(new GetThisNode());
+      argumentOffset++;
+    }
+    int argumentsCount = methodAnnotation.required();
+    for (int index = 0; index < argumentsCount; index++) {
+      argumentsNodes.add(new GetArgumentNode(argumentOffset + index));
     }
 
     Object[] arguments = argumentsNodes.toArray(new HBNode[argumentsNodes.size()]);
