@@ -65,11 +65,16 @@ public class BuiltinNodes {
     return factory.createNode(arguments);
   }
 
-  public MethodTargets get(String name) {
-    if (!this.classes.containsKey(name)) {
-      throw new Error("Missing built-in: " + name);
+  public CallTarget getCallTarget(String className, String methodName) {
+    if (!this.classes.containsKey(className)) {
+      throw new Error("Missing built-in class: " + className);
     }
-    return this.classes.get(name);
+
+    MethodTargets methodTargets = this.classes.get(className);
+    if (!methodTargets.contains(methodName)) {
+      throw new Error("Missing built-in method: " + className + "." + methodName);
+    }
+    return methodTargets.get(methodName);
   }
 
   private MethodTargets getOrCreateMethodTargets(String name) {
