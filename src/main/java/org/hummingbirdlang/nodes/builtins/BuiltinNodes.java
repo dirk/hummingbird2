@@ -23,7 +23,7 @@ public class BuiltinNodes {
 
   private BuiltinNodes(HBLanguage language) {
     this.language = language;
-    this.addNodeFactories(HBStringNodesFactory.getFactories());
+    this.addNodeFactories(StringNodesFactory.getFactories());
   }
 
   public static BuiltinNodes bootstrap(HBLanguage language) {
