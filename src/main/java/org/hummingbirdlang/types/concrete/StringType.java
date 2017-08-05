@@ -1,6 +1,6 @@
 package org.hummingbirdlang.types.concrete;
 
-import org.hummingbirdlang.builtins.Builtins;
+import org.hummingbirdlang.nodes.builtins.BuiltinNodes;
 import org.hummingbirdlang.types.ConcreteType;
 import org.hummingbirdlang.types.MethodProperty;
 import org.hummingbirdlang.types.Property;
@@ -9,11 +9,11 @@ import org.hummingbirdlang.types.PropertyNotFoundException;
 public final class StringType extends ConcreteType {
   private final MethodType toUpperCase;
 
-  private StringType(Builtins builtins) {
+  private StringType(BuiltinNodes builtins) {
     this.toUpperCase = new MethodType(this, "toUpperCase", builtins.get("String").get("toUpperCase"));
   }
 
-  public static StringType bootstrap(Builtins builtins) {
+  public static StringType bootstrap(BuiltinNodes builtins) {
     return new StringType(builtins);
   }
 

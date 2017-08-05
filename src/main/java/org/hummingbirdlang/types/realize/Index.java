@@ -3,7 +3,7 @@ package org.hummingbirdlang.types.realize;
 import java.util.HashMap;
 
 import org.hummingbirdlang.HBLanguage;
-import org.hummingbirdlang.builtins.Builtins;
+import org.hummingbirdlang.nodes.builtins.BuiltinNodes;
 import org.hummingbirdlang.types.Type;
 import org.hummingbirdlang.types.concrete.StringType;
 
@@ -16,13 +16,13 @@ public final class Index {
 
   private final HashMap<String, Module> modules = new HashMap<>();
 
-  private Index(Builtins builtins) {
+  private Index(BuiltinNodes builtins) {
     Module builtin = new Module(Index.BUILTIN);
     builtin.put("String", StringType.bootstrap(builtins));
     this.put(builtin);
   }
 
-  public static Index bootstrap(Builtins builtins) {
+  public static Index bootstrap(BuiltinNodes builtins) {
     return new Index(builtins);
   }
 

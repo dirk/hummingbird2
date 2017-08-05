@@ -9,7 +9,7 @@ import com.oracle.truffle.api.CallTarget;
 import com.oracle.truffle.api.TruffleLanguage;
 import com.oracle.truffle.api.source.Source;
 
-import org.hummingbirdlang.builtins.Builtins;
+import org.hummingbirdlang.nodes.builtins.BuiltinNodes;
 import org.hummingbirdlang.nodes.HBSourceRootNode;
 import org.hummingbirdlang.parser.ParserWrapper;
 import org.hummingbirdlang.types.realize.Index;
@@ -38,8 +38,8 @@ public final class HBLanguage extends TruffleLanguage<HBContext> {
 
     // Bootstrap the builtin node targets and the builtin types in the
     // type-system.
-    Builtins builtins = Builtins.bootstrap(this);
-    Index index = Index.bootstrap(builtins);
+    BuiltinNodes builtinNodes = BuiltinNodes.bootstrap(this);
+    Index index = Index.bootstrap(builtinNodes);
 
     InferenceVisitor visitor = new InferenceVisitor(index);
     program.accept(visitor);

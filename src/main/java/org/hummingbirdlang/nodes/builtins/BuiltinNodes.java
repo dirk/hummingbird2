@@ -1,18 +1,8 @@
-package org.hummingbirdlang.builtins;
+package org.hummingbirdlang.nodes.builtins;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import org.hummingbirdlang.HBLanguage;
-import org.hummingbirdlang.nodes.HBFunctionRootNode;
-import org.hummingbirdlang.nodes.HBNode;
-import org.hummingbirdlang.nodes.arguments.GetThisNode;
-import org.hummingbirdlang.nodes.builtins.BuiltinClass;
-import org.hummingbirdlang.nodes.builtins.BuiltinMethod;
-import org.hummingbirdlang.nodes.builtins.HBBuiltinRootNode;
-import org.hummingbirdlang.nodes.builtins.HBStringNodesFactory;
-
 import com.oracle.truffle.api.CallTarget;
 import com.oracle.truffle.api.Truffle;
 import com.oracle.truffle.api.dsl.GeneratedBy;
@@ -21,18 +11,23 @@ import com.oracle.truffle.api.frame.FrameDescriptor;
 import com.oracle.truffle.api.source.Source;
 import com.oracle.truffle.api.source.SourceSection;
 
-public class Builtins {
+import org.hummingbirdlang.HBLanguage;
+import org.hummingbirdlang.nodes.HBFunctionRootNode;
+import org.hummingbirdlang.nodes.HBNode;
+import org.hummingbirdlang.nodes.arguments.GetThisNode;
+
+public class BuiltinNodes {
   private HBLanguage language;
 
   private HashMap<String, MethodTargets> classes = new HashMap<>();
 
-  private Builtins(HBLanguage language) {
+  private BuiltinNodes(HBLanguage language) {
     this.language = language;
     this.addNodeFactories(HBStringNodesFactory.getFactories());
   }
 
-  public static Builtins bootstrap(HBLanguage language) {
-    return new Builtins(language);
+  public static BuiltinNodes bootstrap(HBLanguage language) {
+    return new BuiltinNodes(language);
   }
 
   private void addNodeFactories(List<? extends NodeFactory<? extends HBNode>> factories) {
