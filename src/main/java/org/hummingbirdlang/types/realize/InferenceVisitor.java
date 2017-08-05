@@ -27,10 +27,12 @@ import org.hummingbirdlang.types.scope.SourceScope;
  * nodes in the AST.
  */
 public final class InferenceVisitor {
+  private final Index index;
   private Scope currentScope;
 
-  public InferenceVisitor() {
+  public InferenceVisitor(Index index) {
     this.currentScope = new SourceScope();
+    this.index = index;
   }
 
   private void pushScope() {
@@ -104,6 +106,6 @@ public final class InferenceVisitor {
   }
 
   public void visit(HBStringLiteralNode literalNode) {
-    literalNode.setType(StringType.SINGLETON);
+    literalNode.setType(this.index.getBuiltin().get("String"));
   }
 }

@@ -1,11 +1,13 @@
 package org.hummingbirdlang.builtins;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import org.hummingbirdlang.HBLanguage;
 import org.hummingbirdlang.nodes.HBFunctionRootNode;
 import org.hummingbirdlang.nodes.HBNode;
+import org.hummingbirdlang.nodes.arguments.GetThisNode;
 import org.hummingbirdlang.nodes.builtins.BuiltinClass;
 import org.hummingbirdlang.nodes.builtins.BuiltinMethod;
 import org.hummingbirdlang.nodes.builtins.HBBuiltinRootNode;
@@ -24,9 +26,13 @@ public class Builtins {
 
   private HashMap<String, MethodTargets> classes = new HashMap<>();
 
-  public Builtins(HBLanguage language) {
+  private Builtins(HBLanguage language) {
     this.language = language;
-    addNodeFactories(HBStringNodesFactory.getFactories());
+    this.addNodeFactories(HBStringNodesFactory.getFactories());
+  }
+
+  public static Builtins bootstrap(HBLanguage language) {
+    return new Builtins(language);
   }
 
   private void addNodeFactories(List<? extends NodeFactory<? extends HBNode>> factories) {
@@ -39,7 +45,8 @@ public class Builtins {
       String className = classAnnotation.value();
       MethodTargets methodTargets = this.getOrCreateMethodTargets(className);
 
-      HBNode bodyNode = factory.createNode();
+      HBNode bodyNode = this.createNode(factory, methodAnnotation);
+
       HBBuiltinRootNode rootNode = new HBBuiltinRootNode(
         this.language,
         new FrameDescriptor(),
@@ -50,15 +57,37 @@ public class Builtins {
     }
   }
 
+  private HBNode createNode(NodeFactory<? extends HBNode> factory, BuiltinMethod methodAnnotation) {
+    List<List<Class<?>>> signatures = factory.getNodeSignatures();
+    assert signatures.size() == 1;
+
+    List<HBNode> argumentsNodes = new ArrayList<>();
+    if (methodAnnotation.usesThis()) {
+      argumentsNodes.add(new GetThisNode());
+    }
+
+    Object[] arguments = argumentsNodes.toArray(new HBNode[argumentsNodes.size()]);
+    return factory.createNode(arguments);
+  }
+
+  public MethodTargets get(String name) {
+    if (!this.classes.containsKey(name)) {
+      throw new Error("Missing built-in: " + name);
+    }
+    return this.classes.get(name);
+  }
+
   private MethodTargets getOrCreateMethodTargets(String name) {
-    if (classes.containsKey(name)) {
-      return classes.get(name);
+    if (this.classes.containsKey(name)) {
+      return this.classes.get(name);
     } else {
-      return classes.put(name, new MethodTargets());
+      MethodTargets methodTargets = new MethodTargets();
+      this.classes.put(name, methodTargets);
+      return methodTargets;
     }
   }
 
-  private class MethodTargets {
+  public class MethodTargets {
     private HashMap<String, CallTarget> map = new HashMap<>();
 
     public MethodTargets() {

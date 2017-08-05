@@ -1,18 +1,30 @@
 package org.hummingbirdlang.types.concrete;
 
+import org.hummingbirdlang.builtins.Builtins;
 import org.hummingbirdlang.types.ConcreteType;
+import org.hummingbirdlang.types.MethodProperty;
 import org.hummingbirdlang.types.Property;
 import org.hummingbirdlang.types.PropertyNotFoundException;
 
 public final class StringType extends ConcreteType {
-  public static final StringType SINGLETON = new StringType();
+  private final MethodType toUpperCase;
 
-  private StringType() {
+  private StringType(Builtins builtins) {
+    this.toUpperCase = new MethodType(this, "toUpperCase", builtins.get("String").get("toUpperCase"));
+  }
+
+  public static StringType bootstrap(Builtins builtins) {
+    return new StringType(builtins);
   }
 
   @Override
   public Property getProperty(String name) throws PropertyNotFoundException {
-    throw new PropertyNotFoundException(this, name);
+    switch (name) {
+      case "toUpperCase":
+        return MethodProperty.fromType(this.toUpperCase);
+      default:
+        throw new PropertyNotFoundException(this, name);
+    }
   }
 
   @Override

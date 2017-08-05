@@ -9,4 +9,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface BuiltinMethod {
   String value();
+
+  // If it has a first argument with its receiver, ie. `this`.
+  boolean usesThis() default true;
 }
