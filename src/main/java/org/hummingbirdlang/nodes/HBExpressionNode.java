@@ -11,14 +11,6 @@ import org.hummingbirdlang.types.realize.Typeable;
 public abstract class HBExpressionNode extends HBStatementNode implements Typeable {
   @CompilationFinal Type type;
 
-  // Execute with a generic unspecialized return value.
-  public abstract Object executeGeneric(VirtualFrame frame) throws Exception;
-
-  @Override
-  public void executeVoid(VirtualFrame frame) throws Exception {
-    executeGeneric(frame);
-  }
-
   public Type getType() {
     return this.type;
   }

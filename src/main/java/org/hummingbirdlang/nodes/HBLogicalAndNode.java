@@ -19,7 +19,7 @@ public class HBLogicalAndNode extends HBBinaryOperatorNode {
   }
 
   @Override
-  public Object executeGeneric(VirtualFrame frame) throws Exception {
+  public Object executeGeneric(VirtualFrame frame) {
     // TODO: Better truthiness!
     Object leftValue = this.leftNode.executeGeneric(frame);
     Object rightValue = this.rightNode.executeGeneric(frame);

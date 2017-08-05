@@ -28,8 +28,8 @@ public class HBLetDeclarationNode extends HBStatementNode {
   }
 
   @Override
-  public void executeVoid(VirtualFrame frame) {
-    return;
+  public Object executeGeneric(VirtualFrame frame) {
+    return null;
   }
 
   @Override

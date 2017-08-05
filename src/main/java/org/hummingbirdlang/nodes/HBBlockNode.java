@@ -24,10 +24,11 @@ public class HBBlockNode extends HBStatementNode {
   }
 
   @Override
-  public void executeVoid(VirtualFrame frame) throws Exception {
+  public Object executeGeneric(VirtualFrame frame) {
     for (HBStatementNode bodyNode : bodyNodes) {
       bodyNode.executeVoid(frame);
     }
+    return null;
   }
 
   @Override

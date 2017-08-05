@@ -16,7 +16,7 @@ public class HBLogicalOrNode extends HBBinaryOperatorNode {
   }
 
   @Override
-  public Object executeGeneric(VirtualFrame frame) throws Exception {
+  public Object executeGeneric(VirtualFrame frame) {
     // TODO: Better truthiness!
     Object leftValue = this.leftNode.executeGeneric(frame);
     if (leftValue != null) {

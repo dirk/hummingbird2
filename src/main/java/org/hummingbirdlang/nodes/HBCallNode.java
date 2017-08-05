@@ -34,7 +34,7 @@ public class HBCallNode extends HBExpressionNode {
   }
 
   @Override
-  public Object executeGeneric(VirtualFrame frame) throws Exception {
+  public Object executeGeneric(VirtualFrame frame) {
     Object target = this.targetNode.executeGeneric(frame);
     return null;
   }

@@ -35,11 +35,15 @@ public class HBPropertyNode extends HBExpressionNode {
   }
 
   @Override
-  public Object executeGeneric(VirtualFrame frame) throws Exception, NoSuchFieldException {
+  public Object executeGeneric(VirtualFrame frame) {
     Object receiver = this.targetNode.executeGeneric(frame);
     Class<?> receiverClass = receiver.getClass();
-    Field field = receiverClass.getField(this.property);
-    return field.get(receiver);
+    try {
+      Field field = receiverClass.getField(this.property);
+      return field.get(receiver);
+    } catch (NoSuchFieldException | IllegalAccessException error) {
+      throw new RuntimeException(error);
+    }
   }
 
   @Override
