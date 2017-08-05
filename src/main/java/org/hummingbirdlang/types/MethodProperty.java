@@ -13,4 +13,9 @@ public class MethodProperty extends Property {
   public static MethodProperty fromType(MethodType methodType) {
     return new MethodProperty(methodType.getParent(), methodType.getName(), methodType);
   }
+
+  @Override
+  public Type getType() {
+    return this.methodType;
+  }
 }

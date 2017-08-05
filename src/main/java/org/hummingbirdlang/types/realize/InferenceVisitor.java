@@ -102,7 +102,9 @@ public final class InferenceVisitor {
 
   public void visit(HBPropertyNode propertyNode) throws PropertyNotFoundException {
     Type targetType = propertyNode.getTargetNode().getType();
-    Property type = targetType.getProperty(propertyNode.getProperty());
+    Property property = targetType.getProperty(propertyNode.getPropertyName());
+    propertyNode.setProperty(property);
+    propertyNode.setType(property.getType());
   }
 
   public void visit(HBStringLiteralNode literalNode) {

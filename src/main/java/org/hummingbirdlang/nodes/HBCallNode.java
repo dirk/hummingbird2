@@ -3,8 +3,10 @@ package org.hummingbirdlang.nodes;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import com.oracle.truffle.api.CallTarget;
 import com.oracle.truffle.api.frame.VirtualFrame;
 
+import org.hummingbirdlang.builtins.Method;
 import org.hummingbirdlang.types.TypeException;
 import org.hummingbirdlang.types.realize.InferenceVisitor;
 
@@ -36,7 +38,14 @@ public class HBCallNode extends HBExpressionNode {
   @Override
   public Object executeGeneric(VirtualFrame frame) {
     Object target = this.targetNode.executeGeneric(frame);
-    return null;
+
+    if (target instanceof Method) {
+      Method method = (Method)target;
+      CallTarget callTarget = method.getCallTarget();
+      return callTarget.call(method.getReceiver());
+    } else {
+      throw new Error("Cannot call to: " + target.toString());
+    }
   }
 
   @Override

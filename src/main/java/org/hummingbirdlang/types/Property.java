@@ -11,4 +11,7 @@ public abstract class Property {
     this.parent = parent;
     this.name = name;
   }
+
+  // Returns the type of the property (right now just `MethodType`).
+  public abstract Type getType();
 }
