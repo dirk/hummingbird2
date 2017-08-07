@@ -1,5 +1,6 @@
 package org.hummingbirdlang.nodes;
 
+import com.oracle.truffle.api.frame.FrameSlot;
 import com.oracle.truffle.api.frame.VirtualFrame;
 
 import org.hummingbirdlang.types.TypeException;
@@ -29,6 +30,9 @@ public class HBLetDeclarationNode extends HBStatementNode {
 
   @Override
   public Object executeGeneric(VirtualFrame frame) {
+    Object value = this.rightNode.executeGeneric(frame);
+    FrameSlot frameSlot = frame.getFrameDescriptor().findOrAddFrameSlot(this.left);
+    frame.setObject(frameSlot, value);
     return null;
   }
 
