@@ -31,6 +31,7 @@ public class HBFunctionRootNode extends RootNode implements Visitable {
 
   @Override
   public Object execute(VirtualFrame frame) {
+    this.bodyNode.executeGeneric(frame);
     return null;
   }
 

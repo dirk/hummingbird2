@@ -14,9 +14,11 @@ import org.hummingbirdlang.types.composite.SumType;
 import org.hummingbirdlang.types.concrete.BooleanType;
 import org.hummingbirdlang.types.concrete.IntegerType;
 import org.hummingbirdlang.types.concrete.StringType;
+import org.hummingbirdlang.types.FunctionType;
 import org.hummingbirdlang.types.Property;
 import org.hummingbirdlang.types.PropertyNotFoundException;
 import org.hummingbirdlang.types.Type;
+import org.hummingbirdlang.types.UnknownType;
 import org.hummingbirdlang.types.scope.BuiltinScope;
 import org.hummingbirdlang.types.scope.LocalScope;
 import org.hummingbirdlang.types.scope.NameNotFoundException;
@@ -56,6 +58,15 @@ public final class InferenceVisitor {
   }
 
   public void enter(HBFunctionNode functionNode) {
+    // TODO: Actually set and/or infer parameter and return types.
+    FunctionType type = new FunctionType(
+      new Type[]{},
+      new UnknownType(),
+      functionNode.getName(),
+      functionNode.getCallTarget()
+    );
+    functionNode.setFunctionType(type);
+    this.currentScope.setLocal(functionNode.getName(), type);
     this.pushScope();
   }
 
