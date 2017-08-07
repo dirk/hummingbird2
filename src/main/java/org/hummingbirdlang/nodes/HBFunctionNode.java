@@ -3,6 +3,8 @@ package org.hummingbirdlang.nodes;
 import com.oracle.truffle.api.CallTarget;
 import com.oracle.truffle.api.Truffle;
 import com.oracle.truffle.api.CompilerDirectives.CompilationFinal;
+import com.oracle.truffle.api.dsl.Cached;
+import com.oracle.truffle.api.dsl.Specialization;
 import com.oracle.truffle.api.frame.FrameDescriptor;
 import com.oracle.truffle.api.frame.FrameSlot;
 import com.oracle.truffle.api.frame.VirtualFrame;
@@ -14,9 +16,8 @@ import org.hummingbirdlang.types.FunctionType;
 import org.hummingbirdlang.types.Type;
 import org.hummingbirdlang.types.TypeException;
 import org.hummingbirdlang.types.realize.InferenceVisitor;
-import org.hummingbirdlang.types.realize.Typeable;
 
-public class HBFunctionNode extends HBStatementNode {
+public abstract class HBFunctionNode extends HBStatementNode {
   private final String name;
   @Child private HBFunctionRootNode rootNode;
   @CompilationFinal FunctionType functionType;
@@ -36,12 +37,6 @@ public class HBFunctionNode extends HBStatementNode {
     return name;
   }
 
-  // Can't be `getRootNode` because Truffle's `Node` already has a final
-  // implementation of it.
-  public HBFunctionRootNode getOwnRootNode() {
-    return this.rootNode;
-  }
-
   public CallTarget getCallTarget() {
     return Truffle.getRuntime().createCallTarget(this.rootNode);
   }
@@ -54,12 +49,18 @@ public class HBFunctionNode extends HBStatementNode {
     this.functionType = functionType;
   }
 
-  @Override
-  public Object executeGeneric(VirtualFrame frame) {
-    Function value = new Function(this.functionType);
+  @Specialization
+  public Object cachedExecuteGeneric(
+    VirtualFrame frame,
+    @Cached("createFunction()") Function value
+  ) {
     FrameSlot frameSlot = frame.getFrameDescriptor().findOrAddFrameSlot(this.name);
     frame.setObject(frameSlot, value);
     return null;
+  }
+
+  protected Function createFunction() {
+    return new Function(this.functionType);
   }
 
   @Override

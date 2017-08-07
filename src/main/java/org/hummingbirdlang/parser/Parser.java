@@ -187,7 +187,7 @@ public class Parser {
 		Expect(12);
 		HBBlockNode block = Block();
 		int length = (t.charPos + t.val.length()) - start;
-		result = new HBFunctionNode(
+		result = HBFunctionNodeGen.create(
 		 this.language,
 		 name,
 		 block,

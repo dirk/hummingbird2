@@ -88,7 +88,7 @@ FunctionDeclaration<out HBFunctionNode result> =
   "("
   ")"
   Block<out HBBlockNode block> (. int length = (t.charPos + t.val.length()) - start;
-                                  result = new HBFunctionNode(
+                                  result = HBFunctionNodeGen.create(
                                     this.language,
                                     name,
                                     block,
