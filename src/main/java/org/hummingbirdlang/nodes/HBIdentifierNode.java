@@ -31,6 +31,6 @@ public class HBIdentifierNode extends HBExpressionNode {
 
   @Override
   public String toString() {
-    return this.name;
+    return "HBIdentifierNode(" + this.name + ")";
   }
 }

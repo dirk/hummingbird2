@@ -38,6 +38,12 @@ public class HBLetDeclarationNode extends HBStatementNode {
 
   @Override
   public String toString() {
-    return "let " + this.left + " = " + this.rightNode.toString();
+    StringBuilder result = new StringBuilder("HBLetDeclarationNode");
+    result.append("(");
+    result.append(this.left);
+    result.append(" = ");
+    result.append(this.rightNode.toString());
+    result.append(")");
+    return result.toString();
   }
 }
