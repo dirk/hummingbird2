@@ -12,12 +12,12 @@ import org.hummingbirdlang.objects.Function;
 import org.hummingbirdlang.types.FunctionType;
 import org.hummingbirdlang.types.Type;
 import org.hummingbirdlang.types.TypeException;
+import org.hummingbirdlang.types.realize.InferenceVisitable;
 import org.hummingbirdlang.types.realize.InferenceVisitor;
-import org.hummingbirdlang.types.realize.Visitable;
 import org.hummingbirdlang.types.scope.BuiltinScope;
 import org.hummingbirdlang.types.scope.SourceScope;
 
-public class HBSourceRootNode extends RootNode implements Visitable {
+public class HBSourceRootNode extends RootNode implements InferenceVisitable {
   @Child private HBBlockNode bodyNode;
   private final SourceSection sourceSection;
   @CompilationFinal private BuiltinScope builtinScope;

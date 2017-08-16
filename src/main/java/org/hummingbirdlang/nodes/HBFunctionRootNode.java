@@ -7,10 +7,10 @@ import com.oracle.truffle.api.source.SourceSection;
 
 import org.hummingbirdlang.HBLanguage;
 import org.hummingbirdlang.types.TypeException;
+import org.hummingbirdlang.types.realize.InferenceVisitable;
 import org.hummingbirdlang.types.realize.InferenceVisitor;
-import org.hummingbirdlang.types.realize.Visitable;
 
-public class HBFunctionRootNode extends RootNode implements Visitable {
+public class HBFunctionRootNode extends RootNode implements InferenceVisitable {
   @Child private HBBlockNode bodyNode;
   private final SourceSection sourceSection;
 
