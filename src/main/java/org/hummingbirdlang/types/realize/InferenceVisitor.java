@@ -2,17 +2,20 @@ package org.hummingbirdlang.types.realize;
 
 import org.hummingbirdlang.nodes.HBBlockNode;
 import org.hummingbirdlang.nodes.HBCallNode;
+import org.hummingbirdlang.nodes.HBExpressionNode;
 import org.hummingbirdlang.nodes.HBFunctionNode;
 import org.hummingbirdlang.nodes.HBIdentifierNode;
 import org.hummingbirdlang.nodes.HBIntegerLiteralNode;
 import org.hummingbirdlang.nodes.HBLetDeclarationNode;
 import org.hummingbirdlang.nodes.HBLogicalAndNode;
 import org.hummingbirdlang.nodes.HBPropertyNode;
+import org.hummingbirdlang.nodes.HBReturnNode;
 import org.hummingbirdlang.nodes.HBSourceRootNode;
 import org.hummingbirdlang.nodes.HBStringLiteralNode;
 import org.hummingbirdlang.types.composite.SumType;
 import org.hummingbirdlang.types.concrete.BooleanType;
 import org.hummingbirdlang.types.concrete.IntegerType;
+import org.hummingbirdlang.types.concrete.NullType;
 import org.hummingbirdlang.types.concrete.StringType;
 import org.hummingbirdlang.types.FunctionType;
 import org.hummingbirdlang.types.Property;
@@ -119,6 +122,15 @@ public final class InferenceVisitor {
     Property property = targetType.getProperty(propertyNode.getPropertyName());
     propertyNode.setProperty(property);
     propertyNode.setType(property.getType());
+  }
+
+  public void visit(HBReturnNode returnNode) {
+    Type returnType = NullType.SINGLETON;
+    HBExpressionNode expressionNode = returnNode.getExpressionNode();
+    if (expressionNode != null) {
+      returnType = expressionNode.getType();
+    }
+    returnNode.setReturnType(returnType);
   }
 
   public void visit(HBStringLiteralNode literalNode) {
