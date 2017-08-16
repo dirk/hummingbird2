@@ -45,13 +45,11 @@ public abstract class HBReturnNode extends HBStatementNode {
   @Specialization(guards = {"expressionNode != null"})
   public Object returnUsingExpression(VirtualFrame frame) {
     Object returnValue = this.expressionNode.executeGeneric(frame);
-    // TODO: Raise a return control flow exception.
-    return null;
+    throw new HBReturnException(returnValue);
   }
 
   @Specialization(guards = {"expressionNode == null"})
   public Object returnNull(VirtualFrame frame) {
-    // TODO: Raise control flow exception.
-    return null;
+    throw new HBReturnException(null);
   }
 }
