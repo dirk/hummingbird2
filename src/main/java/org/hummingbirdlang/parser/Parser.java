@@ -202,9 +202,14 @@ public class Parser {
 	HBReturnNode  ReturnStatement() {
 		HBReturnNode  result;
 		Expect(5);
-		result = HBReturnNodeGen.create();
+		HBExpressionNode expressionNode = null;
 		if (StartOf(2)) {
-			HBExpressionNode expression = Expression();
+			expressionNode = Expression();
+		}
+		if (expressionNode == null) {
+		 result = HBReturnNodeGen.create();
+		} else {
+		 result = HBReturnNodeGen.create(expressionNode);
 		}
 		return result;
 	}

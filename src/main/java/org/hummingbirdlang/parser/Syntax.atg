@@ -99,10 +99,15 @@ FunctionDeclaration<out HBFunctionNode result> =
   .
 
 ReturnStatement<out HBReturnNode result> =
-  return (. result = HBReturnNodeGen.create(); .)
+  return                           (. HBExpressionNode expressionNode = null; .)
   [
-    Expression<out HBExpressionNode expression>
+    Expression<out expressionNode>
   ]
+                                   (. if (expressionNode == null) {
+                                        result = HBReturnNodeGen.create();
+                                      } else {
+                                        result = HBReturnNodeGen.create(expressionNode);
+                                      } .)
   .
 
 Block<out HBBlockNode result> =
