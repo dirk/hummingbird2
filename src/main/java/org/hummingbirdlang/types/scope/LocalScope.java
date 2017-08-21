@@ -8,8 +8,9 @@ import org.hummingbirdlang.types.Type;
 /**
  * Defines a local scope, such as inside of a function.
  */
-public class LocalScope implements Scope {
+public class LocalScope extends AbstractScope implements Scope {
   private Scope parent;
+  // Types of local variables.
   private Map<String, Type> types;
 
   public LocalScope(Scope parent) {
@@ -18,11 +19,12 @@ public class LocalScope implements Scope {
   }
 
   @Override
-  public Type get(String name) throws NameNotFoundException {
-    if (this.types.containsKey(name)) {
-      return this.types.get(name);
+  public void accept(Resolution resolution) throws NameNotFoundException {
+    resolution.pushScope(this);
+    if (this.types.containsKey(resolution.getName())) {
+      resolution.setType(this.types.get(resolution.getName()));
     } else {
-      return this.parent.get(name);
+      this.parent.accept(resolution);
     }
   }
 

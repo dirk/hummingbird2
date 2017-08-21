@@ -10,7 +10,7 @@ import org.hummingbirdlang.types.realize.Index;
  * Source files are the top-level containers of types. Every source file
  * corresponds to a source scope containing names referencing types.
  */
-public class SourceScope implements Scope {
+public class SourceScope extends AbstractScope implements Scope {
   private final BuiltinScope parent;
   private Map<String, Type> types;
 
@@ -20,11 +20,12 @@ public class SourceScope implements Scope {
   }
 
   @Override
-  public Type get(String name) throws NameNotFoundException {
-    if (this.types.containsKey(name)) {
-      return this.types.get(name);
+  public void accept(Resolution resolution) throws NameNotFoundException {
+    resolution.pushScope(this);
+    if (this.types.containsKey(resolution.getName())) {
+      resolution.setType(this.types.get(resolution.getName()));
     } else {
-      return this.parent.get(name);
+      this.parent.accept(resolution);
     }
   }
 

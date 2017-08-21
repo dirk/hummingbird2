@@ -8,7 +8,7 @@ import org.hummingbirdlang.types.Type;
 import org.hummingbirdlang.types.composite.TypeReferenceType;
 import org.hummingbirdlang.types.realize.Index;
 
-public class BuiltinScope implements Scope, Iterable<String> {
+public class BuiltinScope extends AbstractScope implements Scope, Iterable<String> {
   private final Map<String, Type> types;
 
   public BuiltinScope(Index index) {
@@ -21,11 +21,12 @@ public class BuiltinScope implements Scope, Iterable<String> {
   }
 
   @Override
-  public Type get(String name) throws NameNotFoundException {
-    if (this.types.containsKey(name)) {
-      return this.types.get(name);
+  public void accept(Resolution resolution) throws NameNotFoundException {
+    resolution.pushScope(this);
+    if (this.types.containsKey(resolution.getName())) {
+      resolution.setType(this.types.get(resolution.getName()));
     } else {
-      throw new NameNotFoundException("Name not found in BuiltinScope: " + name);
+      throw new NameNotFoundException("Name not found in BuiltinScope: " + resolution.getName());
     }
   }
 
