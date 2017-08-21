@@ -57,7 +57,11 @@ public final class InferenceVisitor {
   }
 
   public void leave(HBSourceRootNode rootNode) {
-    return;
+    // Current scope should be the `SourceScope`.
+    if (!(this.currentScope instanceof SourceScope)) {
+      throw new RuntimeException("Did not return to SourceScope");
+    }
+    this.currentScope.close();
   }
 
   public void enter(HBFunctionNode functionNode) {
@@ -74,6 +78,7 @@ public final class InferenceVisitor {
   }
 
   public void leave(HBFunctionNode functionNode) {
+    this.currentScope.close();
     this.popScope();
   }
 

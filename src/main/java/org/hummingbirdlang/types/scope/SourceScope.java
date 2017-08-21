@@ -31,6 +31,7 @@ public class SourceScope extends AbstractScope implements Scope {
 
   @Override
   public void setLocal(String name, Type type) {
+    this.assertIsNotClosed();
     this.types.put(name, type);
   }
 

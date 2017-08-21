@@ -18,6 +18,8 @@ public class BuiltinScope extends AbstractScope implements Scope, Iterable<Strin
     types.put("String", new TypeReferenceType(builtin.get("StringType")));
     types.put("println", builtin.get("println"));
     this.types = types;
+    // You can't modify the builtin scope!
+    this.close();
   }
 
   @Override
@@ -32,12 +34,12 @@ public class BuiltinScope extends AbstractScope implements Scope, Iterable<Strin
 
   @Override
   public void setLocal(String name, Type type) {
-    throw new Error("Cannot modify BuiltinScope: " + name);
+    throw new RuntimeException("Cannot modify BuiltinScope: " + name);
   }
 
   @Override
   public Scope getParent() {
-    throw new Error("Cannot getParent of BuiltinScope");
+    throw new RuntimeException("Cannot getParent of BuiltinScope");
   }
 
   @Override

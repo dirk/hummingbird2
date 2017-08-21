@@ -36,4 +36,10 @@ abstract class AbstractScope implements Scope {
   public boolean isClosed() {
     return this.closed;
   }
+
+  protected void assertIsNotClosed() {
+    if (this.closed) {
+      throw new RuntimeException("Scope is closed");
+    }
+  }
 }
