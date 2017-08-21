@@ -2,6 +2,7 @@ package org.hummingbirdlang.types.scope;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.hummingbirdlang.types.Type;
@@ -40,6 +41,11 @@ public class BuiltinScope extends AbstractScope implements Scope, Iterable<Strin
   @Override
   public Scope getParent() {
     throw new RuntimeException("Cannot getParent of BuiltinScope");
+  }
+
+  @Override
+  public List<Resolution> getNonLocalResolutions() {
+    throw new RuntimeException("Cannot getNonLocalResolutions of BuiltinScope");
   }
 
   @Override

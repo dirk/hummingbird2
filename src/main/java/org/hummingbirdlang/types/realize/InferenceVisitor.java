@@ -25,6 +25,7 @@ import org.hummingbirdlang.types.UnknownType;
 import org.hummingbirdlang.types.scope.BuiltinScope;
 import org.hummingbirdlang.types.scope.LocalScope;
 import org.hummingbirdlang.types.scope.NameNotFoundException;
+import org.hummingbirdlang.types.scope.Resolution;
 import org.hummingbirdlang.types.scope.Scope;
 import org.hummingbirdlang.types.scope.SourceScope;
 
@@ -95,8 +96,8 @@ public final class InferenceVisitor {
   }
 
   public void visit(HBIdentifierNode identifierNode) throws NameNotFoundException {
-    Type type = this.currentScope.get(identifierNode.getName());
-    identifierNode.setType(type);
+    Resolution resolution = this.currentScope.resolve(identifierNode.getName());
+    identifierNode.setResolution(resolution);
   }
 
   public void visit(HBIntegerLiteralNode literalNode) {

@@ -35,4 +35,20 @@ public final class Resolution {
   public void setType(Type type) {
     this.type = type;
   }
+
+  public boolean isLocal() {
+    this.assertPathIsNotEmpty();
+    return this.path.size() == 1;
+  }
+
+  public boolean isNonLocal() {
+    this.assertPathIsNotEmpty();
+    return this.path.size() > 1;
+  }
+
+  private void assertPathIsNotEmpty() {
+    if (this.path.isEmpty()) {
+      throw new RuntimeException("Empty path in resolution");
+    }
+  }
 }

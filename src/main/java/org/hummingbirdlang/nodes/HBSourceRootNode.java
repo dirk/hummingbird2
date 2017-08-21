@@ -8,6 +8,8 @@ import com.oracle.truffle.api.nodes.RootNode;
 import com.oracle.truffle.api.source.SourceSection;
 
 import org.hummingbirdlang.HBLanguage;
+import org.hummingbirdlang.nodes.frames.SetBindingsNodeGen;
+import org.hummingbirdlang.objects.Bindings;
 import org.hummingbirdlang.objects.Function;
 import org.hummingbirdlang.types.FunctionType;
 import org.hummingbirdlang.types.Type;
@@ -43,17 +45,8 @@ public class HBSourceRootNode extends RootNode implements InferenceVisitable {
     FrameDescriptor frameDescriptor = frame.getFrameDescriptor();
 
     try {
-      // Bootstrap builtins into frame.
-      for (String name : this.builtinScope) {
-        Type type = this.builtinScope.get(name);
-        if (type instanceof FunctionType) {
-          Object function = new Function((FunctionType)type);
-          FrameSlot frameSlot = frameDescriptor.findOrAddFrameSlot(name);
-          frame.setObject(frameSlot, function);
-        } else {
-          System.out.println("Skipping bootstrap of builtin " + name + ": " + type.toString());
-        }
-      }
+      Bindings bindings = new Bindings(this.builtinScope);
+      SetBindingsNodeGen.create(bindings).executeVoid(frame);
 
       this.bodyNode.executeVoid(frame);
     } catch (Exception exception) {

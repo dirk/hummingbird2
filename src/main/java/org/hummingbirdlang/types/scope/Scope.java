@@ -1,5 +1,7 @@
 package org.hummingbirdlang.types.scope;
 
+import java.util.List;
+
 import org.hummingbirdlang.types.Type;
 
 public interface Scope {
@@ -8,6 +10,8 @@ public interface Scope {
   // assign the type, otherwise they push themselves onto the path and
   // recurse to their parent scope.
   public void accept(Resolution resolution) throws NameNotFoundException;
+
+  public Resolution resolve(String name) throws NameNotFoundException;
 
   // Get the type for the given name. Should create a `Resolution` and call
   // the `accept` recursion under the hood.
@@ -22,4 +26,7 @@ public interface Scope {
 
   // Returns whether or not the scope has been closed.
   public boolean isClosed();
+
+  // Should only be called on closed scopes.
+  public List<Resolution> getNonLocalResolutions();
 }
