@@ -40,6 +40,7 @@ public class HBCallNode extends HBExpressionNode {
   @Override
   public Object executeGeneric(VirtualFrame frame) {
     Object target = this.targetNode.executeGeneric(frame);
+    CallTarget callTarget;
 
     ArrayList<Object> arguments = new ArrayList<>();
     for (HBNode argumentNode : this.parameterNodes) {
@@ -48,18 +49,18 @@ public class HBCallNode extends HBExpressionNode {
 
     if (target instanceof Method) {
       Method method = (Method)target;
-      CallTarget callTarget = method.getCallTarget();
+      callTarget = method.getCallTarget();
       arguments.add(0, method.getReceiver());
-      return callTarget.call(arguments.toArray(new Object[arguments.size()]));
 
     } else if (target instanceof Function) {
       Function function = (Function)target;
-      CallTarget callTarget = function.getCallTarget();
-      return callTarget.call(arguments.toArray(new Object[arguments.size()]));
+      callTarget = function.getCallTarget();
 
     } else {
       throw new Error("Cannot call to: " + target.toString());
     }
+
+    return callTarget.call(arguments.toArray(new Object[arguments.size()]));
   }
 
   @Override
