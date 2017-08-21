@@ -16,4 +16,10 @@ public interface Scope {
   public void setLocal(String name, Type type);
 
   public Scope getParent();
+
+  // Close the scope to prevent further modifications.
+  public void close();
+
+  // Returns whether or not the scope has been closed.
+  public boolean isClosed();
 }

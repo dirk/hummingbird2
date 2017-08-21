@@ -9,6 +9,7 @@ import org.hummingbirdlang.types.Type;
  * Provides a cached implementation of `get`.
  */
 abstract class AbstractScope implements Scope {
+  private boolean closed = false;
   private Map<String, Resolution> cachedResolutions = new HashMap<>();
 
   @Override
@@ -21,5 +22,18 @@ abstract class AbstractScope implements Scope {
       this.accept(resolution);
     }
     return resolution.getType();
+  }
+
+  @Override
+  public void close() {
+    if (this.closed) {
+      throw new RuntimeException("Scope already closed");
+    }
+    this.closed = true;
+  }
+
+  @Override
+  public boolean isClosed() {
+    return this.closed;
   }
 }
