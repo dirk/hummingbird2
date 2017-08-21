@@ -9,7 +9,11 @@ public interface Scope {
   // recurse to their parent scope.
   public void accept(Resolution resolution) throws NameNotFoundException;
 
+  // Get the type for the given name. Should create a `Resolution` and call
+  // the `accept` recursion under the hood.
   public Type get(String name) throws NameNotFoundException;
+
   public void setLocal(String name, Type type);
+
   public Scope getParent();
 }
