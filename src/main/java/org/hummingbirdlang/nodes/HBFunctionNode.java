@@ -56,6 +56,7 @@ public abstract class HBFunctionNode extends HBStatementNode {
   ) {
     FrameSlot frameSlot = frame.getFrameDescriptor().findOrAddFrameSlot(this.name);
     frame.setObject(frameSlot, value);
+    this.rootNode.setDeclarationFrame(frame.materialize());
     return null;
   }
 

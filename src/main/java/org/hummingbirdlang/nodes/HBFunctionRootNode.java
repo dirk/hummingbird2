@@ -1,6 +1,8 @@
 package org.hummingbirdlang.nodes;
 
+import com.oracle.truffle.api.CompilerDirectives.CompilationFinal;
 import com.oracle.truffle.api.frame.FrameDescriptor;
+import com.oracle.truffle.api.frame.MaterializedFrame;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.RootNode;
 import com.oracle.truffle.api.source.SourceSection;
@@ -13,6 +15,7 @@ import org.hummingbirdlang.types.realize.InferenceVisitor;
 public class HBFunctionRootNode extends RootNode implements InferenceVisitable {
   @Child private HBBlockNode bodyNode;
   private final SourceSection sourceSection;
+  @CompilationFinal MaterializedFrame declarationFrame;
 
   public HBFunctionRootNode(HBLanguage language, SourceSection sourceSection, FrameDescriptor frameDescriptor, HBBlockNode bodyNode) {
     super(language, frameDescriptor);
@@ -22,6 +25,10 @@ public class HBFunctionRootNode extends RootNode implements InferenceVisitable {
 
   public void accept(InferenceVisitor visitor) throws TypeException {
     this.bodyNode.accept(visitor);
+  }
+
+  public void setDeclarationFrame(MaterializedFrame declarationFrame) {
+    this.declarationFrame = declarationFrame;
   }
 
   @Override
