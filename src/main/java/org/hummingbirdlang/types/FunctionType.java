@@ -9,7 +9,10 @@ public final class FunctionType extends ConcreteType {
   private final Type returnType;
   private final String name;
   private final CallTarget callTarget;
-  private Scope scope;
+  // Scope where the function was declared.
+  private Scope declarationScope;
+  // Scope inside the function (ie. of its block).
+  private Scope ownScope;
 
   public FunctionType(
     Type[] argumentTypes,
@@ -31,18 +34,32 @@ public final class FunctionType extends ConcreteType {
     return this.callTarget;
   }
 
-  public Scope getScope() {
-    if (this.scope != null && !this.scope.isClosed()) {
+  public Scope getOwnScope() {
+    if (this.ownScope != null && !this.ownScope.isClosed()) {
       throw new RuntimeException("Scope not yet closed");
     }
-    return this.scope;
+    return this.ownScope;
   }
 
-  public void setScope(Scope scope) {
-    if (this.scope != null) {
+  public void setOwnScope(Scope scope) {
+    if (this.ownScope != null) {
       throw new RuntimeException("Cannot re-set scope");
     }
-    this.scope = scope;
+    this.ownScope = scope;
+  }
+
+  public Scope getDeclarationScope() {
+    if (this.declarationScope != null && !this.declarationScope.isClosed()) {
+      throw new RuntimeException("Scope not yet closed");
+    }
+    return this.declarationScope;
+  }
+
+  public void setDeclarationScope(Scope declarationScope) {
+    if (this.declarationScope != null) {
+      throw new RuntimeException("Cannot re-set scope");
+    }
+    this.declarationScope = declarationScope;
   }
 
   @Override

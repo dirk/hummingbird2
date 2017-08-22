@@ -67,16 +67,17 @@ public final class InferenceVisitor {
 
   public void enter(HBFunctionNode functionNode) {
     // TODO: Actually set and/or infer parameter and return types.
-    FunctionType type = new FunctionType(
+    FunctionType functionType = new FunctionType(
       new Type[]{},
       new UnknownType(),
       functionNode.getName(),
       functionNode.getCallTarget()
     );
-    functionNode.setFunctionType(type);
-    this.currentScope.setLocal(functionNode.getName(), type);
+    functionNode.setFunctionType(functionType);
+    functionType.setDeclarationScope(this.currentScope);
+    this.currentScope.setLocal(functionNode.getName(), functionType);
     this.pushScope();
-    type.setScope(this.currentScope);
+    functionType.setOwnScope(this.currentScope);
   }
 
   public void leave(HBFunctionNode functionNode) {

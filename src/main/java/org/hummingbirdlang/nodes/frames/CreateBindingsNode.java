@@ -48,11 +48,11 @@ public abstract class CreateBindingsNode extends HBNode {
 
   protected Fetcher[] createFetchers() {
     List<Fetcher> fetchers = new ArrayList<>();
-    
-    Scope functionScope = this.getFunctionScope();
-    Scope declarationScope = functionScope.getParent();
 
-    for (Resolution resolution : this.getFunctionScope().getNonLocalResolutions()) {
+    Scope ownScope = this.getOwnScope();
+    Scope declarationScope = this.getDeclarationScope();
+
+    for (Resolution resolution : ownScope.getNonLocalResolutions()) {
       String name = resolution.getName();
       if (resolution.getHighestScope() == declarationScope) {
         // If the resolution ends at the current scope then we want to look for
@@ -105,10 +105,14 @@ public abstract class CreateBindingsNode extends HBNode {
   protected boolean needsBindings() {
     // If there's a scope (ie. it's not a builtin function) then it will
     // need bindings.
-    return (this.getFunctionScope() != null);
+    return (this.getOwnScope() != null);
   }
 
-  protected Scope getFunctionScope() {
-    return this.getType().getScope();
+  protected Scope getOwnScope() {
+    return this.getType().getOwnScope();
+  }
+
+  protected Scope getDeclarationScope() {
+    return this.getType().getDeclarationScope();
   }
 }
