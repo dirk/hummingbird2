@@ -8,7 +8,6 @@ import com.oracle.truffle.api.nodes.RootNode;
 import com.oracle.truffle.api.source.SourceSection;
 
 import org.hummingbirdlang.HBLanguage;
-import org.hummingbirdlang.nodes.frames.SetBindingsNodeGen;
 import org.hummingbirdlang.objects.Bindings;
 import org.hummingbirdlang.objects.Function;
 import org.hummingbirdlang.types.FunctionType;
@@ -46,7 +45,8 @@ public class HBSourceRootNode extends RootNode implements InferenceVisitable {
 
     try {
       Bindings bindings = new Bindings(this.builtinScope);
-      SetBindingsNodeGen.create(bindings).executeVoid(frame);
+      FrameSlot frameSlot = frameDescriptor.findOrAddFrameSlot(Bindings.IDENTIFIER);
+      frame.setObject(frameSlot, bindings);
 
       this.bodyNode.executeVoid(frame);
     } catch (Exception exception) {

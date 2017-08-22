@@ -11,6 +11,8 @@ import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.source.SourceSection;
 
 import org.hummingbirdlang.HBLanguage;
+import org.hummingbirdlang.nodes.frames.CreateBindingsNode;
+import org.hummingbirdlang.nodes.frames.CreateBindingsNodeGen;
 import org.hummingbirdlang.nodes.frames.GetBindingsNodeGen;
 import org.hummingbirdlang.nodes.frames.GetLocalNodeGen;
 import org.hummingbirdlang.objects.Bindings;
@@ -57,37 +59,18 @@ public abstract class HBFunctionNode extends HBStatementNode {
   @Specialization
   public Object cachedExecuteGeneric(
     VirtualFrame frame,
-    @Cached("createFunction(frame)") Function value
+    @Cached("createCreateBindingsNode()") CreateBindingsNode createBindingsNode
   ) {
+    Bindings bindings = createBindingsNode.executeCreateBindings(frame);
+    Function function = new Function(this.functionType, bindings);
+
     FrameSlot frameSlot = frame.getFrameDescriptor().findOrAddFrameSlot(this.name);
-    frame.setObject(frameSlot, value);
-    this.rootNode.setBindings(value.getBindings());
+    frame.setObject(frameSlot, function);
     return null;
   }
 
-  protected Function createFunction(VirtualFrame frame) {
-    return new Function(this.functionType, this.createBindings(frame));
-  }
-
-  protected Bindings createBindings(VirtualFrame frame) {
-    Scope functionScope = this.functionType.getScope();
-    // Builtin functions won't have a scope.
-    if (functionScope == null) {
-      return null;
-    }
-
-    Bindings ownBindings = (Bindings)GetBindingsNodeGen.create().executeGeneric(frame);
-    Bindings bindings = new Bindings();
-    for (Resolution resolution : functionScope.getNonLocalResolutions()) {
-      String name = resolution.getName();
-      if (ownBindings != null && ownBindings.contains(name)) {
-        bindings.put(name, ownBindings.get(name));
-      } else {
-        Object value = GetLocalNodeGen.create(name).executeGeneric(frame);
-        bindings.put(name, value);
-      }
-    }
-    return bindings;
+  protected CreateBindingsNode createCreateBindingsNode() {
+    return CreateBindingsNodeGen.create(this.functionType);
   }
 
   @Override
