@@ -46,9 +46,32 @@ public final class Resolution {
     return this.path.size() > 1;
   }
 
+  public Scope getHighestScope() {
+    this.assertPathIsNotEmpty();
+    return this.path.get(this.path.size() - 1);
+  }
+
   private void assertPathIsNotEmpty() {
     if (this.path.isEmpty()) {
       throw new RuntimeException("Empty path in resolution");
     }
+  }
+
+  @Override
+  public String toString() {
+    StringBuilder result = new StringBuilder();
+    result.append("Resolution@").append(Integer.toHexString(hashCode()));
+    result.append("{");
+    boolean comma = false;
+    for (Scope scope : this.path) {
+      if (comma) {
+        result.append(", ");
+      } else {
+        comma = true;
+      }
+      result.append(scope.toString());
+    }
+    result.append("}");
+    return result.toString();
   }
 }
