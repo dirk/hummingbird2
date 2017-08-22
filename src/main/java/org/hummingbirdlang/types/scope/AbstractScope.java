@@ -22,6 +22,7 @@ abstract class AbstractScope implements Scope {
     } else {
       resolution = new Resolution(name);
       this.accept(resolution);
+      this.cachedResolutions.put(name, resolution);
     }
     return resolution;
   }
