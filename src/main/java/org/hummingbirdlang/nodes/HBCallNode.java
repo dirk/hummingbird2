@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import com.oracle.truffle.api.CallTarget;
 import com.oracle.truffle.api.frame.VirtualFrame;
 
+import org.hummingbirdlang.nodes.arguments.Layout;
 import org.hummingbirdlang.nodes.frames.GetBindingsNodeGen;
 import org.hummingbirdlang.nodes.frames.GetLocalNodeGen;
 import org.hummingbirdlang.objects.Bindings;
@@ -47,15 +48,17 @@ public class HBCallNode extends HBExpressionNode {
     Object target = this.targetNode.executeGeneric(frame);
     CallTarget callTarget;
 
-    ArrayList<Object> arguments = new ArrayList<>();
+    Layout layout = new Layout(target, null);
+
     for (HBNode argumentNode : this.parameterNodes) {
-      arguments.add(argumentNode.executeGeneric(frame));
+      Object argumentValue = argumentNode.executeGeneric(frame);
+      layout.addArgument(argumentValue);
     }
 
     if (target instanceof Method) {
       Method method = (Method)target;
       callTarget = method.getCallTarget();
-      arguments.add(0, method.getReceiver());
+      layout.setReceiver(method.getReceiver());
 
     } else if (target instanceof Function) {
       Function function = (Function)target;
@@ -65,7 +68,8 @@ public class HBCallNode extends HBExpressionNode {
       throw new Error("Cannot call to: " + target.toString());
     }
 
-    return callTarget.call(arguments.toArray(new Object[arguments.size()]));
+    Object[] arguments = layout.getCallArguments();
+    return callTarget.call(arguments);
   }
 
   @Override

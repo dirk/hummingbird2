@@ -59,14 +59,12 @@ public class BuiltinNodes {
     assert signatures.size() == 1;
 
     List<HBNode> argumentsNodes = new ArrayList<>();
-    int argumentOffset = 0;
     if (methodAnnotation.usesThis()) {
       argumentsNodes.add(new GetThisNode());
-      argumentOffset++;
     }
     int argumentsCount = methodAnnotation.required();
     for (int index = 0; index < argumentsCount; index++) {
-      argumentsNodes.add(new GetArgumentNode(argumentOffset + index));
+      argumentsNodes.add(new GetArgumentNode(index));
     }
 
     Object[] arguments = argumentsNodes.toArray(new HBNode[argumentsNodes.size()]);

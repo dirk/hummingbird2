@@ -14,6 +14,6 @@ public class GetArgumentNode extends HBNode {
   @Override
   public Object executeGeneric(VirtualFrame frame) {
     Object[] arguments = frame.getArguments();
-    return arguments[this.index];
+    return arguments[this.index + Layout.ARGUMENTS_OFFSET];
   }
 }

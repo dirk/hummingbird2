@@ -8,6 +8,6 @@ public class GetThisNode extends HBNode {
   @Override
   public Object executeGeneric(VirtualFrame frame) {
     Object[] arguments = frame.getArguments();
-    return arguments[0];
+    return arguments[Layout.RECEIVER_INDEX];
   }
 }
