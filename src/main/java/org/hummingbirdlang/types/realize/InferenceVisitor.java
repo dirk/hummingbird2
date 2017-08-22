@@ -76,6 +76,7 @@ public final class InferenceVisitor {
     functionNode.setFunctionType(type);
     this.currentScope.setLocal(functionNode.getName(), type);
     this.pushScope();
+    type.setScope(this.currentScope);
   }
 
   public void leave(HBFunctionNode functionNode) {

@@ -7,10 +7,15 @@ import java.util.stream.Collectors;
 import com.oracle.truffle.api.CallTarget;
 import com.oracle.truffle.api.frame.VirtualFrame;
 
+import org.hummingbirdlang.nodes.frames.GetBindingsNodeGen;
+import org.hummingbirdlang.nodes.frames.GetLocalNodeGen;
+import org.hummingbirdlang.objects.Bindings;
 import org.hummingbirdlang.objects.Function;
 import org.hummingbirdlang.objects.Method;
 import org.hummingbirdlang.types.TypeException;
 import org.hummingbirdlang.types.realize.InferenceVisitor;
+import org.hummingbirdlang.types.scope.Resolution;
+import org.hummingbirdlang.types.scope.Scope;
 
 public class HBCallNode extends HBExpressionNode {
   @Child private HBExpressionNode targetNode;

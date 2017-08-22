@@ -22,7 +22,7 @@ public final class Bindings {
     for (String name : builtinScope) {
       Type type = builtinScope.get(name);
       if (type instanceof FunctionType) {
-        Object function = new Function((FunctionType)type);
+        Object function = new Function((FunctionType)type, null);
         this.bindings.put(name, function);
       } else {
         System.out.println("Skipping bootstrap of builtin " + name + ": " + type.toString());
@@ -30,8 +30,16 @@ public final class Bindings {
     }
   }
 
+  public boolean contains(String name) {
+    return this.bindings.containsKey(name);
+  }
+
   public Object get(String name) {
     return this.bindings.get(name);
+  }
+
+  public void put(String name, Object value) {
+    this.bindings.put(name, value);
   }
 
   public static final BindingsIdentifier IDENTIFIER = new BindingsIdentifier();

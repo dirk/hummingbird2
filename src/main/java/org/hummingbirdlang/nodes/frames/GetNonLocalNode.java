@@ -18,6 +18,9 @@ public abstract class GetNonLocalNode extends HBNode {
     @Cached("createGetBindingsNode()") GetBindingsNode getBindingsNode
   ) {
     Bindings bindings = (Bindings)getBindingsNode.executeGeneric(frame);
+    if (bindings == null) {
+      throw new RuntimeException("Missing bindings");
+    }
     return bindings.get(this.getName());
   }
 

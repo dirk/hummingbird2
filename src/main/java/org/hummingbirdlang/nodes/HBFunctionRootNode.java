@@ -8,6 +8,8 @@ import com.oracle.truffle.api.nodes.RootNode;
 import com.oracle.truffle.api.source.SourceSection;
 
 import org.hummingbirdlang.HBLanguage;
+import org.hummingbirdlang.nodes.frames.SetBindingsNodeGen;
+import org.hummingbirdlang.objects.Bindings;
 import org.hummingbirdlang.types.TypeException;
 import org.hummingbirdlang.types.realize.InferenceVisitable;
 import org.hummingbirdlang.types.realize.InferenceVisitor;
@@ -15,7 +17,7 @@ import org.hummingbirdlang.types.realize.InferenceVisitor;
 public class HBFunctionRootNode extends RootNode implements InferenceVisitable {
   @Child private HBBlockNode bodyNode;
   private final SourceSection sourceSection;
-  @CompilationFinal MaterializedFrame declarationFrame;
+  @CompilationFinal Bindings bindings;
 
   public HBFunctionRootNode(HBLanguage language, SourceSection sourceSection, FrameDescriptor frameDescriptor, HBBlockNode bodyNode) {
     super(language, frameDescriptor);
@@ -27,8 +29,8 @@ public class HBFunctionRootNode extends RootNode implements InferenceVisitable {
     this.bodyNode.accept(visitor);
   }
 
-  public void setDeclarationFrame(MaterializedFrame declarationFrame) {
-    this.declarationFrame = declarationFrame;
+  public void setBindings(Bindings bindings) {
+    this.bindings = bindings;
   }
 
   @Override
@@ -39,6 +41,7 @@ public class HBFunctionRootNode extends RootNode implements InferenceVisitable {
   @Override
   public Object execute(VirtualFrame frame) {
     try {
+      SetBindingsNodeGen.create(this.bindings).executeGeneric(frame);
       this.bodyNode.executeGeneric(frame);
     } catch (HBReturnException exception) {
       return exception.getReturnValue();

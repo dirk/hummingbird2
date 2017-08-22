@@ -39,7 +39,7 @@ public class HBIdentifierNode extends HBExpressionNode {
   @Override
   public Object executeGeneric(VirtualFrame frame) {
     if (this.accessNode == null) {
-      if (resolution.isLocal()) {
+      if (this.resolution.isLocal()) {
         this.accessNode = GetLocalNodeGen.create(this.name);
       } else {
         this.accessNode = GetNonLocalNodeGen.create(this.name);
