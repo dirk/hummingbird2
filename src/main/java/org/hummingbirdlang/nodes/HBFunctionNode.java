@@ -15,7 +15,7 @@ import org.hummingbirdlang.nodes.frames.CreateBindingsNode;
 import org.hummingbirdlang.nodes.frames.CreateBindingsNodeGen;
 import org.hummingbirdlang.nodes.frames.GetBindingsNodeGen;
 import org.hummingbirdlang.nodes.frames.GetLocalNodeGen;
-import org.hummingbirdlang.objects.Bindings;
+import org.hummingbirdlang.runtime.bindings.Bindings;
 import org.hummingbirdlang.objects.Function;
 import org.hummingbirdlang.types.FunctionType;
 import org.hummingbirdlang.types.Type;

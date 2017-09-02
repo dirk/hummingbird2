@@ -2,6 +2,7 @@ package org.hummingbirdlang.objects;
 
 import com.oracle.truffle.api.CallTarget;
 
+import org.hummingbirdlang.runtime.bindings.Bindings;
 import org.hummingbirdlang.types.FunctionType;
 
 public final class Function {

@@ -10,9 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hummingbirdlang.nodes.HBNode;
-import org.hummingbirdlang.objects.Binding;
-import org.hummingbirdlang.objects.Bindings;
-import org.hummingbirdlang.objects.MaterializedBinding;
+import org.hummingbirdlang.runtime.bindings.Binding;
+import org.hummingbirdlang.runtime.bindings.Bindings;
+import org.hummingbirdlang.runtime.bindings.MaterializedBinding;
 import org.hummingbirdlang.types.FunctionType;
 import org.hummingbirdlang.types.scope.Resolution;
 import org.hummingbirdlang.types.scope.Scope;

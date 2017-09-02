@@ -10,7 +10,7 @@ import com.oracle.truffle.api.frame.VirtualFrame;
 import org.hummingbirdlang.nodes.arguments.Layout;
 import org.hummingbirdlang.nodes.frames.GetBindingsNodeGen;
 import org.hummingbirdlang.nodes.frames.GetLocalNodeGen;
-import org.hummingbirdlang.objects.Bindings;
+import org.hummingbirdlang.runtime.bindings.Bindings;
 import org.hummingbirdlang.objects.Function;
 import org.hummingbirdlang.objects.Method;
 import org.hummingbirdlang.types.TypeException;

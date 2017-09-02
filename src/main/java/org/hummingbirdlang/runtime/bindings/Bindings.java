@@ -1,8 +1,9 @@
-package org.hummingbirdlang.objects;
+package org.hummingbirdlang.runtime.bindings;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import org.hummingbirdlang.objects.Function;
 import org.hummingbirdlang.types.FunctionType;
 import org.hummingbirdlang.types.Type;
 import org.hummingbirdlang.types.scope.BuiltinScope;

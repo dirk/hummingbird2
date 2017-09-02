@@ -8,7 +8,7 @@ import com.oracle.truffle.api.nodes.RootNode;
 import com.oracle.truffle.api.source.SourceSection;
 
 import org.hummingbirdlang.HBLanguage;
-import org.hummingbirdlang.objects.Bindings;
+import org.hummingbirdlang.runtime.bindings.Bindings;
 import org.hummingbirdlang.objects.Function;
 import org.hummingbirdlang.types.FunctionType;
 import org.hummingbirdlang.types.Type;

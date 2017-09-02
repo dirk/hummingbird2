@@ -16,7 +16,7 @@ import org.hummingbirdlang.nodes.frames.GetFunctionBindingsNode;
 import org.hummingbirdlang.nodes.frames.GetFunctionBindingsNodeGen;
 import org.hummingbirdlang.nodes.frames.SetBindingsNode;
 import org.hummingbirdlang.nodes.frames.SetBindingsNodeGen;
-import org.hummingbirdlang.objects.Bindings;
+import org.hummingbirdlang.runtime.bindings.Bindings;
 import org.hummingbirdlang.types.TypeException;
 import org.hummingbirdlang.types.realize.InferenceVisitable;
 import org.hummingbirdlang.types.realize.InferenceVisitor;

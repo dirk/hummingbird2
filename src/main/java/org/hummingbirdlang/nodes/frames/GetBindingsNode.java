@@ -1,7 +1,7 @@
 package org.hummingbirdlang.nodes.frames;
 
 import org.hummingbirdlang.nodes.HBNode;
-import org.hummingbirdlang.objects.Bindings;
+import org.hummingbirdlang.runtime.bindings.Bindings;
 
 import com.oracle.truffle.api.dsl.Specialization;
 import com.oracle.truffle.api.frame.FrameDescriptor;
