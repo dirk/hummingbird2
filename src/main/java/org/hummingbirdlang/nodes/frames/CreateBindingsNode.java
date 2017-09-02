@@ -3,13 +3,16 @@ package org.hummingbirdlang.nodes.frames;
 import com.oracle.truffle.api.dsl.Cached;
 import com.oracle.truffle.api.dsl.NodeField;
 import com.oracle.truffle.api.dsl.Specialization;
+import com.oracle.truffle.api.frame.MaterializedFrame;
 import com.oracle.truffle.api.frame.VirtualFrame;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.hummingbirdlang.nodes.HBNode;
+import org.hummingbirdlang.objects.Binding;
 import org.hummingbirdlang.objects.Bindings;
+import org.hummingbirdlang.objects.MaterializedBinding;
 import org.hummingbirdlang.types.FunctionType;
 import org.hummingbirdlang.types.scope.Resolution;
 import org.hummingbirdlang.types.scope.Scope;
@@ -29,10 +32,13 @@ public abstract class CreateBindingsNode extends HBNode {
   ) {
     Bindings ownBindings = getBindingsNode.executeGetBindings(frame);
     Bindings bindings = new Bindings();
-    for (Fetcher fetcher : fetchers) {
-      String name = fetcher.getName();
-      Object value = fetcher.fetch(frame, ownBindings);
-      bindings.put(name, value);
+    if (fetchers.length > 0) {
+      MaterializedFrame materializedFrame = frame.materialize();
+      for (Fetcher fetcher : fetchers) {
+        String name = fetcher.getName();
+        Binding binding = fetcher.fetch(materializedFrame, ownBindings);
+        bindings.add(name, binding);
+      }
     }
     return bindings;
   }
@@ -75,30 +81,27 @@ public abstract class CreateBindingsNode extends HBNode {
       return this.name;
     }
 
-    public abstract Object fetch(VirtualFrame frame, Bindings ownBindings);
+    public abstract Binding fetch(MaterializedFrame frame, Bindings ownBindings);
   }
 
-  // Fetch a non-local value from the current scope/frame's own bindings.
+  // Inherit a non-local value from the current frame's own bindings.
   protected class FetchFromOwnBindings extends Fetcher {
     public FetchFromOwnBindings(String name) {
       this.name = name;
     }
 
-    public Object fetch(VirtualFrame frame, Bindings ownBindings) {
-      return ownBindings.get(name);
+    public Binding fetch(MaterializedFrame frame, Bindings ownBindings) {
+      return ownBindings.get(this.name);
     }
   }
 
   protected class FetchFromLocal extends Fetcher {
-    private GetLocalNode getLocalNode;
-
     public FetchFromLocal(String name) {
       this.name = name;
-      this.getLocalNode = GetLocalNodeGen.create(this.name);
     }
 
-    public Object fetch(VirtualFrame frame, Bindings ownBindings) {
-      return this.getLocalNode.executeGeneric(frame);
+    public Binding fetch(MaterializedFrame frame, Bindings ownBindings) {
+      return new MaterializedBinding(this.name, frame);
     }
   }
 

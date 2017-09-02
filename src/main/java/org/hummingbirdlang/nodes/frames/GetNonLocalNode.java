@@ -21,7 +21,7 @@ public abstract class GetNonLocalNode extends HBNode {
     if (bindings == null) {
       throw new RuntimeException("Missing bindings");
     }
-    return bindings.get(this.getName());
+    return bindings.getValue(this.getName());
   }
 
   protected GetBindingsNode createGetBindingsNode() {

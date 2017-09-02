@@ -10,7 +10,7 @@ import org.hummingbirdlang.types.scope.NameNotFoundException;
 
 // Holds references to values closed from an outer scope.
 public final class Bindings {
-  private Map<String, Object> bindings;
+  private Map<String, Binding> bindings;
 
   public Bindings() {
     this.bindings = new HashMap<>();
@@ -23,7 +23,7 @@ public final class Bindings {
       Type type = builtinScope.get(name);
       if (type instanceof FunctionType) {
         Object function = new Function((FunctionType)type, null);
-        this.bindings.put(name, function);
+        this.bindings.put(name, new BuiltinBinding(name, function));
       } else {
         System.out.println("Skipping bootstrap of builtin " + name + ": " + type.toString());
       }
@@ -34,12 +34,17 @@ public final class Bindings {
     return this.bindings.containsKey(name);
   }
 
-  public Object get(String name) {
+  public Binding get(String name) {
     return this.bindings.get(name);
   }
 
-  public void put(String name, Object value) {
-    this.bindings.put(name, value);
+  public Object getValue(String name) {
+    Binding binding = this.get(name);
+    return binding.get();
+  }
+
+  public void add(String name, Binding binding) {
+    this.bindings.put(name, binding);
   }
 
   public static final BindingsIdentifier IDENTIFIER = new BindingsIdentifier();
