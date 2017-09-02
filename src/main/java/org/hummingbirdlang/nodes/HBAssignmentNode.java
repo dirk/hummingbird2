@@ -1,5 +1,6 @@
 package org.hummingbirdlang.nodes;
 
+import com.oracle.truffle.api.frame.FrameSlot;
 import com.oracle.truffle.api.frame.VirtualFrame;
 
 import org.hummingbirdlang.types.realize.InferenceVisitor;
@@ -19,7 +20,15 @@ public class HBAssignmentNode extends HBExpressionNode {
 
   @Override
   public Object executeGeneric(VirtualFrame frame) {
-    return null;
+    if (!(this.targetNode instanceof HBIdentifierNode)) {
+      throw new RuntimeException("Cannot yet handle assignment of non-identifier node: " + this.targetNode.toString());
+    }
+    HBIdentifierNode identifierNode = (HBIdentifierNode)this.targetNode;
+
+    Object value = this.valueNode.executeGeneric(frame);
+    FrameSlot frameSlot = frame.getFrameDescriptor().findFrameSlot(identifierNode.getName());
+    frame.setObject(frameSlot, value);
+    return value;
   }
 
   @Override
