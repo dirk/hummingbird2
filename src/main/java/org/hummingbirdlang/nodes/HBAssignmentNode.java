@@ -21,4 +21,15 @@ public class HBAssignmentNode extends HBExpressionNode {
   public Object executeGeneric(VirtualFrame frame) {
     return null;
   }
+
+  @Override
+  public String toString() {
+    StringBuilder result = new StringBuilder("HBAssignmentNode");
+    result.append("(");
+    result.append(this.targetNode.toString());
+    result.append(" = ");
+    result.append(this.valueNode.toString());
+    result.append(")");
+    return result.toString();
+  }
 }
