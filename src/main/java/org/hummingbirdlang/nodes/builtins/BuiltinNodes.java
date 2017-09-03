@@ -25,6 +25,7 @@ public class BuiltinNodes {
   private BuiltinNodes(HBLanguage language) {
     this.language = language;
     this.addNodeFactories(GlobalNodesFactory.getFactories());
+    this.addNodeFactories(IntegerNodesFactory.getFactories());
     this.addNodeFactories(StringNodesFactory.getFactories());
   }
 
