@@ -36,4 +36,9 @@ public final class IntegerType extends BootstrappableConcreteType {
         throw new PropertyNotFoundException(this, name);
     }
   }
+
+  @Override
+  public String toString() {
+    return "$Integer";
+  }
 }
