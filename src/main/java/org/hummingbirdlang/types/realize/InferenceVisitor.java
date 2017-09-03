@@ -104,6 +104,17 @@ public final class InferenceVisitor {
 
   public void visit(HBCallNode callNode) {
     Type targetType = callNode.getTargetNode().getType();
+    Type returnType;
+    if (targetType instanceof FunctionType) {
+      FunctionType functionType = (FunctionType)targetType;
+      returnType = functionType.getReturnType();
+    } else if (targetType instanceof MethodType) {
+      MethodType methodType = (MethodType)targetType;
+      returnType = methodType.getReturnType();
+    } else {
+      throw new RuntimeException("Cannot call target of type: " + String.valueOf(targetType));
+    }
+    callNode.setType(returnType);
   }
 
   public void visit(HBIdentifierNode identifierNode) throws NameNotFoundException {
