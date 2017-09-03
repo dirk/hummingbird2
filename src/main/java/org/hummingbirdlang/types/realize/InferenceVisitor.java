@@ -1,5 +1,6 @@
 package org.hummingbirdlang.types.realize;
 
+import org.hummingbirdlang.nodes.HBAssignmentNode;
 import org.hummingbirdlang.nodes.HBBlockNode;
 import org.hummingbirdlang.nodes.HBCallNode;
 import org.hummingbirdlang.nodes.HBExpressionNode;
@@ -21,6 +22,7 @@ import org.hummingbirdlang.types.FunctionType;
 import org.hummingbirdlang.types.Property;
 import org.hummingbirdlang.types.PropertyNotFoundException;
 import org.hummingbirdlang.types.Type;
+import org.hummingbirdlang.types.TypeMismatchException;
 import org.hummingbirdlang.types.UnknownType;
 import org.hummingbirdlang.types.scope.BuiltinScope;
 import org.hummingbirdlang.types.scope.LocalScope;
@@ -91,6 +93,15 @@ public final class InferenceVisitor {
 
   public void leave(HBBlockNode blockNode) {
     return;
+  }
+
+  public void visit(HBAssignmentNode assignmentNode) throws TypeMismatchException {
+    Type targetType = assignmentNode.getTargetNode().getType();
+    Type valueType = assignmentNode.getValueNode().getType();
+
+    if (!targetType.equals(valueType)) {
+      throw new TypeMismatchException(targetType, valueType);
+    }
   }
 
   public void visit(HBCallNode callNode) {

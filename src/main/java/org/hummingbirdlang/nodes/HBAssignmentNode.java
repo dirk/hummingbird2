@@ -3,6 +3,7 @@ package org.hummingbirdlang.nodes;
 import com.oracle.truffle.api.frame.FrameSlot;
 import com.oracle.truffle.api.frame.VirtualFrame;
 
+import org.hummingbirdlang.types.TypeException;
 import org.hummingbirdlang.types.realize.InferenceVisitor;
 
 public class HBAssignmentNode extends HBExpressionNode {
@@ -14,8 +15,18 @@ public class HBAssignmentNode extends HBExpressionNode {
     this.valueNode = valueNode;
   }
 
-  public void accept(InferenceVisitor visitor) {
-    return;
+  public void accept(InferenceVisitor visitor) throws TypeException {
+    this.targetNode.accept(visitor);
+    this.valueNode.accept(visitor);
+    visitor.visit(this);
+  }
+
+  public HBExpressionNode getTargetNode() {
+    return this.targetNode;
+  }
+
+  public HBExpressionNode getValueNode() {
+    return this.valueNode;
   }
 
   @Override
