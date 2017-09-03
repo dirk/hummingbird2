@@ -46,6 +46,16 @@ public final class MethodType extends ConcreteType {
     return this.callTarget;
   }
 
+  /**
+   * Get a new method instance with a different return type. Methods are
+   * currently immutable, so this is used during bootstrap to create methods
+   * with an unknown return type and then overwrite them with ones with a
+   * real return type.
+   */
+  public MethodType cloneWithReturnType(Type returnType) {
+    return new MethodType(this.receiverType, returnType, this.name, this.callTarget);
+  }
+
   @Override
   public Property getProperty(String name) throws PropertyNotFoundException {
     throw new PropertyNotFoundException("Not yet implemented");

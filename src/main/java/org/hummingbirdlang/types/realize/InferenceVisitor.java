@@ -16,6 +16,7 @@ import org.hummingbirdlang.nodes.HBStringLiteralNode;
 import org.hummingbirdlang.types.composite.SumType;
 import org.hummingbirdlang.types.concrete.BooleanType;
 import org.hummingbirdlang.types.concrete.IntegerType;
+import org.hummingbirdlang.types.concrete.MethodType;
 import org.hummingbirdlang.types.concrete.NullType;
 import org.hummingbirdlang.types.concrete.StringType;
 import org.hummingbirdlang.types.FunctionType;
@@ -111,7 +112,7 @@ public final class InferenceVisitor {
   }
 
   public void visit(HBIntegerLiteralNode literalNode) {
-    literalNode.setType(IntegerType.SINGLETON);
+    literalNode.setType(this.index.getBuiltin().get(IntegerType.NAME));
   }
 
   public void visit(HBLetDeclarationNode letNode) {
@@ -150,6 +151,6 @@ public final class InferenceVisitor {
   }
 
   public void visit(HBStringLiteralNode literalNode) {
-    literalNode.setType(this.index.getBuiltin().get("StringType"));
+    literalNode.setType(this.index.getBuiltin().get(StringType.BUILTIN_NAME));
   }
 }

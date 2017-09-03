@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.hummingbirdlang.types.Type;
 import org.hummingbirdlang.types.composite.TypeReferenceType;
+import org.hummingbirdlang.types.concrete.StringType;
 import org.hummingbirdlang.types.realize.Index;
 
 public class BuiltinScope extends AbstractScope implements Scope, Iterable<String> {
@@ -16,7 +17,7 @@ public class BuiltinScope extends AbstractScope implements Scope, Iterable<Strin
     Map<String, Type> types = new HashMap<>();
     // Bootstrap the global types.
     Index.Module builtin = index.getBuiltin();
-    types.put("String", new TypeReferenceType(builtin.get("StringType")));
+    types.put("String", new TypeReferenceType(builtin.get(StringType.BUILTIN_NAME)));
     types.put("println", builtin.get("println"));
     this.types = types;
     // You can't modify the builtin scope!

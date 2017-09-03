@@ -6,6 +6,6 @@ public class TypeMismatchException extends TypeException {
   }
 
   public TypeMismatchException(Type leftType, Type rightType) {
-    super("Type " + leftType.toString() + " does not match " + rightType.toString());
+    super("Type " + String.valueOf(leftType) + " does not match " + String.valueOf(rightType));
   }
 }

@@ -26,6 +26,10 @@ public final class FunctionType extends ConcreteType {
     this.callTarget = callTarget;
   }
 
+  public Type getReturnType() {
+    return this.returnType;
+  }
+
   public String getName() {
     return this.name;
   }
