@@ -123,7 +123,7 @@ public final class InferenceVisitor {
   }
 
   public void visit(HBIntegerLiteralNode literalNode) {
-    literalNode.setType(this.index.getBuiltin().get(IntegerType.NAME));
+    literalNode.setType(this.index.getBuiltin().get(IntegerType.BUILTIN_NAME));
   }
 
   public void visit(HBLetDeclarationNode letNode) {

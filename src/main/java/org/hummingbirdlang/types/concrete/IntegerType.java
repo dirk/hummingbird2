@@ -8,13 +8,13 @@ import org.hummingbirdlang.types.UnknownType;
 import org.hummingbirdlang.types.realize.Index.Module;
 
 public final class IntegerType extends BootstrappableConcreteType {
-  public static String NAME = "Integer";
+  public static String BUILTIN_NAME = "Integer";
 
   private MethodType toString;
 
   @Override
   public String getBootstrapName() {
-    return IntegerType.NAME;
+    return IntegerType.BUILTIN_NAME;
   }
 
   @Override
