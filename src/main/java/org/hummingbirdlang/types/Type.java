@@ -26,4 +26,23 @@ package org.hummingbirdlang.types;
  */
 public abstract class Type {
   public abstract Property getProperty(String name) throws PropertyNotFoundException;
+
+  public void assertEquals(Type otherType) throws TypeMismatchException {
+    // Rudimentary pointer comparison by default.
+    if (this != otherType) {
+      throw new TypeMismatchException(this, otherType);
+    }
+  }
+
+  /**
+   * Returns whether or not this type is equal to another type.
+   */
+  public boolean equals(Type otherType) {
+    try {
+      this.assertEquals(otherType);
+    } catch (TypeMismatchException exception) {
+      return false;
+    }
+    return true;
+  }
 }

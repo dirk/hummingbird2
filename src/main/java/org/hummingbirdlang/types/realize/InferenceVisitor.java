@@ -98,10 +98,7 @@ public final class InferenceVisitor {
   public void visit(HBAssignmentNode assignmentNode) throws TypeMismatchException {
     Type targetType = assignmentNode.getTargetNode().getType();
     Type valueType = assignmentNode.getValueNode().getType();
-
-    if (!targetType.equals(valueType)) {
-      throw new TypeMismatchException(targetType, valueType);
-    }
+    targetType.assertEquals(valueType);
   }
 
   public void visit(HBCallNode callNode) {
