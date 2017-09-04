@@ -20,16 +20,16 @@ import org.hummingbirdlang.types.scope.Scope;
 
 public class HBCallNode extends HBExpressionNode {
   @Child private HBExpressionNode targetNode;
-  @Children private final HBExpressionNode[] parameterNodes;
+  @Children private final HBExpressionNode[] argumentNodes;
 
-  public HBCallNode(HBExpressionNode targetNode, HBExpressionNode[] parameterNodes) {
+  public HBCallNode(HBExpressionNode targetNode, HBExpressionNode[] argumentNodes) {
     this.targetNode = targetNode;
-    this.parameterNodes = parameterNodes;
+    this.argumentNodes = argumentNodes;
   }
 
   public void accept(InferenceVisitor visitor) throws TypeException {
     this.targetNode.accept(visitor);
-    for (HBExpressionNode parameterNode : parameterNodes) {
+    for (HBExpressionNode parameterNode : argumentNodes) {
       parameterNode.accept(visitor);
     }
     visitor.visit(this);
@@ -39,8 +39,8 @@ public class HBCallNode extends HBExpressionNode {
     return this.targetNode;
   }
 
-  public HBExpressionNode[] getParameterNodes() {
-    return this.parameterNodes;
+  public HBExpressionNode[] getArgumentNodes() {
+    return this.argumentNodes;
   }
 
   @Override
@@ -50,7 +50,7 @@ public class HBCallNode extends HBExpressionNode {
 
     Layout layout = new Layout(target, null);
 
-    for (HBNode argumentNode : this.parameterNodes) {
+    for (HBNode argumentNode : this.argumentNodes) {
       Object argumentValue = argumentNode.executeGeneric(frame);
       layout.addArgument(argumentValue);
     }
@@ -78,7 +78,7 @@ public class HBCallNode extends HBExpressionNode {
     result.append("HBCallNode(");
     result.append(this.targetNode.toString());
     result.append(", (");
-    List<String> parameters = Arrays.stream(this.parameterNodes).map(p -> p.toString()).collect(Collectors.toList());
+    List<String> parameters = Arrays.stream(this.argumentNodes).map(p -> p.toString()).collect(Collectors.toList());
     result.append(String.join(", ", parameters));
     result.append(")");
     result.append(")");

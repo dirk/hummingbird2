@@ -5,7 +5,7 @@ import org.hummingbirdlang.types.scope.Scope;
 import com.oracle.truffle.api.CallTarget;
 
 public final class FunctionType extends ConcreteType {
-  private final Type[] argumentTypes;
+  private final Type[] parameterTypes;
   private final Type returnType;
   private final String name;
   private final CallTarget callTarget;
@@ -15,19 +15,19 @@ public final class FunctionType extends ConcreteType {
   private Scope ownScope;
 
   public FunctionType(
-    Type[] argumentTypes,
+    Type[] parameterTypes,
     Type returnType,
     String name,
     CallTarget callTarget
   ) {
-    this.argumentTypes = argumentTypes;
+    this.parameterTypes = parameterTypes;
     this.returnType = returnType;
     this.name = name;
     this.callTarget = callTarget;
   }
 
-  public Type[] getArgumentTypes() {
-    return this.argumentTypes;
+  public Type[] getParameterTypes() {
+    return this.parameterTypes;
   }
 
   public Type getReturnType() {

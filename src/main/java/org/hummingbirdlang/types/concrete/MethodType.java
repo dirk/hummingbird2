@@ -14,20 +14,20 @@ import com.oracle.truffle.api.dsl.NodeFactory;
 public final class MethodType extends ConcreteType {
   // Type on which this method is defined.
   private final Type receiverType;
-  private final Type[] argumentTypes;
+  private final Type[] parameterTypes;
   private final Type returnType;
   private final String name;
   private final CallTarget callTarget;
 
   public MethodType(
     Type receiverType,
-    Type[] argumentTypes,
+    Type[] parameterTypes,
     Type returnType,
     String name,
     CallTarget callTarget
   ) {
     this.receiverType = receiverType;
-    this.argumentTypes = argumentTypes;
+    this.parameterTypes = parameterTypes;
     this.returnType = returnType;
     this.name = name;
     this.callTarget = callTarget;
@@ -37,8 +37,8 @@ public final class MethodType extends ConcreteType {
     return this.receiverType;
   }
 
-  public Type[] getArgumentTypes() {
-    return this.argumentTypes;
+  public Type[] getParameterTypes() {
+    return this.parameterTypes;
   }
 
   public Type getReturnType() {
@@ -60,7 +60,7 @@ public final class MethodType extends ConcreteType {
    * real return type.
    */
   public MethodType cloneWithReturnType(Type returnType) {
-    return new MethodType(this.receiverType, this.argumentTypes, returnType, this.name, this.callTarget);
+    return new MethodType(this.receiverType, this.parameterTypes, returnType, this.name, this.callTarget);
   }
 
   @Override
