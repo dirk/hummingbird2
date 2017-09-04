@@ -79,10 +79,10 @@ public class BuiltinNodes {
    * method node as a call target (using `BuiltinMethod` annotation to
    * derive the name).
    */
-  public MethodType createMethodType(Type receiverType, Type returnType, Class<?> nodeClass) {
+  public MethodType createMethodType(Type receiverType, Type[] argumentTypes, Type returnType, Class<?> nodeClass) {
     String name = this.getMethodAnnotation(nodeClass).value();
     CallTarget callTarget = this.getCallTarget(nodeClass);
-    return new MethodType(receiverType, returnType, name, callTarget);
+    return new MethodType(receiverType, argumentTypes, returnType, name, callTarget);
   }
 
   public CallTarget getCallTarget(Class<?> nodeClass) {
