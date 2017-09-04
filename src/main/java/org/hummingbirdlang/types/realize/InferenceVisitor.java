@@ -102,18 +102,38 @@ public final class InferenceVisitor {
     targetType.assertEquals(valueType);
   }
 
-  public void visit(HBCallNode callNode) {
+  public void visit(HBCallNode callNode) throws TypeMismatchException {
     Type targetType = callNode.getTargetNode().getType();
+
+    Type[] parameterTypes;
     Type returnType;
     if (targetType instanceof FunctionType) {
       FunctionType functionType = (FunctionType)targetType;
+      parameterTypes = functionType.getParameterTypes();
       returnType = functionType.getReturnType();
     } else if (targetType instanceof MethodType) {
       MethodType methodType = (MethodType)targetType;
+      parameterTypes = methodType.getParameterTypes();
       returnType = methodType.getReturnType();
     } else {
       throw new RuntimeException("Cannot call target of type: " + String.valueOf(targetType));
     }
+
+    HBExpressionNode[] argumentNodes = callNode.getArgumentNodes();
+    int expectedParameters = parameterTypes.length;
+    int actualArguments = argumentNodes.length;
+    if (expectedParameters != actualArguments) {
+      throw new TypeMismatchException("Argument count mismatch: expected " + expectedParameters + " got " + actualArguments);
+    }
+
+    for (int index = 0; index < expectedParameters; index++) {
+      Type parameterType = parameterTypes[index];
+      Type argumentType = argumentNodes[index].getType();
+      if (!parameterType.equals(argumentType)) {
+        throw new TypeMismatchException("Argument " + (index + 1) + " mismatch: expected " + parameterType.toString() + " got " + String.valueOf(argumentType));
+      }
+    }
+
     callNode.setType(returnType);
   }
 
