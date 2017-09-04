@@ -21,6 +21,25 @@ public class SumType extends CompositeType {
     throw new PropertyNotFoundException("Not yet implemented");
   }
 
+  /**
+   * Other type must be equal to or smaller than this union for equality
+   * to hold.
+   */
+  @Override
+  public boolean equals(Type otherType) {
+    // Equality check first.
+    if (this == otherType) {
+      return true;
+    }
+    // Then check if we contain the other type.
+    for (Type subType : this.subTypes) {
+      if (subType.equals(otherType)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   @Override
   public String toString() {
     StringBuilder result = new StringBuilder();
