@@ -25,7 +25,7 @@ public final class IntegerType extends BootstrappableConcreteType {
 
   @Override
   public void bootstrapTypes(Module builtinModule) {
-    this.toString = this.toString.cloneWithReturnType(builtinModule.get(StringType.BUILTIN_NAME));
+    this.toString = this.toString.cloneWithReturnType(builtinModule.getType(StringType.BUILTIN_NAME));
   }
 
   @Override

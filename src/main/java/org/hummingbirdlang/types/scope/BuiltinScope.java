@@ -18,9 +18,9 @@ public class BuiltinScope extends AbstractScope implements Scope, Iterable<Strin
     Map<String, Type> types = new HashMap<>();
     // Bootstrap the global types.
     Index.Module builtin = index.getBuiltin();
-    types.put("Integer", new TypeReferenceType(builtin.get(IntegerType.BUILTIN_NAME)));
-    types.put("String", new TypeReferenceType(builtin.get(StringType.BUILTIN_NAME)));
-    types.put("println", builtin.get("println"));
+    for (String name : builtin) {
+      types.put(name, builtin.get(name));
+    }
     this.types = types;
     // You can't modify the builtin scope!
     this.close();

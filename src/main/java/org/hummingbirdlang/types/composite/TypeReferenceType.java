@@ -18,6 +18,10 @@ public class TypeReferenceType extends CompositeType {
     this.type = type;
   }
 
+  public Type getType() {
+    return this.type;
+  }
+
   @Override
   public Property getProperty(String name) throws PropertyNotFoundException {
     throw new PropertyNotFoundException("Not yet implemented");

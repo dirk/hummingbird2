@@ -2,19 +2,21 @@ package org.hummingbirdlang.types.realize;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import org.hummingbirdlang.nodes.builtins.BuiltinNodes;
 import org.hummingbirdlang.types.FunctionType;
 import org.hummingbirdlang.types.Type;
 import org.hummingbirdlang.types.UnknownType;
+import org.hummingbirdlang.types.composite.TypeReferenceType;
 import org.hummingbirdlang.types.concrete.BootstrappableConcreteType;
 import org.hummingbirdlang.types.concrete.IntegerType;
 import org.hummingbirdlang.types.concrete.NullType;
 import org.hummingbirdlang.types.concrete.StringType;
 
 /**
- * Maps fully-qualified names to types. Also reponsible for bootstrapping
- * concrete types.
+ * Maps exportable fully-qualified names (either a file-system path or
+ * "builtin") to types. Also reponsible for bootstrapping concrete types.
  */
 public final class Index {
   public static final String BUILTIN = "builtin";
@@ -33,11 +35,11 @@ public final class Index {
     // methods with call targets).
     for (BootstrappableConcreteType type : bootstrappableTypes) {
       type.bootstrapBuiltins(builtins);
-      builtin.put(type.getBootstrapName(), type);
+      builtin.put(type.getBootstrapName(), new TypeReferenceType(type));
     }
 
     // Add root builtin functions to the module.
-    builtin.put("println", new FunctionType(new Type[]{new UnknownType()}, NullType.SINGLETON, "println", builtins.getCallTarget("Global", "println")));
+    builtin.put("println", new FunctionType(new Type[]{new UnknownType(),}, NullType.SINGLETON, "println", builtins.getCallTarget("Global", "println")));
 
     // Finalize the bootstrapped types; now that all the types are in the
     // builtin module they can now reference each other.
@@ -65,7 +67,11 @@ public final class Index {
     return module;
   }
 
-  public final class Module {
+  /**
+   * Resolves names in a module to type. Names are fully-qualified (eg.
+   * "MyClass.MY_CONSTANT").
+   */
+  public final class Module implements Iterable<String> {
     private final String name;
     private final HashMap<String, Type> types = new HashMap<>();
 
@@ -84,8 +90,22 @@ public final class Index {
       return this.types.get(name);
     }
 
+    /**
+     * Unwraps a `TypeReferenceType` to return the inner type.
+     */
+    public Type getType(String name) {
+      Type type = this.get(name);
+      TypeReferenceType typeReferenceType = (TypeReferenceType)type;
+      return typeReferenceType.getType();
+    }
+
     public Type put(String name, Type type) {
       return this.types.put(name, type);
+    }
+
+    @Override
+    public Iterator<String> iterator() {
+      return this.types.keySet().iterator();
     }
   }
 }
