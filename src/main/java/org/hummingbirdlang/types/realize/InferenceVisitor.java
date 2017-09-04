@@ -138,7 +138,7 @@ public final class InferenceVisitor {
 
     Type resultType;
     if (!rightType.equals(BooleanType.SINGLETON)) {
-      resultType = new SumType(BooleanType.SINGLETON, rightType);
+      resultType = new SumType(new Type[]{ BooleanType.SINGLETON, rightType, });
     } else {
       resultType = BooleanType.SINGLETON;
     }

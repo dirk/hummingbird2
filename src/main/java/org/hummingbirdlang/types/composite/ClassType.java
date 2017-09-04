@@ -1,4 +1,9 @@
-package org.hummingbirdlang.types;
+package org.hummingbirdlang.types.composite;
+
+import org.hummingbirdlang.types.CompositeType;
+import org.hummingbirdlang.types.Property;
+import org.hummingbirdlang.types.PropertyNotFoundException;
+import org.hummingbirdlang.types.Type;
 
 public class ClassType extends CompositeType {
   private String name;

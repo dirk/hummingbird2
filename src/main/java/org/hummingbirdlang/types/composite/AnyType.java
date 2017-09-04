@@ -3,17 +3,9 @@ package org.hummingbirdlang.types.composite;
 import org.hummingbirdlang.types.CompositeType;
 import org.hummingbirdlang.types.Property;
 import org.hummingbirdlang.types.PropertyNotFoundException;
-import org.hummingbirdlang.types.Type;
 
-/**
- * Disjoint union type (aka. sum type): it is composed of members A and B.
- * Eventually the union is discriminated into either A or B.
- */
-public class SumType extends CompositeType {
-  public final Type[] subTypes;
-
-  public SumType(Type[] subTypes) {
-    this.subTypes = subTypes;
+public class AnyType extends CompositeType {
+  public AnyType() {
   }
 
   @Override
