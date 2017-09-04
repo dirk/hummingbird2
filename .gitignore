@@ -1,6 +1,8 @@
 *.old
 .DS_Store
 .gradle
+.settings
+bin
 build
 target
 
