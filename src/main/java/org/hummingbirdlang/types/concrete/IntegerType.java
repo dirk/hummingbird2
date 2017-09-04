@@ -1,6 +1,7 @@
 package org.hummingbirdlang.types.concrete;
 
 import org.hummingbirdlang.nodes.builtins.BuiltinNodes;
+import org.hummingbirdlang.nodes.builtins.IntegerNodes;
 import org.hummingbirdlang.types.MethodProperty;
 import org.hummingbirdlang.types.Property;
 import org.hummingbirdlang.types.PropertyNotFoundException;
@@ -19,12 +20,12 @@ public final class IntegerType extends BootstrappableConcreteType {
 
   @Override
   public void bootstrapBuiltins(BuiltinNodes builtins) {
-    this.toString = new MethodType(this, new UnknownType(), "toString", builtins.getCallTarget("Integer", "toString"));
+    this.toString = builtins.createMethodType(this, new UnknownType(), IntegerNodes.ToStringNode.class);
   }
 
   @Override
-  public void bootstrapTypes(Module indexModule) {
-    this.toString = this.toString.cloneWithReturnType(indexModule.get(StringType.BUILTIN_NAME));
+  public void bootstrapTypes(Module builtinModule) {
+    this.toString = this.toString.cloneWithReturnType(builtinModule.get(StringType.BUILTIN_NAME));
   }
 
   @Override

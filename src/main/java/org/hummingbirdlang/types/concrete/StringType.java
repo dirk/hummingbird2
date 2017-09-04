@@ -1,6 +1,7 @@
 package org.hummingbirdlang.types.concrete;
 
 import org.hummingbirdlang.nodes.builtins.BuiltinNodes;
+import org.hummingbirdlang.nodes.builtins.StringNodes;
 import org.hummingbirdlang.types.MethodProperty;
 import org.hummingbirdlang.types.Property;
 import org.hummingbirdlang.types.PropertyNotFoundException;
@@ -18,11 +19,11 @@ public final class StringType extends BootstrappableConcreteType {
 
   @Override
   public void bootstrapBuiltins(BuiltinNodes builtins) {
-    this.toUpperCase = new MethodType(this, this, "toUpperCase", builtins.getCallTarget("String", "toUpperCase"));
+    this.toUpperCase = builtins.createMethodType(this, this, StringNodes.ToUpperCaseNode.class);
   }
 
   @Override
-  public void bootstrapTypes(Module indexModule) {
+  public void bootstrapTypes(Module builtinModule) {
     return;
   }
 

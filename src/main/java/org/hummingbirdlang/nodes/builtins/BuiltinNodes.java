@@ -16,6 +16,8 @@ import org.hummingbirdlang.nodes.HBFunctionRootNode;
 import org.hummingbirdlang.nodes.HBNode;
 import org.hummingbirdlang.nodes.arguments.GetArgumentNode;
 import org.hummingbirdlang.nodes.arguments.GetThisNode;
+import org.hummingbirdlang.types.Type;
+import org.hummingbirdlang.types.concrete.MethodType;
 
 public class BuiltinNodes {
   private HBLanguage language;
@@ -36,8 +38,8 @@ public class BuiltinNodes {
   private void addNodeFactories(List<? extends NodeFactory<? extends HBNode>> factories) {
     for (NodeFactory<? extends HBNode> factory : factories) {
       Class<?> nodeClass = factory.getClass().getAnnotation(GeneratedBy.class).value();
-      BuiltinMethod methodAnnotation = nodeClass.getAnnotation(BuiltinMethod.class);
-      BuiltinClass classAnnotation = nodeClass.getEnclosingClass().getAnnotation(BuiltinClass.class); 
+      BuiltinMethod methodAnnotation = this.getMethodAnnotation(nodeClass);
+      BuiltinClass classAnnotation = this.getClassAnnotation(nodeClass);
 
       String methodName = methodAnnotation.value();
       String className = classAnnotation.value();
@@ -72,6 +74,23 @@ public class BuiltinNodes {
     return factory.createNode(arguments);
   }
 
+  /**
+   * Helper to assist in easily creating a `MethodType`s with a builtin
+   * method node as a call target (using `BuiltinMethod` annotation to
+   * derive the name).
+   */
+  public MethodType createMethodType(Type receiverType, Type returnType, Class<?> nodeClass) {
+    String name = this.getMethodAnnotation(nodeClass).value();
+    CallTarget callTarget = this.getCallTarget(nodeClass);
+    return new MethodType(receiverType, returnType, name, callTarget);
+  }
+
+  public CallTarget getCallTarget(Class<?> nodeClass) {
+    String className = this.getClassAnnotation(nodeClass).value();
+    String methodName = this.getMethodAnnotation(nodeClass).value();
+    return this.getCallTarget(className, methodName);
+  }
+
   public CallTarget getCallTarget(String className, String methodName) {
     if (!this.classes.containsKey(className)) {
       throw new Error("Missing built-in class: " + className);
@@ -92,6 +111,14 @@ public class BuiltinNodes {
       this.classes.put(name, methodTargets);
       return methodTargets;
     }
+  }
+
+  private BuiltinMethod getMethodAnnotation(Class<?> nodeClass) {
+    return nodeClass.getAnnotation(BuiltinMethod.class);
+  }
+
+  private BuiltinClass getClassAnnotation(Class<?> nodeClass) {
+    return nodeClass.getEnclosingClass().getAnnotation(BuiltinClass.class);
   }
 
   public class MethodTargets {

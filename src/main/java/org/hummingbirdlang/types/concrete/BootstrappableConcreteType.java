@@ -21,5 +21,5 @@ public abstract class BootstrappableConcreteType extends ConcreteType {
    * Called at the end of bootstrapping so that it can fill in references
    * to other built-in types.
    */
-  public abstract void bootstrapTypes(Module indexModule);
+  public abstract void bootstrapTypes(Module builtinModule);
 }
