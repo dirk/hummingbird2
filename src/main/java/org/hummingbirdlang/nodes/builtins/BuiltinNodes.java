@@ -16,6 +16,7 @@ import org.hummingbirdlang.nodes.HBFunctionRootNode;
 import org.hummingbirdlang.nodes.HBNode;
 import org.hummingbirdlang.nodes.arguments.GetArgumentNode;
 import org.hummingbirdlang.nodes.arguments.GetThisNode;
+import org.hummingbirdlang.types.FunctionType;
 import org.hummingbirdlang.types.Type;
 import org.hummingbirdlang.types.concrete.MethodType;
 
@@ -83,6 +84,12 @@ public class BuiltinNodes {
     String name = this.getMethodAnnotation(nodeClass).value();
     CallTarget callTarget = this.getCallTarget(nodeClass);
     return new MethodType(receiverType, parameterTypes, returnType, name, callTarget);
+  }
+
+  public FunctionType createFunctionType(Type[] parameterTypes, Type returnType, Class<?> nodeClass) {
+    String name = this.getMethodAnnotation(nodeClass).value();
+    CallTarget callTarget = this.getCallTarget(nodeClass);
+    return new FunctionType(parameterTypes, returnType, name, callTarget);
   }
 
   public CallTarget getCallTarget(Class<?> nodeClass) {

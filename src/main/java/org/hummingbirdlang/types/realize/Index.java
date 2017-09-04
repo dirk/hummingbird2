@@ -5,9 +5,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import org.hummingbirdlang.nodes.builtins.BuiltinNodes;
+import org.hummingbirdlang.nodes.builtins.GlobalNodes;
 import org.hummingbirdlang.types.FunctionType;
 import org.hummingbirdlang.types.Type;
 import org.hummingbirdlang.types.UnknownType;
+import org.hummingbirdlang.types.composite.SumType;
 import org.hummingbirdlang.types.composite.TypeReferenceType;
 import org.hummingbirdlang.types.concrete.BootstrappableConcreteType;
 import org.hummingbirdlang.types.concrete.IntegerType;
@@ -39,7 +41,16 @@ public final class Index {
     }
 
     // Add root builtin functions to the module.
-    builtin.put("println", new FunctionType(new Type[]{new UnknownType(),}, NullType.SINGLETON, "println", builtins.getCallTarget("Global", "println")));
+    builtin.put(builtins.createFunctionType(
+      new Type[]{
+        new SumType(new Type[]{
+          builtin.getType(IntegerType.BUILTIN_NAME),
+          builtin.getType(StringType.BUILTIN_NAME),
+        }),
+      },
+      NullType.SINGLETON,
+      GlobalNodes.PrintlnNode.class
+    ));
 
     // Finalize the bootstrapped types; now that all the types are in the
     // builtin module they can now reference each other.
@@ -99,8 +110,13 @@ public final class Index {
       return typeReferenceType.getType();
     }
 
-    public Type put(String name, Type type) {
-      return this.types.put(name, type);
+    public void put(String name, Type type) {
+      this.types.put(name, type);
+    }
+
+    public void put(FunctionType type) {
+      String name = type.getName();
+      this.types.put(name, type);
     }
 
     @Override
