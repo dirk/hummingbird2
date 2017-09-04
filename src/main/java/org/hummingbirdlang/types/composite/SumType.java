@@ -20,4 +20,19 @@ public class SumType extends CompositeType {
   public Property getProperty(String name) throws PropertyNotFoundException {
     throw new PropertyNotFoundException("Not yet implemented");
   }
+
+  @Override
+  public String toString() {
+    StringBuilder result = new StringBuilder();
+    boolean bar = false;
+    for (Type subType : this.subTypes) {
+      if (bar) {
+        result.append(" | ");
+      } else {
+        bar = true;
+      }
+      result.append(subType.toString());
+    }
+    return result.toString();
+  }
 }
